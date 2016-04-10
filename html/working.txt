@@ -1,0 +1,58 @@
+header
+				<a href='javascript:void(0)' onclick='login.logout(true)'>Logout</a>
+				<a href='javascript:void(0)' onclick='login.showDialog('login')'>Login</a>
+				<a href='javascript:void(0)' onclick='login.showDialog('register')'>Register</a>
+
+
+
+			<div id='login' class='dialog'>
+				<b>Login</b>
+				<p><input type='text' id='login_both' placeholder='Username or email' /></p>
+				<p><input type='password' id='login_password' placeholder='Password'/>
+				<p><input type='checkbox' id='login_rememberme_cb' />Remember me<br/>
+				Error Message: <span id='login_msg' class='error'>&nbsp;</span><br/>
+				<button id='loginsubmitbtn'>Login</button><br/>
+				<a id='loginforgotbtn'>Forget your password?</a><br/>
+				Don't have an account? <a id='loginregisterbtn')'>Register</a> now.<br/>
+			</div>
+
+			<div id='register' class='dialog'>
+				<b>Register</b><br/>
+				email: <input type='text' id='register_email' /><br/>
+				password: <input type='password' id='register_password' /><br/>
+				Error Message: <span id='register_msg' class='error'>&nbsp;</span><br/>
+				<button onclick='login.register()'>Register</button><br/>
+				Already registered? <a href='javascript:void(0)' onclick='login.showDialog('Login')'>Login</a> now.<br/>
+			</div>
+			<div id='forgot' class='dialog'>
+				<b>Forgot Password</b><br/>
+				email: <input type='text' id='forgot_email' /><br/>
+				Error Message: <span id='forgot_msg' class='error'>&nbsp;</span><br/>
+				<button onclick='login.login()'>Reset Password</button><br/>
+			</div>
+			<div id='passwordreset' class='dialog'>
+				<b>Reset Password</b><br/>
+				An email has been sent to you.<br/>
+				Click on the link in the email.
+			</div>
+			<div id='passwordresetverify' class='dialog'>
+				<b>Reset Password Verify</b><br/>
+				Your email has been changed.<br/>
+				You may now login.
+			</div>
+			<div id='changepassword' class='dialog'>
+				<b>Change Password</b><br/>
+				old password: <input type='password' id='change_old_password' /><br/>
+				new password: <input type='password' id='change_new_password' /><br/>
+				Error Message: <span id='changepassword_msg' class='error'>&nbsp;</span><br/>
+				<button onclick='login.changePassword()'>Change Password</button><br/>
+			</div>
+			<div id='changeemail' class='dialog'>
+				<b>Change Email</b><br/>
+				email: <input type='password' id='change_email' /><br/>
+				Error Message: <span id='changeemail_msg' class='error'>&nbsp;</span><br/>
+				<button onclick='login.changeEmail()'>Change Password</button><br/>
+			</div>
+		</div>
+	</body>
+</html>
