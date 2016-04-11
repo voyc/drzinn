@@ -84,11 +84,6 @@ User Authentication,
 Code Hiding,
 ID Theft
 
-## TODO
-  * The create_accounts_schema.sql file exposes a database username.  Can this be hidden?  This file is for postgres and would have to be modified for use with mysql.  We can assume this file will be modified by the user.  So it's a possibility it could accidentally get committed to the repository after the user has modified it.  Remove the grants from this file, and add them as comments to config.php, near the db credentials section.
-  * add a config.php.sample file and add it to .gitignore 
-  * publish valid username, email, and password requirements
-
 ## How to Install
 
   1. clone the repository.
@@ -112,4 +107,56 @@ ID Theft
      Note: Do NOT allow the modified config.php file to get into the repository.
 
   1. Run the sql grant statements found in the config.php file, modified with your dbuser name.
+
+## History
+
+Created the Flash project and wrote user management into it.
+
+Created the Login project and copied the user management code from Flash.  Anticipating that this project would be used by Flash, Guru, Voyc, and other projects.  Either embedded into each project, or as a stand-alone single-signon app.
+
+Created the Secure project and copied the code from Login.  Finished the PHP services.  Wrote a unit test program now named svctest.  Started working on a UI program to call the services.
+
+April 2016 - Created the Accounts project and copied the code from Secure.  Put in git repository.  
+
+
+The Flash project has three entry points: index, flash, and bahasa.
+
+UI concept
+The User object does his own login etc.
+The User object resides in each app.  Each app may extend it differently.
+Should we do a simple Accounts demo, or go all in with Minimal, and create something that can drop into Flash and other apps?  Because we are looking at the User Object.  I think it needs to use the Observer so it is loosely coupled to any other app.
+
+How to use Accounts in other projects.
+	Server code.
+	Client UI code.
+	Client app code, especially the User Object.
+Options.
+	1. Let each app fork its own version of Accounts and include that as a submodule.
+	2. Include Accounts as a submodule.  Use Inheritance to add app logic to the User Object.
+	3. Use two User objects, one with UA logic, and one with app logic.
+What about the UI?
+	Accounts can provide a string of HTML to add an offscreen div.
+	Accounts can use Minimal, so the UI will work as expected by the app that is also using Minimal.
+
+Accounts has to be included as two submodules.  One under HTML.  One under phplib.
+The svc url will be 
+	flash.hagstrand.com/accounts/svc/login 
+	flash.hagstrand.com/accounts/svc/ua  where ua is consolidated service.
+	flash.hagstrand.com/accounts/svc  where ua is consolidated service.
+We're doing a POST, so don't confuse that with adding URL parameters.
+Usually svc is a folder.  Do we want to confuse the convention by making it a php file in this case?
+If that's an issue, then just use a diffent name.
+Make svc a consolidated service in all apps.  No svc folders.
+
+
+## TODO
+  * The create_accounts_schema.sql file exposes a database username.  Can this be hidden?  This file is for postgres and would have to be modified for use with mysql.  We can assume this file will be modified by the user.  So it's a possibility it could accidentally get committed to the repository after the user has modified it.  Remove the grants from this file, and add them as comments to config.php, near the db credentials section.
+  * add a config.php.sample file and add it to .gitignore 
+  * publish valid username, email, and password requirements here
+  * consolidate all svcs into one
+  * replace cookie with local storage
+  * add remove user (by admin or logged-in user)
+  * add block user (by admin)
+  * add suspend user (by admin)
+  * add svc reverify to resend TIC 
 

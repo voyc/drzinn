@@ -9,14 +9,17 @@
 		<link href="css/typography.css" rel="stylesheet" type="text/css"></link>
 
 		<script src="js/secure.js"></script>
+		<script src="js/user.js"></script>
+		<script src="js/modal.js"></script>
 		<script src="jslib/cookie.js"></script>
+		<script src="jslib/observer.js"></script>
 
 		<script>
 			var secure = {};  // one global variable
 			window.addEventListener('load', function() {
 				secure.secure = new Secure();
 				secure.secure.load();  // one starting point
-			}
+			}, false);
 		</script>
 	</head>
 

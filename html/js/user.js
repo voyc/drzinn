@@ -18,7 +18,7 @@ User = function() {
 	this.gender = '';
 	
 	this.config = {
-		reason = {
+		reason: {
 			remember_me: 'rc',
 		}
 	};

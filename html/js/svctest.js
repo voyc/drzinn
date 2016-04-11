@@ -1,5 +1,5 @@
-secure = {};
-secure.svcs = {
+svctest = {};
+svctest.svcs = {
 	register:		{uname:1, email:1, pword:1, rmrq:0, both:0, pnew:0, st:0, rm:0, tic:0},
 	verify:			{uname:0, email:0, pword:1, rmrq:0, both:0, pnew:0, st:1, rm:0, tic:1},
 	login:			{uname:0, email:0, pword:1, rmrq:1, both:1, pnew:0, st:0, rm:0, tic:0},
@@ -12,7 +12,7 @@ secure.svcs = {
 	reset:			{uname:0, email:0, pword:0, rmrq:0, both:0, pnew:1, st:1, rm:0, tic:1},
 	stub:			{uname:0, email:0, pword:0, rmrq:0, both:0, pnew:0, st:1, rm:0, tic:0},
 }
-secure.fields = {
+svctest.fields = {
 	uname:	{type:'text'    , display:'username'},
 	email:	{type:'text'    , display:'email'},
 	pword:	{type:'text'    , display:'password'},
@@ -31,14 +31,14 @@ window.onload = function() {
 	$('register').click();  // select first radio button
 	
 	// initialize the server communications
-	secure.comm = new Comm('http://accounts.hagstrand.com/svc/', '', 0); 
+	svctest.comm = new Comm('http://accounts.hagstrand.com/svc/', '', 0); 
 }
 
 drawScreen = function() {
 	// draw an input for each field
 	var field,r,p;
-	for (var k in secure.fields) {
-		field = secure.fields[k];
+	for (var k in svctest.fields) {
+		field = svctest.fields[k];
 
 		p = document.createElement('div');
 		p.className = 'line';
@@ -73,8 +73,8 @@ drawScreen = function() {
 
 	// draw a radio button for each svc
 	var svc,r,p;
-	for (var k in secure.svcs) {
-		svc = secure.svcs[k];
+	for (var k in svctest.svcs) {
+		svc = svctest.svcs[k];
 
 		p = document.createElement('div');
 		p.className = 'line';
@@ -96,11 +96,11 @@ drawScreen = function() {
 attachDomEventHandlers = function() {
 	// attach click handler to each radio button
 	var svc,r,f;
-	for (var k in secure.svcs) {
-		svc = secure.svcs[k];
+	for (var k in svctest.svcs) {
+		svc = svctest.svcs[k];
 		r = $(k);
 		r.addEventListener('click', function(event) {
-			var svc = secure.svcs[event.target.id];
+			var svc = svctest.svcs[event.target.id];
 			for (var m in svc) {
 				var f = svc[m];
 				if (f == 0) {
@@ -115,10 +115,10 @@ attachDomEventHandlers = function() {
 
 	// attach click handler to copy buttons
 	$('stbtn').addEventListener('click', function(event) {
-		$('st').value = secure.response.st;
+		$('st').value = svctest.response.st;
 	});
 	$('rmbtn').addEventListener('click', function(event) {
-		$('rm').value = secure.response.rm;
+		$('rm').value = svctest.response.rm;
 	});
 
 	// attach click handler to submit button
@@ -128,12 +128,12 @@ attachDomEventHandlers = function() {
 
 		// move required inputs into postdata object
 		var postdata = {};
-		var svc = secure.svcs[svcname];
+		var svc = svctest.svcs[svcname];
 		var f;
 		for (var m in svc) {
 			f = svc[m];
 			if (f) {
-				if (secure.fields[m].type == 'checkbox') {
+				if (svctest.fields[m].type == 'checkbox') {
 					postdata[m] = ($(m).checked) ? 't' : 'f';
 				}
 				else {
@@ -151,11 +151,11 @@ attachDomEventHandlers = function() {
 		// in the div with the submit button
 		$('ok').innerHTML = 'waiting...';
 		
-		secure.comm.request(svcname, postdata, function(ok,response,xhr) {
+		svctest.comm.request(svcname, postdata, function(ok,response,xhr) {
 			$('ok').innerHTML = (ok) ? 'ok: true' : 'ok: false';
 			
 			// save and display the response
-			secure.response = response;
+			svctest.response = response;
 			$('response').innerHTML = dumpObject(response);
 		});
 	});

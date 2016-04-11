@@ -12,6 +12,37 @@ require_once('log.php');
 
 writeHeader();
 
+/* 
+	this function is not yet implemented or tested
+	todo:
+		implement html/svc/ua
+		change all svc calls
+*/
+function ua() {
+	$taint_svc = isset($_POST['svc']) ? $_POST['svc'] : 0;
+	switch (svc) {
+		case 'register':       register(); break;
+		case 'verify':         verify(); break;
+		case 'forgotpassword': forgotpassword(); break;
+		case 'resetpassword':  resetpassword(); break;
+		case 'login':          login(); break;
+		case 'relogin':        relogin(); break;
+		case 'logout':         logout(); break;
+		case 'changepassword': changepassword(); break;
+		case 'changeemail':    changeemail(); break;
+		case 'changeusername': changeusername(); break;
+		case 'stub':           stub(); break;
+		default: 
+			$a = array(
+				'status' => 'system-error'
+			);
+			echo json_encode($a);
+			Log::write(LOG_WARNING, 'attempt with invalid parameter set');
+			break;
+	}
+	return;
+}
+
 function register() {
 	Log::open('register');
 	require_once('svcregister.php');
