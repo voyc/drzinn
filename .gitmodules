@@ -1,0 +1,3 @@
+[submodule "html/minimal"]
+	path = html/minimal
+	url = http://github.com/hagstrand/minimal.git

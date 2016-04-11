@@ -160,3 +160,52 @@ Make svc a consolidated service in all apps.  No svc folders.
   * add suspend user (by admin)
   * add svc reverify to resend TIC 
 
+## Notes on php_login_advanced
+
+We took several concepts from project php_login_advanced on github.
+
+Two different techniques for generating a unique key used in project php_login_advanced.  Which one is best?  Which one did we choose and why?
+
+  1. hash('sha256', mt_rand());<br/>
+		For rememberme cookie.  Length 64.
+			
+  1. sha1(uniqid(mt_rand(), true));<br/>
+		For email verification for register and reset-password.  Length 40.
+
+## Notes on Email verification
+
+There seem to be two methods of email verification in use on websites.
+
+Method 1.
+	Like Chase Bank.
+	User has already entered email/password.
+	Now in the Verify dialog, he enters Temporary Identification Code and password.
+	Pros:
+		all handled in one browser window
+	Cons:
+		user may have to wait for email
+		user has to cut and paste between windows
+	Mitigation:
+		let the user continue working while waiting for the email
+		keep the code small and easier to re-type if the user cannot do cut-and-paste
+	UI:
+		verify dialog: takes TIC and password, btns: Verify/Later
+		link to verify dialog from user-options dropdown
+		prompt 'thank you' after verify complete
+		check with every putcards, whether access-level has changed
+	
+Method 2.
+	Click link in email.
+	Nota Bene:
+		Hash code in email must be more secure, because email/password are not required.
+		The hash takes us straight to the user record, just like a cookie.
+	Pros:
+		easy for user to click the link
+	Cons:
+		user can easily get two windows open simultaneously
+	Mitigation:
+		make sure simultaneous open windows does not break anything
+		give him his "success" message in a stripped-down window 
+			that encourages him to return to his original window
+	UI:
+		Thank you page has link to redirect to index.html
