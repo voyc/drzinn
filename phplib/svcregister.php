@@ -31,7 +31,7 @@ function doRegister() {
 
 	// validate username is unique
 	$name = 'test-unique-username';
-	$sql  = "select id from secure.user where username = $1";
+	$sql  = "select id from accounts.user where username = $1";
 	$params = array($uname);
 	$result = execSql($conn, $name, $sql, $params, false);
 	if (!$result) {
@@ -47,7 +47,7 @@ function doRegister() {
 
 	// validate email is unique
 	$name = 'test-unique-email';
-	$sql  = "select id from secure.user where email = $1";
+	$sql  = "select id from accounts.user where email = $1";
 	$params = array($email);
 	$result = execSql($conn, $name, $sql, $params, false);
 	if (!$result) {
@@ -63,7 +63,7 @@ function doRegister() {
 
 	// get the next user id
 	$name = 'get-next-user-id';
-	$sql = "select nextval('secure.user_id_seq')";
+	$sql = "select nextval('accounts.user_id_seq')";
 	$params = array();
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {
@@ -80,7 +80,7 @@ function doRegister() {
 
 	// write the user record
 	$name = 'insert-user';
-	$sql  = "insert into secure.user (id, username, email, hashpassword, auth) values ($1, $2, $3, $4, $5)";
+	$sql  = "insert into accounts.user (id, username, email, hashpassword, auth) values ($1, $2, $3, $4, $5)";
 	$params = array($id, $uname, $email, $hashedPassword, $auth);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {
@@ -175,7 +175,7 @@ function doVerify() {
 	// set user record to active
 	$auth = DB::$auth_verified;
 	$name = 'verify-registration';
-	$sql = "update secure.user set auth = $1, tmverify = now() where id = $2";
+	$sql = "update accounts.user set auth = $1, tmverify = now() where id = $2";
 	$params = array($auth, $userid);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {

@@ -62,7 +62,7 @@ function getUserByToken($conn, $token, $reason) {
 	$name = 'query-user-by-token';
 	$sql = "select u.id, u.auth, u.access, u.hashpassword, u.username, u.email, t.tmexpire is not null as used,";
 	$sql .= " age(now(), t.tmcreate) > $3 * '1 hour'::interval as expired, t.hashtic";
-	$sql .= " from secure.user u, secure.token t";
+	$sql .= " from accounts.user u, accounts.token t";
 	$sql .= " where t.token = $1 and t.reason = $2 and t.userid = u.id";
 	$params = array($dbtoken, $reason, $expiration);
 	$result = execSql($conn, $name, $sql, $params, true);
@@ -101,7 +101,7 @@ function getUserByToken($conn, $token, $reason) {
 function getUserByBoth($conn, $both) {
 	$name = 'query-user';
 	$sql = "select id, auth, access, hashpassword, username, email";
-	$sql .= " from secure.user";
+	$sql .= " from accounts.user";
 	$sql .= " where username = $1 or email = $1";
 	$params = array($both);
 	$result = execSql($conn, $name, $sql, $params, true); 
@@ -132,7 +132,7 @@ function writeToken($conn, $uid, $reason, $hashtic) {
 
 	// insert a token record
 	$name = 'insert-token';
-	$sql = "insert into secure.token (reason, userid, token, ipcreate, agentcreate, hashtic) values ($1, $2, $3, $4, $5, $6)";
+	$sql = "insert into accounts.token (reason, userid, token, ipcreate, agentcreate, hashtic) values ($1, $2, $3, $4, $5, $6)";
 	$params = array($reason, $uid, $dbToken, $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT'], $hashtic);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {
@@ -147,7 +147,7 @@ function expireToken($conn, $publicToken) {
 
 	// set token record to expired
 	$name = 'expire-token';
-	$sql = "update secure.token set tmexpire = now() where token = $1";
+	$sql = "update accounts.token set tmexpire = now() where token = $1";
 	$params = array($dbtoken);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {

@@ -1,7 +1,12 @@
-create schema secure;
-grant usage on schema secure to webuser64;
+/* 
+This SQL is designed for postgres.
 
-create table secure.user (
+After creating this schema, execute the GRANT statements found in the comments section of the config.php file.
+*/
+
+create schema accounts;
+
+create table accounts.user (
 	id serial primary key,
 	username varchar(100) not null,
 	email varchar(100) not null,
@@ -11,12 +16,10 @@ create table secure.user (
 	tmregister timestamp with time zone not null default now(),
 	tmverify timestamp with time zone
 );
-create unique index ndx_username on secure.user (username);
-create unique index ndx_email on secure.user (email);
-grant select,insert,update,delete on secure.user to webuser64;
-grant select,update on secure.user_id_seq to webuser64;
+create unique index ndx_username on accounts.user (username);
+create unique index ndx_email on accounts.user (email);
 
-create table secure.token (
+create table accounts.token (
 	id serial primary key,
 	reason char(2) not null default '',
 	userid integer not null default 0,
@@ -27,11 +30,9 @@ create table secure.token (
 	agentcreate varchar(255),
 	hashtic varchar(100)
 );
-create unique index ndx_token on secure.token (token);
-grant select,insert,update,delete on secure.token to webuser64;
-grant select,update on secure.token_id_seq to webuser64;
+create unique index ndx_token on accounts.token (token);
 
-create table secure.attempt (
+create table accounts.attempt (
 	id serial primary key,
 	locus char(2) not null default '',
 	userid integer not null default 0,
@@ -39,5 +40,3 @@ create table secure.attempt (
 	ip varchar(39) not null default '0.0.0.0',
 	agent varchar(255)
 );
-grant select,insert,update,delete on secure.attempt to webuser64;
-grant select,update on secure.attempt_id_seq to webuser64;

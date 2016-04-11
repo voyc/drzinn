@@ -1,7 +1,7 @@
 secure = {};
 secure.svcs = {
 	register:		{uname:1, email:1, pword:1, rmrq:0, both:0, pnew:0, st:0, rm:0, tic:0},
-	verify:			{uname:0, email:0, pword:0, rmrq:0, both:0, pnew:0, st:1, rm:0, tic:1},
+	verify:			{uname:0, email:0, pword:1, rmrq:0, both:0, pnew:0, st:1, rm:0, tic:1},
 	login:			{uname:0, email:0, pword:1, rmrq:1, both:1, pnew:0, st:0, rm:0, tic:0},
 	relogin:		{uname:0, email:0, pword:0, rmrq:0, both:0, pnew:0, st:0, rm:1, tic:0},
 	logout:			{uname:0, email:0, pword:0, rmrq:0, both:0, pnew:0, st:1, rm:0, tic:0},
@@ -31,7 +31,7 @@ window.onload = function() {
 	$('register').click();  // select first radio button
 	
 	// initialize the server communications
-	secure.comm = new Comm('http://secure.hagstrand.com/svc/', '', 0); 
+	secure.comm = new Comm('http://accounts.hagstrand.com/svc/', '', 0); 
 }
 
 drawScreen = function() {

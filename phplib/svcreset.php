@@ -56,7 +56,7 @@ function doForgot() {
 
 	// update auth in user record
 	$name = 'change-user-auth';
-	$sql = "update secure.user set auth = $1 where id = $2";
+	$sql = "update accounts.user set auth = $1 where id = $2";
 	$auth = DB::$auth_resetpending;
 	$params = array($auth, $id);
 	$result = execSql($conn, $name, $sql, $params, true);
@@ -138,7 +138,7 @@ function doReset() {
 
 	// store the new hashed password and set user to verified
 	$name = 'reset-password-update';
-	$sql = "update secure.user set auth = $1, hashpassword = $3 where id = $2";
+	$sql = "update accounts.user set auth = $1, hashpassword = $3 where id = $2";
 	$auth = DB::$auth_verified;
 	$params = array($auth, $id, $hashpnew);
 	$result = execSql($conn, $name, $sql, $params, true);

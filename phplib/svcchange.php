@@ -54,7 +54,7 @@ function doChangePassword() {
 
 	// update the user record
 	$name = 'change-user-password';
-	$sql  = "update secure.user set hashpassword = $1 where id = $2";
+	$sql  = "update accounts.user set hashpassword = $1 where id = $2";
 	$params = array($hashedPassword, $id);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {
@@ -120,7 +120,7 @@ function doChangeUsername() {
 
 	// update the user record
 	$name = 'change-user-username';
-	$sql  = "update secure.user set username = $1 where id = $2";
+	$sql  = "update accounts.user set username = $1 where id = $2";
 	$params = array($uname, $id);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {
@@ -186,7 +186,7 @@ function doChangeEmail() {
 
 	// update the user record
 	$name = 'change-user-email';
-	$sql  = "update secure.user set email = $1 where id = $2";
+	$sql  = "update accounts.user set email = $1 where id = $2";
 	$params = array($email, $id);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {
