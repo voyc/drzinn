@@ -3,88 +3,222 @@
 	<head>
 		<meta http-equiv=Content-Type content="text/html; charset=UTF-8">
 		<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
-		<title>Secure</title>
+		<title>Accounts</title>
 
+		<style>[hidden] {display:none ! important;}</style>
+		<link href='normalize.css/normalize.css' rel='stylesheet' type='text/css'></link>
+		<link href='minimal/minimal.css' rel='stylesheet' type='text/css'></link>
+		<link href='icon/icon.css' rel='stylesheet' type='text/css'></link>
+		<link href='css/accounts.css' rel='stylesheet' type='text/css'></link>
+	<!--
 		<link href="css/secure.css" rel="stylesheet" type="text/css"></link>
 		<link href="css/typography.css" rel="stylesheet" type="text/css"></link>
-
-		<script src="js/secure.js"></script>
+	-->
+	
+		<script src="minimal/minimal.js"></script>
+		<script src='icon/icon.js'></script>
+		<script src='icon/lib/menu.js'></script>
+		<script src='icon/lib/gear.js'></script>
+		<script src='icon/lib/user.js'></script>
+		<script src='icon/lib/spinner.js'></script>
+		<script src='jslib/utils.js'></script>
+		<script src='jslib/dragger.js'></script>
+		<script src='jslib/comm.js'></script>
+		<script src="jslib/observer.js"></script>
+		<script src="jslib/note.js"></script>
+		
+		<script src="js/accounts.js"></script>
+		<script src="js/header.js"></script>
 		<script src="js/user.js"></script>
 		<script src="js/modal.js"></script>
-		<script src="jslib/cookie.js"></script>
-		<script src="jslib/observer.js"></script>
 
 		<script>
-			var secure = {};  // one global variable
-			window.addEventListener('load', function() {
-				secure.secure = new Secure();
-				secure.secure.load();  // one starting point
+			window.addEventListener('load', function(evtwin) {
+				var observer = new Observer();
+				new Accounts(observer);
+				new Header(observer);
+				new User(observer);
+				new Modal(observer);
+				observer.publish(new Note('setup-complete', 'app', {}));
 			}, false);
 		</script>
 	</head>
 
 	<body>
-		<div id="loginheader">
-			<div id="welcome" class='loginheadercomponent'>
-				Logged-in User:<span id="loggedInUser">&nbsp;</span>
+		<header class='fixed'>
+			<div class='group'>
+				<icon class='bit' type='draw' name='menu' open='leftnav-dialog'></icon>
+				<div class='bit hdr' id='hdrtitle'>Accounts</div>
 			</div>
-			<div id="logoutButton" class='loginheadercomponent'>
-				<a href="javascript:void(0)" onclick="login.logout(true)">Logout</a>
+			<div id='headeruser' initially hidden class='group tright'>
+				<div class='bit' id="welcome">
+					<span id="loggedinuser">LoggedInUser</span>
+				</div>
+				<div id='headerlogout' class='bit' id="logoutButton">
+					<button class='anchor' request='logout'>Logout</a>
+				</div>
+				<div id='headerlogin' class='bit' id="loginOrRegister">
+					<button class='anchor' request='login'>Login</button>
+					<button class='anchor' request='register'>Register</button>
+				</div>
+				<icon type='draw' name='user' class='bit' open='user-dialog'></icon>
 			</div>
-			<div id="loginOrRegister" class='loginheadercomponent'>
-				<a href="javascript:void(0)" onclick="login.showDialog('login')">Login</a>
-				<a href="javascript:void(0)" onclick="login.showDialog('register')">Register</a>
+			<div id='headergear' class='group tright'>
+				<icon type='draw' name='gear' class='bit' open='settings-dialog'></icon>
+			</div>
+		</header>
+
+		<section class='narrative' id='narrative-section'>
+			<h1>Accounts - User Authentication</h1>
+			<p>This project is designed as a submodule for any project
+			that needs to authenticate users.</p>
+
+			<p>The following transactions are supported.</p>
+			<table id=svctable>
+				<tr><td><button class='anchor' modal request='register'      >Register</button></td><td>User enters username, email, password.  A new account is created for this user with auth=registered, and an email containing a Temporary Identification Code is sent to the user.</td></tr>
+				<tr><td><button class='anchor' modal request='verify'>Verify&nbsp;Register</button></td><td>Logged-in-user enters the Temporary Identification Code from the email and his password.  The account is changed to auth=verified.</td></tr>
+				<tr><td><button class='anchor' modal request='login'         >Login</button></td><td>User enters username or email, and password.  The user is logged-in.</td></tr>
+				<tr><td><button class='anchor' modal request='relogin'       >Relogin</button></td><td>No user input.  When a user refreshes the page, the user is logged-in silently at startup.</td></tr>
+				<tr><td><button class='anchor' modal request='logout'        >Logout</button></td><td>No user input.  Logged-in-user is logged out.</td></tr>
+				<tr><td><button class='anchor' modal request='forgotpassword'>Forgot&nbsp;Password</button></td><td>User enters username or email.  The account is changed to auth=resetpending and an email containing a Temporary Identification Code is sent to the user.</td></tr>
+				<tr><td><button class='anchor' modal request='resetpassword' >Reset&nbsp;Password</button></td><td>User enters the Temporary Identification Code and new password.  His password is changed.</td></tr>
+				<tr><td><button class='anchor' modal request='changepassword'>Change&nbsp;Password</button></td><td>Logged-in-user enters old password and new password.  His password is changed.</td></tr>
+				<tr><td><button class='anchor' modal request='changeusername'>Change&nbsp;Username</button></td><td>Logged-in-user enters new username and password.  His username is changed.</td></tr>
+				<tr><td><button class='anchor' modal request='changeemail'   >Change&nbsp;Email</button></td><td>Logged-in-user enters new email address.  The account is changed to auth=emailpending and a Temporary Identification Code is sent to the new email address.</td></tr>
+				<tr><td><button class='anchor' modal request='verifyemail'   >Verify&nbsp;Email</button></td><td>Logged-in-user enters new email address.  The account is changed to auth=emailpending and a Temporary Identification Code is sent to the new email address.</td></tr>
+				<tr><td><button class='anchor' modal request='stub'          >Stub</button></td><td>An example svc.  Demonstrates how to write an application svc using session-id to retrieve the user record.</td></tr>
+			</table>
+		</section>
+		
+		<!---- modeless dialogs ----------------------------------------->
+
+		<nav initially hidden class='panel popup leftnav blu' id='leftnav-dialog'>
+			<div close class='closex'>&times;</div>
+			<h3>About</h3>
+			<p>Dear friends...</p>
+		</nav>
+		<aside initially hidden class='panel popup dropdown blu' id='settings-dialog'>
+			<div close class='closex'>&times;</div>
+			<h3>Settings (for debugging)</h3>
+			<h4>Session Storage</h4>
+			<div id='sessionstorage'></div>
+		</aside>
+		<aside initially hidden class='panel popup dropdown blu' id='user-dialog'>
+			<div close class='closex'>&times;</div>
+			<h3>User</h3>
+			<p><button close class='anchor' request='logout'        >Logout</button></p>
+			<p><button close class='anchor' request='forgotpassword'>Forgot Password</button></p>
+			<p><button close class='anchor' request='changeusername'>Change Username</button></p>
+			<p><button close class='anchor' request='changepassword'>Change Password</button></p>
+			<p><button close class='anchor' request='changeemail'   >Change Email</button></p>
+		</aside>
+
+		<!---- modal dialog container ----------------------------->
+		<div hidden id='modalcontainer' class='full smoke'>
+			<div class='centered modal'>
+				<div close class='closex'>&times;</div>
+				<h3 id='modaltitle'>Modal Title</h3>
+				<p id='dialog-msg'></p>
+				<div id='dialog'>
+				</div>
+				<div hidden id='wait' class='centered'>
+					<icon type=draw name=spinner class='spin'></icon>
+				</div>
 			</div>
 		</div>
-		<div id='dialog'></div>
-		<div id='offscreen'>
-			<div id="login" class="dialog">
-				<b>Login</b><br/>
-				email: <input type="text" id="login_email" /><br/>
-				password: <input type="password" id="login_password" /><br/>
-				<input type="checkbox" id="login_rememberme" />Remember me<br/>
-				Error Message: <span id="login_msg" class="error">&nbsp;</span><br/>
-				<button onclick="login.login()">Login</button><br/>
-				<a href="javascript:void(0)" onclick="login.sendEmailReminder()">Forget your password?</a><br/>
-				Don't have an account? <a href="javascript:void(0)" onclick="login.showDialog('register')">Register</a> now.<br/>
-			</div>
-			<div id="register" class="dialog">
-				<b>Register</b><br/>
-				email: <input type="text" id="register_email" /><br/>
-				password: <input type="password" id="register_password" /><br/>
-				Error Message: <span id="register_msg" class="error">&nbsp;</span><br/>
-				<button onclick="login.register()">Register</button><br/>
-				Already registered? <a href="javascript:void(0)" onclick="login.showDialog('Login')">Login</a> now.<br/>
-			</div>
-			<div id="forgot" class="dialog">
-				<b>Forgot Password</b><br/>
-				email: <input type="text" id="forgot_email" /><br/>
-				Error Message: <span id="forgot_msg" class="error">&nbsp;</span><br/>
-				<button onclick="login.login()">Reset Password</button><br/>
-			</div>
-			<div id="passwordreset" class="dialog">
-				<b>Reset Password</b><br/>
-				An email has been sent to you.<br/>
-				Click on the link in the email.
-			</div>
-			<div id="passwordresetverify" class="dialog">
-				<b>Reset Password Verify</b><br/>
-				Your email has been changed.<br/>
-				You may now login.
-			</div>
-			<div id="changepassword" class="dialog">
-				<b>Change Password</b><br/>
-				old password: <input type="password" id="change_old_password" /><br/>
-				new password: <input type="password" id="change_new_password" /><br/>
-				Error Message: <span id="changepassword_msg" class="error">&nbsp;</span><br/>
-				<button onclick="login.changePassword()">Change Password</button><br/>
-			</div>
-			<div id="changeemail" class="dialog">
-				<b>Change Email</b><br/>
-				email: <input type="password" id="change_email" /><br/>
-				Error Message: <span id="changeemail_msg" class="error">&nbsp;</span><br/>
-				<button onclick="login.changeEmail()">Change Password</button><br/>
-			</div>
+
+		<!---- forms which will be moved to modal dialog container on open ---->
+		<div hidden id='offscreen'>
+			<form modal id='login' svc='ua' class='dialog' title='Login to Your Account'>
+				<p><input name='both' type='text' placeholder='Username or Email' autofocus required pattern='[a-zA-Z0-9\_@.]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
+				<p><input name='pword' type='password' placeholder='Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
+				<p class='tright'>
+					<input close type='button' value='Cancel' class='anchor' tabindex='-1'>
+					<input type='submit' value='Login' class='submit'>
+				</p>
+				<p><input type='button' class='anchor' value='Forget your password?' open='forgotpassword'/></p>
+			</form>
+			<form modal id='register' svc='ua' class='dialog' title='Register a New Account'>
+				<p><input name='uname' type='text' placeholder='Username' autofocus required pattern='[a-zA-Z0-9\_@.]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
+				<p><input name='email' type='text' placeholder='Email' required pattern='[a-zA-Z0-9\_@.]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
+				<p><input name='pword' type='password' placeholder='Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
+				<p><input name='pwordc' type='password' placeholder='Confirm Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
+				<p class='tright'>
+					<input close type='button' value='Cancel' class='anchor' tabindex='-1'>
+					<input type='submit' value='Register' class='submit'>
+				</p>
+			</form>
+			<form modal id='verify' svc='ua' class='dialog' title='Verify Registration'>
+				<p>A Temporary Identification Code has been sent to your email address.
+				Enter it here along with your password to complete your registration.</p>
+				<p><input name='tic' type='text' placeholder='Temporary Identification Code' autofocus required pattern='[a-zA-Z0-9]{6}'></p>
+				<p><input name='pword' type='password' placeholder='Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
+				<p class='tright'>
+					<input close type='button' value='Cancel' class='anchor' tabindex='-1'>
+					<input type='submit' value='Verify' class='submit'>
+				</p>
+			</form>
+			<form modal id='verifyemail' svc='ua' class='dialog' title='Verify New Email'>
+				<p>A Temporary Identification Code has been sent to your new email address.
+				Enter it here along with your password to complete your email change.</p>
+				<p><input name='tic' type='text' placeholder='Temporary Identification Code' autofocus required pattern='[a-zA-Z0-9]{6}'></p>
+				<p><input name='pword' type='password' placeholder='Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
+				<p class='tright'>
+					<input close type='button' value='Cancel' class='anchor' tabindex='-1'>
+					<input type='submit' value='Verify' class='submit'>
+				</p>
+			</form>
+			<form modal id='forgotpassword' svc='ua' class='dialog' title='Forgot Password'>
+				<p>You may reset your password.<br/>
+				A Temporary Identification Code will be sent
+				to the email address we have on file for you.</p>
+				<p><input name='both' type='text' placeholder='Username or Email' autofocus required pattern='[a-zA-Z0-9\_@.]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
+				<p class='tright'>
+					<input close type='button' value='Cancel' class='anchor' tabindex='-1'>
+					<input type='submit' value='Send Code' class='submit'>
+				</p>
+			</form>
+			<form modal id='resetpassword' svc='ua' class='dialog' title='Reset Password'>
+				<p>A Temporary Identification Code has been sent to your email address.
+				Enter it here along with a new password.</p>
+				<p><input name='tic' type='password' placeholder='Temporary Identification Code' required pattern='[a-zA-Z0-9]{6}'></p>
+				<p><input name='pnew' type='password' placeholder='New Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
+				<p><input name='pnewc' type='password' placeholder='Confirm New Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
+				<p class='tright'>
+					<input close type='button' value='Cancel' class='anchor' tabindex='-1'>
+					<input type='submit' value='Change' class='submit'>
+				</p>
+			</form>
+			<form modal id='changepassword' svc='ua' class='dialog' title='Change Password'>
+				<p><input name='pword' type='password' placeholder='Old Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
+				<p><input name='pnew' type='password' placeholder='New Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
+				<p><input name='pnewc' type='password' placeholder='Confirm New Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
+				<p class='tright'>
+					<input close type='button' value='Cancel' class='anchor' tabindex='-1'>
+					<input type='submit' value='Change' class='submit'>
+				</p>
+			</form>
+			<form modal id='changeusername' svc='ua' class='dialog' title='Change Username'>
+				<p><input name='uname' type='text' placeholder='New Username' autofocus required pattern='[a-zA-Z0-9\_@.]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
+				<p><input name='pword' type='password' placeholder='Re-enter Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
+				<p class='tright'>
+					<input close type='button' value='Cancel' class='anchor' tabindex='-1'>
+					<input type='submit' value='Change' class='submit'>
+				</p>
+			</form>
+			<form modal id='changeemail' svc='ua' class='dialog' title='Change Email'>
+				<p><input name='email' type='text' placeholder='New Email' required pattern='[a-zA-Z0-9\_@.]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
+				<p><input name='pword' type='password' placeholder='Re-enter Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
+				<p class='tright'>
+					<input close type='button' value='Cancel' class='anchor' tabindex='-1'>
+					<input type='submit' value='Change' class='submit'>
+				</p>
+			</form>
 		</div>
+
+		<br/>
+		<footer>
+			<a class='ftr'>Love & Peace</a>
+		</footer>
 	</body>
 </html>

@@ -1,26 +1,26 @@
 svctest = {};
 svctest.svcs = {
-	register:		{uname:1, email:1, pword:1, rmrq:0, both:0, pnew:0, st:0, rm:0, tic:0},
-	verify:			{uname:0, email:0, pword:1, rmrq:0, both:0, pnew:0, st:1, rm:0, tic:1},
-	login:			{uname:0, email:0, pword:1, rmrq:1, both:1, pnew:0, st:0, rm:0, tic:0},
-	relogin:		{uname:0, email:0, pword:0, rmrq:0, both:0, pnew:0, st:0, rm:1, tic:0},
-	logout:			{uname:0, email:0, pword:0, rmrq:0, both:0, pnew:0, st:1, rm:0, tic:0},
-	changepassword:	{uname:0, email:0, pword:1, rmrq:0, both:0, pnew:1, st:1, rm:0, tic:0},
-	changeusername:	{uname:1, email:0, pword:1, rmrq:0, both:0, pnew:0, st:1, rm:0, tic:0},
-	changeemail:	{uname:0, email:1, pword:1, rmrq:0, both:0, pnew:0, st:1, rm:0, tic:0},
-	forgot:			{uname:0, email:0, pword:0, rmrq:0, both:1, pnew:0, st:0, rm:0, tic:0},
-	reset:			{uname:0, email:0, pword:0, rmrq:0, both:0, pnew:1, st:1, rm:0, tic:1},
-	stub:			{uname:0, email:0, pword:0, rmrq:0, both:0, pnew:0, st:1, rm:0, tic:0},
+	register:		{uname:1, email:1, pword:1, rmrq:0, both:0, pnew:0, si:0, rm:0, tic:0},
+	verify:			{uname:0, email:0, pword:1, rmrq:0, both:0, pnew:0, si:1, rm:0, tic:1},
+	login:			{uname:0, email:0, pword:1, rmrq:1, both:1, pnew:0, si:0, rm:0, tic:0},
+	relogin:		{uname:0, email:0, pword:0, rmrq:0, both:0, pnew:0, si:0, rm:1, tic:0},
+	logout:			{uname:0, email:0, pword:0, rmrq:0, both:0, pnew:0, si:1, rm:0, tic:0},
+	changepassword:	{uname:0, email:0, pword:1, rmrq:0, both:0, pnew:1, si:1, rm:0, tic:0},
+	changeusername:	{uname:1, email:0, pword:1, rmrq:0, both:0, pnew:0, si:1, rm:0, tic:0},
+	changeemail:	{uname:0, email:1, pword:1, rmrq:0, both:0, pnew:0, si:1, rm:0, tic:0},
+	forgot:			{uname:0, email:0, pword:0, rmrq:0, both:1, pnew:0, si:0, rm:0, tic:0},
+	reset:			{uname:0, email:0, pword:0, rmrq:0, both:0, pnew:1, si:1, rm:0, tic:1},
+	stub:			{uname:0, email:0, pword:0, rmrq:0, both:0, pnew:0, si:1, rm:0, tic:0},
 }
 svctest.fields = {
 	uname:	{type:'text'    , display:'username'},
 	email:	{type:'text'    , display:'email'},
 	pword:	{type:'text'    , display:'password'},
-	rmrq:	{type:'checkbox', display:'remember me'},
+	rmrq:	{type:'checkbox', display:'remember me requested'},
 	both:	{type:'text'    , display:'username or email'},
 	pnew:	{type:'text'    , display:'new password'},
-	st:		{type:'text'    , display:'token'},
-	rm:		{type:'text'    , display:'cookie'},
+	si:		{type:'text'    , display:'session-id'},
+	rm:		{type:'text'    , display:'remember-me'},
 	tic:	{type:'text'    , display:'temporary id code'},
 }
 
@@ -44,7 +44,7 @@ drawScreen = function() {
 		p.className = 'line';
 		$('fields').appendChild(p);
 
-		if (k == 'st' || k == 'rm') {
+		if (k == 'si' || k == 'rm') {
 			r = document.createElement('input');
 			r.type = 'button';
 			r.className = 'copybtn';
@@ -115,7 +115,7 @@ attachDomEventHandlers = function() {
 
 	// attach click handler to copy buttons
 	$('stbtn').addEventListener('click', function(event) {
-		$('st').value = svctest.response.st;
+		$('si').value = svctest.response.si;
 	});
 	$('rmbtn').addEventListener('click', function(event) {
 		$('rm').value = svctest.response.rm;

@@ -1,20 +1,21 @@
 <?php
 /*
-	stub - an empty client service, using authenticated, logged-in user
+	svc stub
+	An empty client service, using authenticated, logged-in user.
 */
-function doStub() {
+function stub() {
 	$a = array(
 		'status' => 'system-error'
 	);
-	
+
 	// raw inputs
-	$taint_st = isset($_POST['st']) ? $_POST['st'] : 0;
+	$taint_si = isset($_POST['si']) ? $_POST['si'] : 0;
 
 	// validate inputs
-	$st = validateToken($taint_st);
+	$si = validateToken($taint_si);
 
 	// validate parameter set
-	if (!$st){
+	if (!$si){
 		Log::write(LOG_WARNING, 'attempt with invalid parameter set');
 		return $a;
 	}
@@ -24,13 +25,13 @@ function doStub() {
 	if (!$conn) {
 		return $a;
 	}
-	
+
 	// get logged-in user
-	$result = getUserByToken($conn, $st, DB::$reason_session_id);
+	$result = getUserByToken($conn, $si);
 	if (!$result) {
 		return $a;
 	}
-	
+
 	// get data fields
 	$row = pg_fetch_array($result, 0, PGSQL_ASSOC);
 	$username = $row['username'];
@@ -41,7 +42,7 @@ function doStub() {
 	if (isUserVerified($auth)) {
 		$message = "$username is verified";
 	}
-	
+
 	// success
 	$a['status'] = 'ok';
 	$a['message'] = $message;

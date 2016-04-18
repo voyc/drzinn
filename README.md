@@ -16,6 +16,45 @@ A demo/test AJAX application is also provided.
 
 Javascript is required.  Cookies are not required.
 
+## Installation
+
+How to install the accounts project as a stand-alone application.
+
+  1. Clone the accounts project onto your docroot path.
+  1. Download the files for the four submodules.
+  1. Launch index.html in your browser.
+  
+<pre>
+   /* Download the source files. */
+   git clone http://git.hagstrand.com/accounts.git
+   cd accounts
+   git submodule update --init --recursive
+ </pre>	
+
+## Implementation
+
+How to embed the accounts project into your own project.
+
+  1. Add the Accounts project as a submodule into your project's html folder.
+  
+  1. If you haven't already, also add the four required submodules: normalize.css, minimal, iicon, and jslib.
+
+<pre>
+   /* Add Download the source files. */
+   cd myproject/html
+   git submodule add http://git.hagstrand.com/accounts.git
+
+   /* Add four required submodules. */
+   git submodule add https://github.com/necolas/normalize.css
+   git submodule add http://github.com/hagstrand/minimal.git
+   git submodule add http://github.com/hagstrand/icon.git
+   git submodule add http://github.com/hagstrand/jslib.git
+   cd ../../
+
+   /* Download the source files for all the submodules. */
+   git submodule update --init --recursive
+</pre>	
+
 ## Design Principles
 
   1. This project is open source.  The source code for this library is provided publicly on github so it can be vetted by multiple experts, and so the security algorithms do not depend on obfuscation and are not susceptible to reverse-engineering.
@@ -77,6 +116,21 @@ Javascript is required.  Cookies are not required.
 **Threat:** Timing attacks.  Example: login attempt with existing username takes longer to respond.<br/>
 **Mitigation:** We query for username/password combination with a single query.
 
+**Threat:** Session Hijacking
+**Mitigation:** 
+  1. Session-id is replaced on any svc call after n minutes.
+  1. Session-Id times out after n minutes of inactivity.
+  1. Session-Id times out after n minutes since login.
+
+## Unsupported Features:
+The following features are NOT supported.
+
+  1. Remember me.  Save username, and fill in the login form next time.
+  1. Stay signed in.  Save the session-id or equivalent between sessions.
+  1. Unrecognized computer.  Require email verification if user logs in with previously unused ip/user-agent.
+  1. Multiple simultaneous sessions.  User logs in on different computers or browsers.
+  1. Auto logout.  Use HTTP Push to log the user out and erase the screen on timeout.
+		
 ## Categories
 Security,
 Privacy,

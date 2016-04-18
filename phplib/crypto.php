@@ -6,7 +6,7 @@
 		for now, we are using built-in PHP functions
 **/
 
-// 1. generate a unique key for use as session id or rememberme cookie
+// 1. generate a unique key for use as session-id or remember-me token
 function generateToken() {  // returns a hash string length 64
 	// older version from php-login-advanced, returns a hash string length 32
 	//$tk = sha1(uniqid(mt_rand(), true));
@@ -26,7 +26,7 @@ function decryptToken($publicToken) {
 }
 
 // 2. generate a code for use as "temporary identification code" in email authorization
-function generateCode() {  // returns all digits length 6
+function generateTic() {  // returns all digits length 6
 	// exclude problem chars: B8G6I1l0OQDS5Z2
 	$characters = 'ACEFHJKMNPRTUVWXY4937';
 	$string = '';
@@ -36,13 +36,20 @@ function generateCode() {  // returns all digits length 6
 	}
 	return $string;
 }
+// Using PHP functions.  The hashed string contains concatenated salt and algo.
+function hashTic($publictic) {  // returns a hash string max length 255
+	return password_hash($publictic, PASSWORD_DEFAULT);
+}
+function verifyTic($publictic, $hashtic) {  // returns a boolean
+	return password_verify($publictic, $hashtic);
+}
 
 // 3. hash and verify a password
-// the hashed string contains concatenated salt and algo which are used to verify the incoming password
+// Using PHP functions.  The hashed string contains concatenated salt and algo.
 function hashPassword($password) {  // returns a hash string max length 255
 	return password_hash($password, PASSWORD_DEFAULT);
 }
-function verifyPassword($password, $storedHashPassword) {  // returns a boolean
-	return password_verify($password, $storedHashPassword);
+function verifyPassword($password, $hashpassword) {  // returns a boolean
+	return password_verify($password, $hashpassword);
 }
 ?>

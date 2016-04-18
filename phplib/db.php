@@ -25,6 +25,8 @@ function execSql($conn, $name, $sql, $params, $test1) {
 		$result = @pg_prepare($conn, $name, $sql);
 		if (!$result) {
 			Log::write(LOG_ERR, "$name prepare error: ".pg_last_error($conn));
+			Log::write(LOG_ERR, "uid = $uid");
+			Log::write(LOG_ERR, "sql = $sql");
 			return false;
 		}
 		$stmts[$name] = 1;
@@ -51,7 +53,7 @@ function execSql($conn, $name, $sql, $params, $test1) {
 	return $result;
 }
 
-function getUserByToken($conn, $token, $reason) {
+function getUserByToken($conn, $token) {
 
 	// get non-public version of the token
 	$dbtoken = decryptToken($token);
@@ -61,10 +63,11 @@ function getUserByToken($conn, $token, $reason) {
 	// read user,token
 	$name = 'query-user-by-token';
 	$sql = "select u.id, u.auth, u.access, u.hashpassword, u.username, u.email, t.tmexpire is not null as used,";
-	$sql .= " age(now(), t.tmcreate) > $3 * '1 hour'::interval as expired, t.hashtic";
+	$sql .= " age(now(), t.tmcreate) > $2 * '1 hour'::interval as expired,";
+	$sql .= " u.hashtic, u.tmhashtic";
 	$sql .= " from accounts.user u, accounts.token t";
-	$sql .= " where t.token = $1 and t.reason = $2 and t.userid = u.id";
-	$params = array($dbtoken, $reason, $expiration);
+	$sql .= " where t.token = $1 and t.userid = u.id";
+	$params = array($dbtoken, $expiration);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {
 		Log::write(LOG_NOTICE, "$name token not found");
@@ -88,12 +91,10 @@ function getUserByToken($conn, $token, $reason) {
 	}
 
 	// expire token
-	if ($reason != DB::$reason_session_id) {
-		$boo = expireToken($conn, $token);
-		if (!$boo) {
-			return false;
-		}
-	}
+//	$boo = expireToken($conn, $token);
+//	if (!$boo) {
+//		return false;
+//	}
 
 	return $result;
 }
@@ -125,20 +126,27 @@ function sendAuthenticationEmail($email, $code, $svc) {
 	return $boo;
 }
 
-function writeToken($conn, $uid, $reason, $hashtic) {
+function writeToken($conn, $uid) {
+	// expire all previous tokens for this user
+	$rc = expireAllTokens($conn, $uid);
+	if (!$rc) {
+		return false;
+	}
+
 	// get a unique key and encrypt it
 	$dbToken = generateToken();
 	$publicToken = encryptToken($dbToken);
 
 	// insert a token record
 	$name = 'insert-token';
-	$sql = "insert into accounts.token (reason, userid, token, ipcreate, agentcreate, hashtic) values ($1, $2, $3, $4, $5, $6)";
-	$params = array($reason, $uid, $dbToken, $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT'], $hashtic);
+	$sql = "insert into accounts.token (userid, token, ipcreate, agentcreate) values ($1, $2, $3, $4)";
+	$params = array($uid, $dbToken, $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {
-		Log::write(LOG_ERR, "$name $reason, failed. ".pg_last_error($conn));
+		Log::write(LOG_ERR, "$name failed. ".pg_last_error($conn));
 		false;
 	}
+
 	return $publicToken;
 }
 function expireToken($conn, $publicToken) {
@@ -155,6 +163,17 @@ function expireToken($conn, $publicToken) {
 	}
 	return true;
 }
+function expireAllTokens($conn, $uid) {
+	// set token record to expired
+	$name = 'expire-all-tokens';
+	$sql = "update accounts.token set tmexpire = now() where userid = $1";
+	$params = array($uid);
+	$result = execSql($conn, $name, $sql, $params, false);
+	if (!$result) {
+		return false;
+	}
+	return true;
+}
 
 function obscureEmail($email) {
 	$a = explode('@', $email);
@@ -166,20 +185,20 @@ function obscureEmail($email) {
 }
 
 class DB {
-	static public $auth_anonymous = 0;
-	static public $auth_registered = 1;
+	static public $auth_anonymous    = 0;
+	static public $auth_registered   = 1;
 	static public $auth_resetpending = 2;
-	static public $auth_verified = 7;
+	static public $auth_verified     = 7;
+	static public $auth_emailpending = 8;
 
-	static public $access_none = 0;
-	static public $access_student = 1;
-	static public $access_teacher = 100;
-	static public $access_admin = 255;
+	static public $access_none   = 0;
+	static public $access_novice = 1;
+	static public $access_pro    = 100;
+	static public $access_master = 200;
+	static public $access_admin  = 235;
+	static public $access_super  = 255;
     
-	static public $reason_session_id = 'si';
-	static public $reason_rememberme_cookie = 'rc';
-
-	static public $locus_login_by_password = 'lp';
-	static public $locus_login_by_rememberme = 'lr';
+	static public $reason_password_no_match = 'bp';
+	static public $reason_user_not_found = 'nf';
 }
 ?>

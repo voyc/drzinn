@@ -1,3 +1,12 @@
-[submodule "html/minimal"]
+[submodule "minimal"]
 	path = html/minimal
 	url = http://github.com/hagstrand/minimal.git
+[submodule "normalize.css"]
+	path = html/normalize.css
+	url = https://github.com/necolas/normalize.css
+[submodule "jslib"]
+	path = html/jslib
+	url = https://github.com/hagstrand/jslib.git
+[submodule "icon"]
+	path = html/icon
+	url = https://github.com/hagstrand/icon.git

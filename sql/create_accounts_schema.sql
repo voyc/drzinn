@@ -4,6 +4,7 @@ This SQL is designed for postgres.
 After creating this schema, execute the GRANT statements found in the comments section of the config.php file.
 */
 
+drop schema accounts cascade;
 create schema accounts;
 
 create table accounts.user (
@@ -14,27 +15,30 @@ create table accounts.user (
 	auth integer not null default 0,
 	access integer not null default 1,
 	tmregister timestamp with time zone not null default now(),
-	tmverify timestamp with time zone
+	tmverify timestamp with time zone,
+	hashtic varchar(100),
+	tmhashtic timestamp with time zone,
+	newemail varchar(100)
 );
 create unique index ndx_username on accounts.user (username);
 create unique index ndx_email on accounts.user (email);
 
 create table accounts.token (
 	id serial primary key,
-	reason char(2) not null default '',
 	userid integer not null default 0,
 	token varchar(64),
 	tmcreate timestamp with time zone not null default now(),
+	tmreplace timestamp with time zone,
+	tmactive timestamp with time zone,
 	tmexpire timestamp with time zone,
 	ipcreate varchar(39) not null default '0.0.0.0',
-	agentcreate varchar(255),
-	hashtic varchar(100)
+	agentcreate varchar(255)
 );
 create unique index ndx_token on accounts.token (token);
 
 create table accounts.attempt (
 	id serial primary key,
-	locus char(2) not null default '',
+	reason char(2) not null default '',
 	userid integer not null default 0,
 	tm timestamp with time zone not null default now(),
 	ip varchar(39) not null default '0.0.0.0',
