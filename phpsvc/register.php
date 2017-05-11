@@ -30,7 +30,7 @@ function register() {
 
 	// validate username is unique
 	$name = 'test-unique-username';
-	$sql  = "select id from accounts.user where username = $1";
+	$sql  = "select id from account.user where username = $1";
 	$params = array($uname);
 	$result = execSql($conn, $name, $sql, $params, false);
 	if (!$result) {
@@ -46,7 +46,7 @@ function register() {
 
 	// validate email is unique
 	$name = 'test-unique-email';
-	$sql  = "select id from accounts.user where email = $1";
+	$sql  = "select id from account.user where email = $1";
 	$params = array($email);
 	$result = execSql($conn, $name, $sql, $params, false);
 	if (!$result) {
@@ -62,7 +62,7 @@ function register() {
 
 	// get the next user id
 	$name = 'get-next-user-id';
-	$sql = "select nextval('accounts.user_id_seq')";
+	$sql = "select nextval('account.user_id_seq')";
 	$params = array();
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {
@@ -76,7 +76,7 @@ function register() {
 	$hashPassword = hashPassword($pword);
 
 	$auth = DB::$auth_registered;
-	$access = DB::$auth_novice;
+	$access = DB::$access_novice;
 
 	// get TIC
 	$publicTic = generateTic();
@@ -90,7 +90,7 @@ function register() {
 
 	// write the user record
 	$name = 'insert-user';
-	$sql  = "insert into accounts.user (id, username, email, hashpassword, auth, hashtic, tmhashtic) values ($1, $2, $3, $4, $5, $6, now())";
+	$sql  = "insert into account.user (id, username, email, hashpassword, auth, hashtic, tmhashtic) values ($1, $2, $3, $4, $5, $6, now())";
 	$params = array($id, $uname, $email, $hashPassword, $auth, $hashTic);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {

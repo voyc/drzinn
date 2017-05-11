@@ -66,7 +66,7 @@ function verifyemail() {
 	// update user record
 	$auth = DB::$auth_verified;
 	$name = 'verify-email';
-	$sql = "update accounts.user set email=newemail, newemail='', auth=$1, hashtic=null, tmhashtic=null where id = $2";
+	$sql = "update account.user set email=newemail, newemail='', auth=$1, hashtic=null, tmhashtic=null where id = $2";
 	$params = array($auth, $userid);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {

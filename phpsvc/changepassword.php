@@ -54,7 +54,7 @@ function changepassword() {
 
 	// update the user record
 	$name = 'change-user-password';
-	$sql  = "update accounts.user set hashpassword = $1 where id = $2";
+	$sql  = "update account.user set hashpassword = $1 where id = $2";
 	$params = array($hashPassword, $id);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {

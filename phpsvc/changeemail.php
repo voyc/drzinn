@@ -54,7 +54,7 @@ function changeemail() {
 
 	// validate email is unique
 	$name = 'test-unique-email';
-	$sql  = "select id from accounts.user where email = $1 and $id <> $2";
+	$sql  = "select id from account.user where email = $1 and $id <> $2";
 	$params = array($email, $id);
 	$result = execSql($conn, $name, $sql, $params, false);
 	if (!$result) {
@@ -75,7 +75,7 @@ function changeemail() {
 
 	// update the user record
 	$name = 'change-user-email';
-	$sql  = "update accounts.user set newemail = $1, auth=$3, hashtic=$4, tmhashtic=now() where id = $2";
+	$sql  = "update account.user set newemail = $1, auth=$3, hashtic=$4, tmhashtic=now() where id = $2";
 	$params = array($email, $id, $auth, $hashTic);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {

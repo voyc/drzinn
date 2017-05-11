@@ -31,7 +31,7 @@ window.onload = function() {
 	$('register').click();  // select first radio button
 	
 	// initialize the server communications
-	svctest.comm = new Comm('http://accounts.hagstrand.com/svc/', '', 0); 
+	svctest.comm = new Comm('http://account.hagstrand.com/svc/', '', 0); 
 }
 
 drawScreen = function() {

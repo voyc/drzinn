@@ -27,7 +27,7 @@ function login() { // login with username/email/password
 	// query user table
 	$name = 'login_with_email';
 	$sql = "select id, username, email, hashpassword, auth, access";
-	$sql .= " from accounts.user";
+	$sql .= " from account.user";
 	$sql .= " where email = $1 or username = $1";
 	$params = array($both);
 	$result = execSql($conn, $name, $sql, $params, false);
@@ -86,7 +86,7 @@ function login() { // login with username/email/password
 
 function recordFailedAttempt($conn, $id, $reason) {
 	$name = 'insert-attempt';
-	$sql = "insert into accounts.attempt ( reason, userid, ip, agent) values ($1, $2, $3, $4)";
+	$sql = "insert into account.attempt ( reason, userid, ip, agent) values ($1, $2, $3, $4)";
 	$params = array($reason, $id, $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {

@@ -53,7 +53,7 @@ function changeusername() {
 
 	// validate username is unique
 	$name = 'test-unique-username';
-	$sql  = "select id from accounts.user where username = $1 and id <> $2";
+	$sql  = "select id from account.user where username = $1 and id <> $2";
 	$params = array($uname, $id);
 	$result = execSql($conn, $name, $sql, $params, false);
 	if (!$result) {
@@ -68,7 +68,7 @@ function changeusername() {
 
 	// update the user record
 	$name = 'change-user-username';
-	$sql  = "update accounts.user set username = $1 where id = $2";
+	$sql  = "update account.user set username = $1 where id = $2";
 	$params = array($uname, $id);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {

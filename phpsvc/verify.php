@@ -66,7 +66,7 @@ function verify() {
 	// set user record to active
 	$auth = DB::$auth_verified;
 	$name = 'verify-registration';
-	$sql = "update accounts.user set auth = $1, tmverify = now() where id = $2";
+	$sql = "update account.user set auth = $1, tmverify = now() where id = $2";
 	$params = array($auth, $userid);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {

@@ -36,7 +36,6 @@ $supported_svcs = array(
 function validateSvc($taint) {
 	global $supported_svcs;
 	$clean = in_array($taint, $supported_svcs) ? $taint : 0;
-	Log::open("unsupported svc: $svc.$taint_svc");
 	return $clean;
 }
 

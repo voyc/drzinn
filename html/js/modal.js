@@ -8,15 +8,15 @@ Modal = function (observer) {
 
 	// attach app events
 	var self = this;
-	this.observer.subscribe('login-requested'          ,'modal' ,function(note) { (new Minimal).openPopup('login');          });
-	this.observer.subscribe('register-requested'       ,'modal' ,function(note) { (new Minimal).openPopup('register');       });
-	this.observer.subscribe('verify-requested' ,'modal' ,function(note) { (new Minimal).openPopup('verify'); });
-	this.observer.subscribe('forgotpassword-requested' ,'modal' ,function(note) { (new Minimal).openPopup('forgotpassword'); });
-	this.observer.subscribe('resetpassword-requested'  ,'modal' ,function(note) { (new Minimal).openPopup('resetpassword');  });
-	this.observer.subscribe('changepassword-requested' ,'modal' ,function(note) { (new Minimal).openPopup('changepassword'); });
-	this.observer.subscribe('changeusername-requested' ,'modal' ,function(note) { (new Minimal).openPopup('changeusername'); });
-	this.observer.subscribe('changeemail-requested'    ,'modal' ,function(note) { (new Minimal).openPopup('changeemail');    });
-	this.observer.subscribe('verifyemail-requested'    ,'modal' ,function(note) { (new Minimal).openPopup('verifyemail');    });
+	this.observer.subscribe('login-requested'          ,'modal' ,function(note) { (new voyc.Minimal).openPopup('login');          });
+	this.observer.subscribe('register-requested'       ,'modal' ,function(note) { (new voyc.Minimal).openPopup('register');       });
+	this.observer.subscribe('verify-requested' ,'modal' ,function(note) { (new voyc.Minimal).openPopup('verify'); });
+	this.observer.subscribe('forgotpassword-requested' ,'modal' ,function(note) { (new voyc.Minimal).openPopup('forgotpassword'); });
+	this.observer.subscribe('resetpassword-requested'  ,'modal' ,function(note) { (new voyc.Minimal).openPopup('resetpassword');  });
+	this.observer.subscribe('changepassword-requested' ,'modal' ,function(note) { (new voyc.Minimal).openPopup('changepassword'); });
+	this.observer.subscribe('changeusername-requested' ,'modal' ,function(note) { (new voyc.Minimal).openPopup('changeusername'); });
+	this.observer.subscribe('changeemail-requested'    ,'modal' ,function(note) { (new voyc.Minimal).openPopup('changeemail');    });
+	this.observer.subscribe('verifyemail-requested'    ,'modal' ,function(note) { (new voyc.Minimal).openPopup('verifyemail');    });
 
 	this.observer.subscribe('login-posted'             ,'modal' ,function(note) { self.onSvcPosted    (note);});
 	this.observer.subscribe('login-received'           ,'modal' ,function(note) { self.onSvcReceived  (note);});
@@ -43,7 +43,7 @@ Modal = function (observer) {
 	var self = this;
 	for (i=0; i<elems.length; i++) {
 		elem = elems[i];
-		dialog = findParentWithTag(elem, 'form');
+		dialog = voyc.findParentWithTag(elem, 'form');
 		dialog.addEventListener('submit', function(evt) {
 			evt.preventDefault();
 			self.onSubmitClick(evt);
@@ -56,90 +56,90 @@ Modal.prototype.onSubmitClick = function(evt) {
 	var svc = form.id;
 	var inputs = form.elements;
 	var note = svc + '-submitted';
-	this.observer.publish(new Note(note, 'modal', {svc:svc, inputs:inputs}));
-	$('dialog-msg').innerHTML = '';
+	this.observer.publish(new voyc.Note(note, 'modal', {svc:svc, inputs:inputs}));
+	voyc.$('dialog-msg').innerHTML = '';
 }
 
 Modal.prototype.onLoginPosted = function(note) {
-	wait();
+	voyc.wait();
 }
 
 Modal.prototype.onLoginReceived = function(note) {
 	if (note.payload.status == 'ok') {
-		closePopup();
+		voyc.closePopup();
 	}
 	else {
-		killWait();
-		$('dialog-msg').innerHTML = note.payload.status;
+		voyc.killWait();
+		voyc.$('dialog-msg').innerHTML = note.payload.status;
 	}
 }
 
 Modal.prototype.onRegisterPosted = function(note) {
-	wait();
+	voyc.wait();
 }
 
 Modal.prototype.onRegisterReceived = function(note) {
 	if (note.payload.status == 'ok') {
-		closePopup();
+		voyc.closePopup();
 	}
 	else {
-		killWait();
-		$('dialog-msg').innerHTML = note.payload.status;
+		voyc.killWait();
+		voyc.$('dialog-msg').innerHTML = note.payload.status;
 	}
 }
 
 Modal.prototype.onVerifyPosted = function(note) {
-	wait();
+	voyc.wait();
 }
 
 Modal.prototype.onVerifyReceived = function(note) {
 	if (note.payload.status == 'ok') {
-		closePopup();
+		voyc.closePopup();
 	}
 	else {
-		killWait();
-		$('dialog-msg').innerHTML = note.payload.status;
+		voyc.killWait();
+		voyc.$('dialog-msg').innerHTML = note.payload.status;
 	}
 }
 
 Modal.prototype.onForgotPosted = function(note) {
-	wait();
+	voyc.wait();
 }
 
 Modal.prototype.onForgotReceived = function(note) {
 	if (note.payload.status == 'ok') {
-		closePopup();
+		voyc.closePopup();
 	}
 	else {
-		killWait();
-		$('dialog-msg').innerHTML = note.payload.status;
+		voyc.killWait();
+		voyc.$('dialog-msg').innerHTML = note.payload.status;
 	}
 }
 
 Modal.prototype.onResetPosted = function(note) {
-	wait();
+	voyc.wait();
 }
 
 Modal.prototype.onResetReceived = function(note) {
 	if (note.payload.status == 'ok') {
-		closePopup();
+		voyc.closePopup();
 	}
 	else {
-		killWait();
-		$('dialog-msg').innerHTML = note.payload.status;
+		voyc.killWait();
+		voyc.$('dialog-msg').innerHTML = note.payload.status;
 	}
 }
 
 Modal.prototype.onSvcPosted = function(note) {
-	wait();
+	voyc.wait();
 }
 
 Modal.prototype.onSvcReceived = function(note) {
 	if (note.payload.status == 'ok') {
-		closePopup();
+		voyc.closePopup();
 	}
 	else {
-		killWait();
-		$('dialog-msg').innerHTML = note.payload.status;
+		voyc.killWait();
+		voyc.$('dialog-msg').innerHTML = note.payload.status;
 	}
 }

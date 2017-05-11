@@ -4,10 +4,10 @@ This SQL is designed for postgres.
 After creating this schema, execute the GRANT statements found in the comments section of the config.php file.
 */
 
-drop schema accounts cascade;
-create schema accounts;
+/* drop schema account cascade; */
+create schema account;
 
-create table accounts.user (
+create table account.user (
 	id serial primary key,
 	username varchar(100) not null,
 	email varchar(100) not null,
@@ -20,10 +20,10 @@ create table accounts.user (
 	tmhashtic timestamp with time zone,
 	newemail varchar(100)
 );
-create unique index ndx_username on accounts.user (username);
-create unique index ndx_email on accounts.user (email);
+create unique index ndx_username on account.user (username);
+create unique index ndx_email on account.user (email);
 
-create table accounts.token (
+create table account.token (
 	id serial primary key,
 	userid integer not null default 0,
 	token varchar(64),
@@ -34,9 +34,9 @@ create table accounts.token (
 	ipcreate varchar(39) not null default '0.0.0.0',
 	agentcreate varchar(255)
 );
-create unique index ndx_token on accounts.token (token);
+create unique index ndx_token on account.token (token);
 
-create table accounts.attempt (
+create table account.attempt (
 	id serial primary key,
 	reason char(2) not null default '',
 	userid integer not null default 0,

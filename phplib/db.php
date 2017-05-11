@@ -65,7 +65,7 @@ function getUserByToken($conn, $token) {
 	$sql = "select u.id, u.auth, u.access, u.hashpassword, u.username, u.email, t.tmexpire is not null as used,";
 	$sql .= " age(now(), t.tmcreate) > $2 * '1 hour'::interval as expired,";
 	$sql .= " u.hashtic, u.tmhashtic";
-	$sql .= " from accounts.user u, accounts.token t";
+	$sql .= " from account.user u, account.token t";
 	$sql .= " where t.token = $1 and t.userid = u.id";
 	$params = array($dbtoken, $expiration);
 	$result = execSql($conn, $name, $sql, $params, true);
@@ -102,7 +102,7 @@ function getUserByToken($conn, $token) {
 function getUserByBoth($conn, $both) {
 	$name = 'query-user';
 	$sql = "select id, auth, access, hashpassword, username, email";
-	$sql .= " from accounts.user";
+	$sql .= " from account.user";
 	$sql .= " where username = $1 or email = $1";
 	$params = array($both);
 	$result = execSql($conn, $name, $sql, $params, true); 
@@ -139,7 +139,7 @@ function writeToken($conn, $uid) {
 
 	// insert a token record
 	$name = 'insert-token';
-	$sql = "insert into accounts.token (userid, token, ipcreate, agentcreate) values ($1, $2, $3, $4)";
+	$sql = "insert into account.token (userid, token, ipcreate, agentcreate) values ($1, $2, $3, $4)";
 	$params = array($uid, $dbToken, $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {
@@ -155,7 +155,7 @@ function expireToken($conn, $publicToken) {
 
 	// set token record to expired
 	$name = 'expire-token';
-	$sql = "update accounts.token set tmexpire = now() where token = $1";
+	$sql = "update account.token set tmexpire = now() where token = $1";
 	$params = array($dbtoken);
 	$result = execSql($conn, $name, $sql, $params, true);
 	if (!$result) {
@@ -166,7 +166,7 @@ function expireToken($conn, $publicToken) {
 function expireAllTokens($conn, $uid) {
 	// set token record to expired
 	$name = 'expire-all-tokens';
-	$sql = "update accounts.token set tmexpire = now() where userid = $1";
+	$sql = "update account.token set tmexpire = now() where userid = $1";
 	$params = array($uid);
 	$result = execSql($conn, $name, $sql, $params, false);
 	if (!$result) {

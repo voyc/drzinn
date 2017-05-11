@@ -53,7 +53,7 @@ function forgotpassword() {
 
 	// update auth and hashtic in user record
 	$name = 'change-user-auth';
-	$sql = "update accounts.user set auth = $1, hashtic=$3 where id = $2";
+	$sql = "update account.user set auth = $1, hashtic=$3 where id = $2";
 	$auth = DB::$auth_resetpending;
 	$params = array($auth, $id, $hashTic);
 	$result = execSql($conn, $name, $sql, $params, true);

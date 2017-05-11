@@ -35,7 +35,7 @@ Header = function(observer) {
 	// for debugging only
 	var elem = document.querySelector('icon[name=gear]');
 	elem.addEventListener('click', function() {
-		var ss = $('sessionstorage');
+		var ss = voyc.$('sessionstorage');
 		if (ss) {
 			var s = '';
 			for (var v in sessionStorage) {
@@ -48,7 +48,7 @@ Header = function(observer) {
 
 Header.prototype.onRequest = function(evt) {
 	var name = evt.currentTarget.getAttribute('request') + '-requested';
-	this.observer.publish(new Note(name, 'header', {}));
+	this.observer.publish(new voyc.Note(name, 'header', {}));
 }
 
 Header.prototype.onSetupComplete = function(note) {
@@ -60,34 +60,34 @@ Header.prototype.refresh = function(note) {
 	// refresh header
 	switch (getAuth()) {
 		case 'anonymous'   :
-			$('loggedinuser').innerHTML = '';
-			$('headeruser').style.display = 'table-cell';
-			$('headerlogin').style.display = 'inline-block';
-			$('headerlogout').style.display = 'none';
+			voyc.$('loggedinuser').innerHTML = '';
+			voyc.$('headeruser').style.display = 'table-cell';
+			voyc.$('headerlogin').style.display = 'inline-block';
+			voyc.$('headerlogout').style.display = 'none';
 		break;
 		case 'registered'  :
-			$('loggedinuser').innerHTML = this.uname;
-			$('headeruser').style.display = 'table-cell';
-			$('headerlogin').style.display = 'none';
-			$('headerlogout').style.display = 'inline-block';
+			voyc.$('loggedinuser').innerHTML = this.uname;
+			voyc.$('headeruser').style.display = 'table-cell';
+			voyc.$('headerlogin').style.display = 'none';
+			voyc.$('headerlogout').style.display = 'inline-block';
 		break;
 		case 'resetpending':
-			$('loggedinuser').innerHTML = this.uname;
-			$('headeruser').style.display = 'table-cell';
-			$('headerlogin').style.display = 'none';
-			$('headerlogout').style.display = 'inline-block';
+			voyc.$('loggedinuser').innerHTML = this.uname;
+			voyc.$('headeruser').style.display = 'table-cell';
+			voyc.$('headerlogin').style.display = 'none';
+			voyc.$('headerlogout').style.display = 'inline-block';
 		break;
 		case 'verified'    :
-			$('loggedinuser').innerHTML = this.uname;
-			$('headeruser').style.display = 'table-cell';
-			$('headerlogin').style.display = 'none';
-			$('headerlogout').style.display = 'inline-block';
+			voyc.$('loggedinuser').innerHTML = this.uname;
+			voyc.$('headeruser').style.display = 'table-cell';
+			voyc.$('headerlogin').style.display = 'none';
+			voyc.$('headerlogout').style.display = 'inline-block';
 		break;
 		case 'emailpending':
-			$('loggedinuser').innerHTML = this.uname;
-			$('headeruser').style.display = 'table-cell';
-			$('headerlogin').style.display = 'none';
-			$('headerlogout').style.display = 'inline-block';
+			voyc.$('loggedinuser').innerHTML = this.uname;
+			voyc.$('headeruser').style.display = 'table-cell';
+			voyc.$('headerlogin').style.display = 'none';
+			voyc.$('headerlogout').style.display = 'inline-block';
 		break;
 	}
 	

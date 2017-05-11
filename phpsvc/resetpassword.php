@@ -63,7 +63,7 @@ function resetpassword() {
 
 	// store the new hashed password and set user to verified
 	$name = 'reset-password-update';
-	$sql = "update accounts.user set auth = $1, hashpassword = $3 where id = $2";
+	$sql = "update account.user set auth = $1, hashpassword = $3 where id = $2";
 	$auth = DB::$auth_verified;
 	$params = array($auth, $id, $hashpnew);
 	$result = execSql($conn, $name, $sql, $params, true);
