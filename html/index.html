@@ -4,18 +4,19 @@
 		<meta http-equiv=Content-Type content="text/html; charset=UTF-8">
 		<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
 		<title>Account</title>
-
 		<style>[hidden] {display:none ! important;}</style>
+
+<?php if (false) { ?>
 		<link href='normalize.css/normalize.css' rel='stylesheet' type='text/css'></link>
 		<link href='minimal/minimal.css' rel='stylesheet' type='text/css'></link>
+		<link href='minimal/theme/mahagony.css' rel='stylesheet' type='text/css'></link>
 		<link href='icon/icon.css' rel='stylesheet' type='text/css'></link>
 		<link href='css/account.css' rel='stylesheet' type='text/css'></link>
-	<!--
-		<link href="css/secure.css" rel="stylesheet" type="text/css"></link>
-		<link href="css/typography.css" rel="stylesheet" type="text/css"></link>
-	-->
-
-		<script>voyc = {};</script>
+		<script src="js/namespace.js"></script>
+		<script src="js/account.js"></script>
+		<script src="js/header.js"></script>
+		<script src="js/user.js"></script>
+		<script src="js/modal.js"></script>
 		<script src="minimal/minimal.js"></script>
 		<script src='icon/icon.js'></script>
 		<script src='icon/lib/menu.js'></script>
@@ -27,22 +28,15 @@
 		<script src='jslib/comm.js'></script>
 		<script src="jslib/observer.js"></script>
 		<script src="jslib/note.js"></script>
-		
-		<script src="js/account.js"></script>
-		<script src="js/header.js"></script>
-		<script src="js/user.js"></script>
-		<script src="js/modal.js"></script>
+		<script src="jslib/session.js"></script>
+		<script src="jslib/cookie.js"></script>
+<?php } else { ?>
+<!--<remove>
+		<script src='min.js'></script>
+		<link href='min.css' rel='stylesheet' type='text/css'></link>
+<remove>-->
+<?php } ?>
 
-		<script>
-			window.addEventListener('load', function(evtwin) {
-				var observer = new voyc.Observer();
-				new Account(observer);
-				new Header(observer);
-				new User(observer);
-				new Modal(observer);
-				observer.publish(new voyc.Note('setup-complete', 'app', {}));
-			}, false);
-		</script>
 	</head>
 
 	<body>
@@ -77,9 +71,9 @@
 			<p>The following transactions are supported.</p>
 			<table id=svctable>
 				<tr><td><button class='anchor' modal request='register'      >Register</button></td><td>User enters username, email, password.  A new account is created for this user with auth=registered, and an email containing a Temporary Identification Code is sent to the user.</td></tr>
-				<tr><td><button class='anchor' modal request='verify'>Verify&nbsp;Register</button></td><td>Logged-in-user enters the Temporary Identification Code from the email and his password.  The account is changed to auth=verified.</td></tr>
+				<tr><td><button class='anchor' modal request='verify'        >Verify&nbsp;Register</button></td><td>Logged-in-user enters the Temporary Identification Code from the email and his password.  The account is changed to auth=verified.</td></tr>
 				<tr><td><button class='anchor' modal request='login'         >Login</button></td><td>User enters username or email, and password.  The user is logged-in.</td></tr>
-				<tr><td><button class='anchor' modal request='relogin'       >Relogin</button></td><td>No user input.  When a user refreshes the page, the user is logged-in silently at startup.</td></tr>
+				<tr><td><button class='anchor' modal request='relogin'       >Relogin</button></td><td>No user input.  A previously logged-in user is logged-in silently at startup.  Refresh the page to test.</td></tr>
 				<tr><td><button class='anchor' modal request='logout'        >Logout</button></td><td>No user input.  Logged-in-user is logged out.</td></tr>
 				<tr><td><button class='anchor' modal request='forgotpassword'>Forgot&nbsp;Password</button></td><td>User enters username or email.  The account is changed to auth=resetpending and an email containing a Temporary Identification Code is sent to the user.</td></tr>
 				<tr><td><button class='anchor' modal request='resetpassword' >Reset&nbsp;Password</button></td><td>User enters the Temporary Identification Code and new password.  His password is changed.</td></tr>

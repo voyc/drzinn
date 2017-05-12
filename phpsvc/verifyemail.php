@@ -44,8 +44,8 @@ function verifyemail() {
 	$hashtic = $row['hashtic'];
 
 	// check user
-	if (isUserVerified($auth)) {
-	 	Log::write(LOG_NOTICE, 'attempt on already verified user');
+	if (!isUserEmailPending($auth)) {
+	 	Log::write(LOG_NOTICE, 'user is not email-pending');
 		return $a;
 	}
 

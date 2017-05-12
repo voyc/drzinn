@@ -1,5 +1,6 @@
-/*
+/**
 	class Modal
+	@constructor
 	Singleton object.
 	Represents the set of modal dialogs for user authentication.
 */
@@ -10,7 +11,7 @@ Modal = function (observer) {
 	var self = this;
 	this.observer.subscribe('login-requested'          ,'modal' ,function(note) { (new voyc.Minimal).openPopup('login');          });
 	this.observer.subscribe('register-requested'       ,'modal' ,function(note) { (new voyc.Minimal).openPopup('register');       });
-	this.observer.subscribe('verify-requested' ,'modal' ,function(note) { (new voyc.Minimal).openPopup('verify'); });
+	this.observer.subscribe('verify-requested'         ,'modal' ,function(note) { (new voyc.Minimal).openPopup('verify'); });
 	this.observer.subscribe('forgotpassword-requested' ,'modal' ,function(note) { (new voyc.Minimal).openPopup('forgotpassword'); });
 	this.observer.subscribe('resetpassword-requested'  ,'modal' ,function(note) { (new voyc.Minimal).openPopup('resetpassword');  });
 	this.observer.subscribe('changepassword-requested' ,'modal' ,function(note) { (new voyc.Minimal).openPopup('changepassword'); });
@@ -22,8 +23,8 @@ Modal = function (observer) {
 	this.observer.subscribe('login-received'           ,'modal' ,function(note) { self.onSvcReceived  (note);});
 	this.observer.subscribe('register-posted'          ,'modal' ,function(note) { self.onSvcPosted    (note);});
 	this.observer.subscribe('register-received'        ,'modal' ,function(note) { self.onSvcReceived  (note);});
-	this.observer.subscribe('verify-posted'    ,'modal' ,function(note) { self.onSvcPosted    (note);});
-	this.observer.subscribe('verify-received'  ,'modal' ,function(note) { self.onSvcReceived  (note);});
+	this.observer.subscribe('verify-posted'            ,'modal' ,function(note) { self.onSvcPosted    (note);});
+	this.observer.subscribe('verify-received'          ,'modal' ,function(note) { self.onSvcReceived  (note);});
 	this.observer.subscribe('forgotpassword-posted'    ,'modal' ,function(note) { self.onSvcPosted    (note);});
 	this.observer.subscribe('forgotpassword-received'  ,'modal' ,function(note) { self.onSvcReceived  (note);});
 	this.observer.subscribe('resetpassword-posted'     ,'modal' ,function(note) { self.onSvcPosted    (note);});
@@ -65,12 +66,12 @@ Modal.prototype.onLoginPosted = function(note) {
 }
 
 Modal.prototype.onLoginReceived = function(note) {
-	if (note.payload.status == 'ok') {
+	if (note.payload['status'] == 'ok') {
 		voyc.closePopup();
 	}
 	else {
 		voyc.killWait();
-		voyc.$('dialog-msg').innerHTML = note.payload.status;
+		voyc.$('dialog-msg').innerHTML = note.payload['status'];
 	}
 }
 
@@ -79,12 +80,12 @@ Modal.prototype.onRegisterPosted = function(note) {
 }
 
 Modal.prototype.onRegisterReceived = function(note) {
-	if (note.payload.status == 'ok') {
+	if (note.payload['status'] == 'ok') {
 		voyc.closePopup();
 	}
 	else {
 		voyc.killWait();
-		voyc.$('dialog-msg').innerHTML = note.payload.status;
+		voyc.$('dialog-msg').innerHTML = note.payload['status'];
 	}
 }
 
@@ -93,12 +94,12 @@ Modal.prototype.onVerifyPosted = function(note) {
 }
 
 Modal.prototype.onVerifyReceived = function(note) {
-	if (note.payload.status == 'ok') {
+	if (note.payload['status'] == 'ok') {
 		voyc.closePopup();
 	}
 	else {
 		voyc.killWait();
-		voyc.$('dialog-msg').innerHTML = note.payload.status;
+		voyc.$('dialog-msg').innerHTML = note.payload['status'];
 	}
 }
 
@@ -107,12 +108,12 @@ Modal.prototype.onForgotPosted = function(note) {
 }
 
 Modal.prototype.onForgotReceived = function(note) {
-	if (note.payload.status == 'ok') {
+	if (note.payload['status'] == 'ok') {
 		voyc.closePopup();
 	}
 	else {
 		voyc.killWait();
-		voyc.$('dialog-msg').innerHTML = note.payload.status;
+		voyc.$('dialog-msg').innerHTML = note.payload['status'];
 	}
 }
 
@@ -121,12 +122,12 @@ Modal.prototype.onResetPosted = function(note) {
 }
 
 Modal.prototype.onResetReceived = function(note) {
-	if (note.payload.status == 'ok') {
+	if (note.payload['status'] == 'ok') {
 		voyc.closePopup();
 	}
 	else {
 		voyc.killWait();
-		voyc.$('dialog-msg').innerHTML = note.payload.status;
+		voyc.$('dialog-msg').innerHTML = note.payload['status'];
 	}
 }
 
@@ -135,11 +136,11 @@ Modal.prototype.onSvcPosted = function(note) {
 }
 
 Modal.prototype.onSvcReceived = function(note) {
-	if (note.payload.status == 'ok') {
+	if (note.payload['status'] == 'ok') {
 		voyc.closePopup();
 	}
 	else {
 		voyc.killWait();
-		voyc.$('dialog-msg').innerHTML = note.payload.status;
+		voyc.$('dialog-msg').innerHTML = note.payload['status'];
 	}
 }

@@ -81,6 +81,9 @@ function isUserRegistered($auth) {
 function isUserResetPending($auth) {
 	return ($auth == DB::$auth_resetpending);
 }
+function isUserEmailPending($auth) {
+	return ($auth == DB::$auth_emailpending);
+}
 function isUserVerified($auth) {
 	return ($auth >= DB::$auth_verified);
 }

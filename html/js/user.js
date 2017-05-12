@@ -1,6 +1,7 @@
 // अथ योगानुशासनम्॥१॥
-/*
+/**
 	class User
+	@constructor
 	Singleton object.
 	Represents the current user.
 	May be logged-in or anonymous.
@@ -27,9 +28,9 @@ User.prototype.isAnonymous = function() {
 }
 
 User.prototype.onLoginReceived = function(note) {
-	this.username = note.payload.username;
-	this.auth = note.payload.auth;
-	this.access = note.payload.access;
+	this.username = note.payload['uname'];
+	this.auth = note.payload['auth'];
+	this.access = note.payload['access'];
 }
 
 User.prototype.onLogoutReceived = function(note) {

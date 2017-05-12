@@ -1,5 +1,6 @@
-/*
+/**
 	class Header
+	@constructor
 	Singleton object.
 	Represents the UI header and the popup dialog for user functions.
 */
@@ -21,14 +22,15 @@ Header = function(observer) {
 	this.observer.subscribe('changeemail-received'     ,'header' ,function(note) { self.refresh(note);});
 	this.observer.subscribe('verifyemail-received'     ,'header' ,function(note) { self.refresh(note);});
 
-	// attach UI events
+	// attach request button handlers in both header and modal elements
 	var elems = document.querySelectorAll('[request]');
 	var elem;
 	var self = this;
 	for (i=0; i<elems.length; i++) {
 		elem = elems[i];
 		elem.addEventListener('click', function(evt) {
-			self.onRequest(evt);
+			var name = evt.currentTarget.getAttribute('request') + '-requested';
+			self.observer.publish(new voyc.Note(name, 'account', {}));
 		}, false);
 	}
 
@@ -46,19 +48,15 @@ Header = function(observer) {
 	}, false);
 }
 
-Header.prototype.onRequest = function(evt) {
-	var name = evt.currentTarget.getAttribute('request') + '-requested';
-	this.observer.publish(new voyc.Note(name, 'header', {}));
-}
-
 Header.prototype.onSetupComplete = function(note) {
 }
 
 Header.prototype.refresh = function(note) {
-	this.uname = note.payload.uname || '';
+	this.uname = note.payload['uname'] || '';
 
 	// refresh header
-	switch (getAuth()) {
+	var x = getAuth();
+	switch (x) {
 		case 'anonymous'   :
 			voyc.$('loggedinuser').innerHTML = '';
 			voyc.$('headeruser').style.display = 'table-cell';
@@ -93,7 +91,7 @@ Header.prototype.refresh = function(note) {
 	
 	// refresh dropdown user menu
 
-	// enable buttons
+	// enable request buttons
 	var elems = document.querySelectorAll('[request]');
 	var elem, svc;
 	var self = this;
