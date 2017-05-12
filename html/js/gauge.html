@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+<style>
+img {
+	width:50px;
+}
+</style>
+<script src='gauge.js'></script>
+<script>
+var gauge1 = [
+	{p:30, c:'RGB(255,99,99)', l:'Need for Definitions' },
+];
+var gauge2 = [
+	{p:50, c:'green', l:'Resistance to Authority' },
+];
+var gauge3 = [
+	{p:90, c:'RGB(255,99,99)', l:'Offenbach' },
+];
+window.addEventListener('load', function() {
+	drawgauge(document.getElementById('gauge1'), gauge1);
+	drawgauge(document.getElementById('gauge2'), gauge2);
+	drawgauge(document.getElementById('gauge3'), gauge3);
+}, false);
+/**
+
+http://bernii.github.io/gauge.js/
+
+**/
+</script>
+</head>
+<body>
+<div id='gauge1'></div>
+<div id='gauge2'></div>
+<div id='gauge3'></div>
+</body>
+</html>

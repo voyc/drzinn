@@ -1,0 +1,170 @@
+
+/* typography */
+gifts p  {
+	font-family:serif;
+	margin-top:.8rem;
+	margin-bottom:.8rem;
+}
+
+gifts p.definition {
+	color: rgb( 25, 25,112); /* fblu */
+}
+
+gifts p.gift::before {
+	content: 'Gift: ';
+	color: rgb(178, 34, 34); /* fred */
+	font-weight:bold;
+}
+gifts p.nourishment::before {
+	content: 'Nourishment: ';
+	color: rgb(178, 34, 34); /* fred */
+	font-weight:bold;
+}
+gifts p.burnout::before {
+	content: 'Burnout: ';
+	color: rgb(178, 34, 34); /* fred */
+	font-weight:bold;
+}
+
+/* layout */
+chapter {
+	display:block;
+	border-top:1px solid rgb(192,192,192);
+	border-left:1px solid rgb(192,192,192);
+	border-right:1px solid rgb(192,192,192);
+}
+chapter:last-child {
+	border-bottom:1px solid rgb(192,192,192);
+}
+gifts {
+	display:block;
+}
+gifts p  textarea {
+	width:100%;
+	color: rgb(128,128,128);
+}
+
+/*
+chapter [id=testname-factorname]
+	h3
+	bar [class=oneway,paired,offcenter]
+		factor
+		score
+		slider
+			graph [min=0][max=0][draw=oneway,paired,offcenter]
+				canvas
+			canvas
+		score
+		factor
+	gifts
+*/
+
+bar {
+	display:table;
+	table-layout: fixed;
+	width:100%;
+}
+bar factor {
+	display:table-cell;
+	xmax-width:15em;
+	width:20vw;
+	vertical-align: middle;
+	padding:.2em .4em;
+	min-height: 2em;
+}
+bar factor:nth-of-type(1) {
+	text-align:right;
+}
+bar factor:nth-of-type(2) {
+	text-align:left;
+}
+bar score {
+	display:table-cell;
+	vertical-align:middle;
+	padding:0 .4em;
+	width:2.8rem;
+}
+bar score input {
+	width:2rem;
+	text-align:right;
+}
+bar subfactor::before {
+	content:' ';
+	display:block;
+}
+bar subfactor {
+	font-weight:normal;
+}
+bar slider {
+	display:table-cell;
+	vertical-align:middle;
+	position:relative;
+	background-image:linear-gradient(to right,rgba(255,0,0,.3) 0,rgba(255,0,0,0) 40%,rgba(255,0,0,0) 60%,rgba(255,0,0,.3) 100%);
+
+}
+bar.oneway slider {
+	/* padding-right:.5em; */
+	background-image:linear-gradient(to right,rgba(255,0,0,0) 0,rgba(255,0,0,.3) 100%);
+}
+bar slider graph {
+	height:1rem;
+	display:block;
+}
+
+bar slider canvas.slidercanvas {
+	position:absolute;
+	z-index:0;
+	top:0px;
+}
+
+bar slider graph canvas.graphcanvas {
+	position:absolute;
+	z-index:0;
+}
+
+header.fixed {
+	z-index:1;
+    xheight: 3rem;
+	xtable-layout:fixed;
+}
+header button[toggle] {
+	margin-left:.5em;
+}
+
+chart {
+	display:inline-block;
+	width:100%;
+	height:6rem;
+}
+
+panel chart {
+	display:inline-block;
+	width:6rem;
+	height:6rem;
+	padding:.4rem;
+}
+
+panel img {
+	width:6rem;
+}
+
+panel p {
+	text-align:center;
+}
+
+story {
+	font-family: serif;
+}
+
+story .gift {
+	color: rgb( 0, 0,255);
+}
+story .nourishment {
+	color: rgb( 0, 192, 0);
+}
+story .burnout {
+	color: rgb( 255, 0, 0);
+}
+story textarea {
+	width: 100%;
+}

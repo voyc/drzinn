@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+<style>
+img {
+	width:50px;
+}
+</style>
+<script src='pie.js'></script>
+<script>
+var pieVAK1 = [
+	{p:90, c:'RGB(255,99,99)', l:'V' },
+	{p:60, c:'RGB(255,255,0)', l:'A' },
+	{p:40, c:'RGB(99,99,255)', l:'K' },
+];
+var pieVAK2 = [
+	{p:30, c:'green', l:'Intuitive' },
+	{p:70, c:'magenta', l:'Practical' },
+];
+var pieVAK3 = [
+	{p:90, c:'RGB(255,99,99)', i:'iconvisual' },
+	{p:60, c:'RGB(255,255,0)', i:'iconauditory' },
+	{p:40, c:'RGB(99,99,255)', i:'iconkinesthetic' },
+];
+window.addEventListener('load', function() {
+	//draw_org();
+	drawpie(document.getElementById('vakpie1'), pieVAK1);
+	drawpie(document.getElementById('vakpie2'), pieVAK2);
+	drawpie(document.getElementById('vakpie3'), pieVAK3);
+}, false);
+/**
+
+21 question quizz
+http://lonerwolf.com/visual-auditory-or-kinesthetic-test/
+
+**/
+</script>
+</head>
+<body>
+<img src='../mockup/iconeye.png' id='iconvisual' />
+<img src='../mockup/iconear.png' id='iconauditory' />
+<img src='../mockup/iconhand.png' id='iconkinesthetic' />
+<div id='vakpie1'></div>
+<div id='vakpie2'></div>
+<div id='vakpie3'></div>
+</body>
+</html>

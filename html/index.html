@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv=Content-Type content="text/html; charset=UTF-8">
 		<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
-		<title>Account</title>
+		<title>DrZinn Authentic Self Guide</title>
 		<style>[hidden] {display:none ! important;}</style>
 
 <?php if (false) { ?>
@@ -12,6 +12,8 @@
 		<link href='minimal/theme/mahagony.css' rel='stylesheet' type='text/css'></link>
 		<link href='icon/icon.css' rel='stylesheet' type='text/css'></link>
 		<link href='css/account.css' rel='stylesheet' type='text/css'></link>
+		<link href='css/peg.css' rel='stylesheet' type='text/css'></link>
+		<link  href='q/q.css' rel='stylesheet' type='text/css'></link>
 		<script src="js/namespace.js"></script>
 		<script src="js/account.js"></script>
 		<script src="js/header.js"></script>
@@ -30,6 +32,27 @@
 		<script src="jslib/note.js"></script>
 		<script src="jslib/session.js"></script>
 		<script src="jslib/cookie.js"></script>
+		<script src='jslib/browserhistory.js'></script>
+
+		<!-- software -->
+		<script src='js/peg.js'></script>
+		<script src='js/pie.js'></script>
+		<script src='js/gauge.js'></script>
+
+		<!-- quizz data and software, load dynamically -->
+		<script src='q/q.js'></script>
+		<script src='q/qkiersey.js'></script>
+		<script src='q/qrunner.js'></script>
+		<script src='q/qtorres.js'></script>
+
+		<!-- fixed data -->
+		<script src='js/strings.js'></script>
+		<script src='js/tests.js'></script>
+		<script src='js/factors.js'></script>
+		<script src='js/gifts.js'></script>
+		
+		<!-- scores loaded dynamically per user -->
+		<script src='js/scores.js'></script>
 <?php } else { ?>
 <!--<remove>
 		<script src='min.js'></script>
@@ -43,7 +66,7 @@
 		<header class='fixed'>
 			<div class='group'>
 				<icon class='bit' type='draw' name='menu' open='leftnav-dialog'></icon>
-				<div class='bit hdr' id='hdrtitle'>Account</div>
+				<div class='bit hdr' id='hdrtitle'>DrZinn Personal Empowerment Guide</div>
 			</div>
 			<div id='headeruser' initially hidden class='group tright'>
 				<div class='bit' id="welcome">
@@ -63,26 +86,8 @@
 			</div>
 		</header>
 
-		<section class='narrative' id='narrative-section'>
-			<h1>Account - User Authentication</h1>
-			<p>This project is designed as a submodule for any project
-			that needs to authenticate users.</p>
-
-			<p>The following transactions are supported.</p>
-			<table id=svctable>
-				<tr><td><button class='anchor' modal request='register'      >Register</button></td><td>User enters username, email, password.  A new account is created for this user with auth=registered, and an email containing a Temporary Identification Code is sent to the user.</td></tr>
-				<tr><td><button class='anchor' modal request='verify'        >Verify&nbsp;Register</button></td><td>Logged-in-user enters the Temporary Identification Code from the email and his password.  The account is changed to auth=verified.</td></tr>
-				<tr><td><button class='anchor' modal request='login'         >Login</button></td><td>User enters username or email, and password.  The user is logged-in.</td></tr>
-				<tr><td><button class='anchor' modal request='relogin'       >Relogin</button></td><td>No user input.  A previously logged-in user is logged-in silently at startup.  Refresh the page to test.</td></tr>
-				<tr><td><button class='anchor' modal request='logout'        >Logout</button></td><td>No user input.  Logged-in-user is logged out.</td></tr>
-				<tr><td><button class='anchor' modal request='forgotpassword'>Forgot&nbsp;Password</button></td><td>User enters username or email.  The account is changed to auth=resetpending and an email containing a Temporary Identification Code is sent to the user.</td></tr>
-				<tr><td><button class='anchor' modal request='resetpassword' >Reset&nbsp;Password</button></td><td>User enters the Temporary Identification Code and new password.  His password is changed.</td></tr>
-				<tr><td><button class='anchor' modal request='changepassword'>Change&nbsp;Password</button></td><td>Logged-in-user enters old password and new password.  His password is changed.</td></tr>
-				<tr><td><button class='anchor' modal request='changeusername'>Change&nbsp;Username</button></td><td>Logged-in-user enters new username and password.  His username is changed.</td></tr>
-				<tr><td><button class='anchor' modal request='changeemail'   >Change&nbsp;Email</button></td><td>Logged-in-user enters new email address.  The account is changed to auth=emailpending and a Temporary Identification Code is sent to the new email address.</td></tr>
-				<tr><td><button class='anchor' modal request='verifyemail'   >Verify&nbsp;Email</button></td><td>Pending user enters Temporary Identification Code and password and his registration is completed and he is logged in as a new user.</td></tr>
-				<tr><td><button class='anchor' modal request='stub'          >Stub</button></td><td>An example svc.  Demonstrates how to write an application svc using session-id to retrieve the user record.</td></tr>
-			</table>
+		<section id='dcontent'>
+			dynamic content goes here
 		</section>
 		
 		<!---- modeless dialogs ----------------------------------------->
