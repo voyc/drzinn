@@ -1,9 +1,4 @@
 peg.tests = {
-	learningstyle: {
-		display: 'My Learning Style',
-		quizz: 'torres',
-		company: 'Torres',
-	},
 	temperament: {
 		display: 'My Temperament',
 		minscore: 0,
@@ -41,20 +36,6 @@ peg.tests = {
 		derived: false,
 		hassubs: false,
 	},
-//	zinn: {
-//		display: 'My Motivation',
-//		minscore: 0,
-//		maxscore: 10,
-//		mean: 5,
-//		step: 1,
-//		pole: 2,
-//		dimensions: 'paired', // single or paired
-//		vendorstyle: 'paired', // oneway, paired or offcenter
-//		pairedscore: true,
-//		company: 'Dr Zinn, Encinitas CA, www.drzinn.com',
-//		derived: true,
-//		hassubs: false,
-//	},
 	personality: {
 		//display: '16PF',
 		display: 'My Personality',

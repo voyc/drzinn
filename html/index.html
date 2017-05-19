@@ -15,6 +15,7 @@
 		<link href='css/peg.css' rel='stylesheet' type='text/css'></link>
 		<link  href='q/q.css' rel='stylesheet' type='text/css'></link>
 		<script src="js/namespace.js"></script>
+		<script src="js/stub.js"></script>
 		<script src="js/account.js"></script>
 		<script src="js/header.js"></script>
 		<script src="js/user.js"></script>
@@ -130,7 +131,7 @@
 		<!---- forms which will be moved to modal dialog container on open ---->
 		<div hidden id='offscreen'>
 			<form modal id='login' svc='ua' class='dialog' title='Login to Your Account'>
-				<p><input name='both' type='text' placeholder='Username or Email' autofocus required pattern='[a-zA-Z0-9_@.]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
+				<p><input name='both' type='text' placeholder='Username or Email' autofocus required pattern='[a-zA-Z0-9_@.+]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
 				<p><input name='pword' type='password' placeholder='Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
 				<p class='tright'>
 					<input close type='button' value='Cancel' class='anchor' tabindex='-1'>
@@ -139,8 +140,8 @@
 				<p><input type='button' class='anchor' value='Forget your password?' open='forgotpassword'/></p>
 			</form>
 			<form modal id='register' svc='ua' class='dialog' title='Register a New Account'>
-				<p><input name='uname' type='text' placeholder='Username' autofocus required pattern='[a-zA-Z0-9_@.]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
-				<p><input name='email' type='text' placeholder='Email' required pattern='[a-zA-Z0-9_@.]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
+				<p><input name='uname' type='text' placeholder='Username' autofocus required pattern='[a-zA-Z0-9_@.+]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
+				<p><input name='email' type='text' placeholder='Email' required pattern='[a-zA-Z0-9_@.+]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
 				<p><input name='pword' type='password' placeholder='Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
 				<p><input name='pwordc' type='password' placeholder='Confirm Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
 				<p class='tright'>
@@ -172,7 +173,7 @@
 				<p>You may reset your password.<br/>
 				A Temporary Identification Code will be sent
 				to the email address we have on file for you.</p>
-				<p><input name='both' type='text' placeholder='Username or Email' autofocus required pattern='[a-zA-Z0-9_@.]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
+				<p><input name='both' type='text' placeholder='Username or Email' autofocus required pattern='[a-zA-Z0-9_@.+]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
 				<p class='tright'>
 					<input close type='button' value='Cancel' class='anchor' tabindex='-1'>
 					<input type='submit' value='Send Code' class='submit'>
@@ -199,7 +200,7 @@
 				</p>
 			</form>
 			<form modal id='changeusername' svc='ua' class='dialog' title='Change Username'>
-				<p><input name='uname' type='text' placeholder='New Username' autofocus required pattern='[a-zA-Z0-9_@.]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
+				<p><input name='uname' type='text' placeholder='New Username' autofocus required pattern='[a-zA-Z0-9_@.+]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
 				<p><input name='pword' type='password' placeholder='Re-enter Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
 				<p class='tright'>
 					<input close type='button' value='Cancel' class='anchor' tabindex='-1'>
@@ -207,7 +208,7 @@
 				</p>
 			</form>
 			<form modal id='changeemail' svc='ua' class='dialog' title='Change Email'>
-				<p><input name='email' type='text' placeholder='New Email' required pattern='[a-zA-Z0-9_@.]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
+				<p><input name='email' type='text' placeholder='New Email' required pattern='[a-zA-Z0-9_@.+]{6,100}' title='Letters and numbers or @ or period or underscore. Length between 6 and 100.'></p>
 				<p><input name='pword' type='password' placeholder='Re-enter Password' required pattern='[a-zA-Z0-9@&amp;#$%]{8,255}' title='Letters and numbers or @,&amp;,#,$,%. Length between 8 and 255.'></p>
 				<p class='tright'>
 					<input close type='button' value='Cancel' class='anchor' tabindex='-1'>

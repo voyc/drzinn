@@ -64,9 +64,10 @@ Peg.prototype.answer = function(id) {
 	var n = parseInt(a[0].substring(1));
 	var v = parseInt(a[1].substring(1));
 
-	this.answers[this.openquizzid][n] = v;
+	this.answers[this.openquizzid][n-1] = v;
 	
 	this.updateProgress();
+	this.flushToServer();
 	return;
 }
 
@@ -87,4 +88,22 @@ Peg.prototype.countAnswers = function() {
 		}
 	}
 	return cnt;
+}
+
+Peg.prototype.flushToServer = function() {
+	var svcname = 'setanswer';
+	var data = {};
+	data.tid = this.openquizzid;
+	data.answers = this.answers[this.openquizzid];
+	var s = JSON.stringify(data);
+	var self = this;
+	voyc.comm.request(svcname, data, function(ok, response, xhr) {
+		if (!ok) {
+			response = { 'status':'system-error'};
+		}
+		self.observer.publish(new voyc.Note('setanswer-received', 'stub', response));
+		if (response['status'] == 'ok') {
+			
+		}
+	});
 }

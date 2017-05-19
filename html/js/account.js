@@ -23,9 +23,9 @@ Account = function (observer) {
 	Account._instance = this;
 
 	this.observer = observer;
-	this.comm = new voyc.Comm('/svc/', 'acomm', 2, true);  // for production
+	this.comma = new voyc.Comm('account/svc/', 'comma', 2, true);  // for production
 	if (window.location.origin == 'file://') {
-		this.comm = new voyc.Comm('http://account.hagstrand.com/svc', 'acomm', 2, true);  // for local testing
+		this.comma = new voyc.Comm('http://account.hagstrand.com/svc', 'comma', 2, true);  // for local testing
 	}
 
 	// attach app events
@@ -41,7 +41,6 @@ Account = function (observer) {
 	this.observer.subscribe('changeusername-submitted' ,'account' ,function(note) { self.onChangeUsernameSubmitted (note); });
 	this.observer.subscribe('changeemail-submitted'    ,'account' ,function(note) { self.onChangeEmailSubmitted    (note); });
 	this.observer.subscribe('verifyemail-submitted'    ,'account' ,function(note) { self.onVerifyEmailSubmitted    (note); });
-	this.observer.subscribe('stub-requested'           ,'account' ,function(note) { self.onStubRequested           (note); });
 }
 
 Account.svcdef = {
@@ -116,7 +115,7 @@ Account.prototype.onLoginSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comm.request(svcname, data, function(ok, response, xhr) {
+	this.comma.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -139,7 +138,7 @@ Account.prototype.onRegisterSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comm.request(svcname, data, function(ok, response, xhr) {
+	this.comma.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -165,7 +164,7 @@ Account.prototype.onVerifySubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comm.request(svcname, data, function(ok, response, xhr) {
+	this.comma.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -186,7 +185,7 @@ Account.prototype.onSetupComplete = function(note) {
 		var svcname = 'relogin';
 		var data = { 'si':getSessionId() };
 		var self = this;
-		this.comm.request(svcname, data, function(ok, response, xhr) {
+		this.comma.request(svcname, data, function(ok, response, xhr) {
 			if (!ok) {
 				response = { 'status':'system-error'};
 			}
@@ -213,7 +212,7 @@ Account.prototype.onLogoutRequested = function(note) {
 	var svcname = 'logout';
 	var data = { 'si':getSessionId() };
 	var self = this;
-	this.comm.request(svcname, data, function(ok, response, xhr) {
+	this.comma.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -233,7 +232,7 @@ Account.prototype.onForgotPasswordSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comm.request(svcname, data, function(ok, response, xhr) {
+	this.comma.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -262,7 +261,7 @@ Account.prototype.onResetPasswordSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comm.request(svcname, data, function(ok, response, xhr) {
+	this.comma.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -287,7 +286,7 @@ Account.prototype.onChangePasswordSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comm.request(svcname, data, function(ok, response, xhr) {
+	this.comma.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -311,7 +310,7 @@ Account.prototype.onChangeUsernameSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comm.request(svcname, data, function(ok, response, xhr) {
+	this.comma.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -335,7 +334,7 @@ Account.prototype.onChangeEmailSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comm.request(svcname, data, function(ok, response, xhr) {
+	this.comma.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -360,7 +359,7 @@ Account.prototype.onVerifyEmailSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comm.request(svcname, data, function(ok, response, xhr) {
+	this.comma.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -382,7 +381,7 @@ Account.prototype.onStubRequested = function(note) {
 
 	// call svc
 	var self = this;
-	this.comm.request(svcname, data, function(ok, response, xhr) {
+	this.comma.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -486,13 +485,3 @@ var isUserResetPending= function() { return getAuth() == 'resetpending';}
 var isUserVerified    = function() { return getAuth() == 'verified'    ;}
 var isUserEmailPending= function() { return getAuth() == 'emailpending';}
 var getSessionId = function() { return voyc.Session.get('si'); }
-
-/* on startup */
-window.addEventListener('load', function(evtwin) {
-	var observer = new voyc.Observer();
-	new Account(observer);
-	new Header(observer);
-	new User(observer);
-	new Modal(observer);
-	observer.publish(new voyc.Note('setup-complete', 'app', {}));
-}, false);
