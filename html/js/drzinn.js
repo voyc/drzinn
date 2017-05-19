@@ -1,5 +1,6 @@
-/*
-class Peg
+/**
+	class voyc.DrZinn
+	@constructor
 singleton
 
 A pie shows a distribution of scores within oneself.
@@ -25,7 +26,7 @@ fact - object in peg.factors
 
 pageid - string test-factor or test-all or all-all
 */
-function Peg() {
+voyc.DrZinn = function() {
 }
 
 /**
@@ -34,7 +35,7 @@ function Peg() {
 	on startup, on back and forward, and on every user navigation click.
 	Draws the page using composeXXX() methods, each of which returns a string of HTML.
 **/
-Peg.prototype.drawPage = function(pageid) {
+voyc.DrZinn.prototype.drawPage = function(pageid) {
 	var pageid = pageid || 'home';
 	var s = '';
 	if (pageid == 'home') {  // main refrigerator-magnet summary page
@@ -47,10 +48,11 @@ Peg.prototype.drawPage = function(pageid) {
 		s = this.composeFactor(pageid);
 	}
 
-	document.title = 'PEG ' + pageid;
-	document.getElementById('dcontent').innerHTML = s;
-	this.attachHandlers();
-	window.dispatchEvent(new Event('resize'));
+	document.title = pageid + ' DrZinn';
+	var dcontent = document.getElementById('dcontent');
+	dcontent.innerHTML = s;
+	this.attachHandlers(dcontent); // attach click handlers to the new content
+	window.dispatchEvent(new Event('resize'));  // redraw size-dependent elements
 	window.scroll(0,0);
 	return;
 }
@@ -63,7 +65,7 @@ Peg.prototype.drawPage = function(pageid) {
 	method composeHome()
 	draw the home page, a refrigerator-magnet-like summary screen
 */
-Peg.prototype.composeHome = function(test, factors) {
+voyc.DrZinn.prototype.composeHome = function(test, factors) {
 	var s = "<h1>My Authentic Self</h3>";
 	s += "<panel id='temperament' class='panel red'><h3>My Temperament</h3>";
 	s += "<p>";
@@ -135,7 +137,7 @@ Peg.prototype.composeHome = function(test, factors) {
 	method composePanel()
 	A panel is a set of graphs in a box.
 */
-Peg.prototype.composePanel = function(test, factors) {
+voyc.DrZinn.prototype.composePanel = function(test, factors) {
 	var s = '';
 	s += "<panel class='panel red'><h3></h3>";
 	s += "<p>";
@@ -148,7 +150,7 @@ Peg.prototype.composePanel = function(test, factors) {
 	return s;
 }
 
-Peg.prototype.composeFactor = function(pageid) {
+voyc.DrZinn.prototype.composeFactor = function(pageid) {
 	var a = pageid.split('-');
 	var test = a[0];
 	var factor = a[1];
@@ -168,7 +170,7 @@ Peg.prototype.composeFactor = function(pageid) {
 	return s;
 }
 
-Peg.prototype.composeTestFactor = function(test,factor) {
+voyc.DrZinn.prototype.composeTestFactor = function(test,factor) {
 	var pageid = test + '-' + factor;
 	var s = '';
 	s += "<p><button class='anchor' nav='home'>Return to main page</button></p>";
@@ -180,7 +182,7 @@ Peg.prototype.composeTestFactor = function(test,factor) {
 	return s;
 }
 
-Peg.prototype.composeFactorStory = function(test, factor, showComponents) {
+voyc.DrZinn.prototype.composeFactorStory = function(test, factor, showComponents) {
 	var s = '';
 	var pageid = test + '-' + factor;
 	s += "<h2><headline factor='" + pageid + "'>" + this.composeHeadline(test, factor) + "</headline></h2>";
@@ -189,7 +191,7 @@ Peg.prototype.composeFactorStory = function(test, factor, showComponents) {
 	return s;
 }
 
-Peg.prototype.composeTestAll = function(pageid) {
+voyc.DrZinn.prototype.composeTestAll = function(pageid) {
 	var a = pageid.split('-');
 	var test = a[0];
 	var factor = a[1];  // 'all'
@@ -205,7 +207,7 @@ Peg.prototype.composeTestAll = function(pageid) {
 	return s;
 }
 
-Peg.prototype.composeAllAll = function() {
+voyc.DrZinn.prototype.composeAllAll = function() {
 	var s = '';
 	for (var test in peg.tests) {
 		s += "<h1>" + peg.tests[test].display + "</h1>";
@@ -216,7 +218,7 @@ Peg.prototype.composeAllAll = function() {
 	return s;
 }
 
-Peg.prototype.composeStory = function(test, factor, showComponents) {
+voyc.DrZinn.prototype.composeStory = function(test, factor, showComponents) {
 	var fact = peg.factors[test][factor];
 	
 	var score = peg.scores.get(test, factor);
@@ -269,14 +271,14 @@ Peg.prototype.composeStory = function(test, factor, showComponents) {
 
 	if (fact.global && showComponents) {
 		s += '<p>This is a composite factor made up of the following component factors.</p>'
-		s += voyc.peg.composePanel(test, fact.components);
+		s += voyc.drzinn.composePanel(test, fact.components);
 	}
 	
 	s = this.changePerson(s);
 	return s;
 }
 
-Peg.prototype.composeHeadline = function(test, factor, score) {
+voyc.DrZinn.prototype.composeHeadline = function(test, factor, score) {
 	var fact = peg.factors[test][factor];
 	
 	var score = peg.scores.get(test, factor);
@@ -291,7 +293,7 @@ Peg.prototype.composeHeadline = function(test, factor, score) {
 	var pctlow = 100 - score.pct;
 
 	//if (peg.tests[test].dimensions == 'paired') {
-	if (voyc.peg.getPole(fact) == 2) {
+	if (voyc.drzinn.getPole(fact) == 2) {
 		if (range == 'medium') {
 			displayrange = 'balanced';
 		}
@@ -313,7 +315,7 @@ Peg.prototype.composeHeadline = function(test, factor, score) {
 	return s;
 }
 
-Peg.prototype.composeQuizz = function(test,factor) {
+voyc.DrZinn.prototype.composeQuizz = function(test,factor) {
 	var pageid = test + "-" + factor;
 	
 	var quizzid = peg.tests[test].quizz;
@@ -333,7 +335,7 @@ Peg.prototype.composeQuizz = function(test,factor) {
 	
 	// scrolling quizz area
 	s += "<div class='qscroller'>";
-	s += voyc.peg.composeQuizzScroller(quizzid);
+	s += voyc.drzinn.composeQuizzScroller(quizzid);
 	s += "</div>";
 	
 	// fixed footer
@@ -347,7 +349,7 @@ Peg.prototype.composeQuizz = function(test,factor) {
 	return s;
 }
 
-Peg.prototype.composeGifts = function(which) {
+voyc.DrZinn.prototype.composeGifts = function(which) {
 	var s = '';
 
 	// loop through scores
@@ -423,28 +425,38 @@ Peg.prototype.composeGifts = function(which) {
 
 /**
 	Populate HTML after it has been rendered.
+	First time, call this with no element, do the whole page including header and hidden.
+	Subsequently, specify the element which has changed.
 **/
-Peg.prototype.attachHandlers = function() {
-	var charts = document.querySelectorAll('chart');
+voyc.DrZinn.prototype.attachHandlers = function(element) {
+	var elem = element || document;
+	
+	// click on a chart
+	var charts = elem.querySelectorAll('chart');
 	for (var i=0; i<charts.length; i++) {
 		charts[i].addEventListener('click', function(e) {
-			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('factor'));
+//			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('factor'));
 		}, false);
 	}
 	
-	// attach click handlers
-	var navs = document.querySelectorAll('[nav]');
-	for (var i=0; i<navs.length; i++) {
-		navs[i].addEventListener('click', function(e) {
-			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('nav'));
-		}, false);
-	}
+//	// click on a nav item
+//	var self = this;
+//	var navs = elem.querySelectorAll('[nav]');
+//	for (var i=0; i<navs.length; i++) {
+//		navs[i].addEventListener('click', function(e) {
+////			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('nav'));
+//			var pageid = e.currentTarget.getAttribute('nav');
+//			self.observer.publish(new voyc.Note('nav-requested', 'model', {'pageid':pageid}));
+//	
+//			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('nav'));
+//		}, false);
+//	}
 
-	// attach handlers for click on quizz answer
-	var ae = document.querySelectorAll('div.ans');
+	// click on a quizz answer
+	var ae = elem.querySelectorAll('div.ans');
 	for (var i=0; i<ae.length; i++) {
 		ae[i].addEventListener('click', function(e) {
-			voyc.peg.answer(e.currentTarget.id);
+			voyc.drzinn.answer(e.currentTarget.id);
 		}, false);
 	}
 }
@@ -454,14 +466,14 @@ Peg.prototype.attachHandlers = function() {
 	called on window resize event
 	redraws variable sized elements
 **/
-Peg.prototype.populateHTML = function() {
+voyc.DrZinn.prototype.populateHTML = function() {
 	var charts = document.querySelectorAll('chart');
 	for (var i=0; i<charts.length; i++) {
 		this.populateChart(charts[i]);
 	}
 }
 
-Peg.prototype.populateChart = function(elem) {
+voyc.DrZinn.prototype.populateChart = function(elem) {
 	var c1 = 'RGB(0,255,255)';
 	var c2 = 'RGB(255,255,0)';
 
@@ -471,7 +483,7 @@ Peg.prototype.populateChart = function(elem) {
 	var fact = peg.factors[test][factor];
 	var tst = peg.tests[test];
 
-	if (voyc.peg.getPole(fact) == 1) {
+	if (voyc.drzinn.getPole(fact) == 1) {
 		var scoreleft = peg.scores.get(test, factor).pct;
 		var	labelleft = fact.aleft || fact.left;
 		var w = elem.offsetWidth;
@@ -489,7 +501,7 @@ Peg.prototype.populateChart = function(elem) {
 
 		drawgauge(elem, data);
 	}
-	else if (voyc.peg.getPole(fact) == 2) {
+	else if (voyc.drzinn.getPole(fact) == 2) {
 		var scoreleft = peg.scores.get(test, factor).raw;
 		var scoreright = peg.tests[test].maxscore - scoreleft;
 		
@@ -524,12 +536,12 @@ voyc.pct = function(n,max) {
 	return parseInt((n / max) * 100);
 }
 
-Peg.prototype.getPole = function(factor) {
+voyc.DrZinn.prototype.getPole = function(factor) {
 	var n = factor.pole || peg.tests[factor.test].pole;
 	return n;
 }
 
-Peg.prototype.getRange = function(test, factor, score) {
+voyc.DrZinn.prototype.getRange = function(test, factor, score) {
 	// determine range: low, high, medium
 	var range = '';
 	var low = 35;
@@ -553,19 +565,19 @@ Peg.prototype.getRange = function(test, factor, score) {
 		temperament-all         Temperament All
 		temperament-extravert   Temperament Extravert
 **/
-Peg.prototype.getPageId = function(test, factor) {
+voyc.DrZinn.prototype.getPageId = function(test, factor) {
 	return test + '-' + factor;
 }
 
-Peg.prototype.getPageTitle = function(test, factor) {
+voyc.DrZinn.prototype.getPageTitle = function(test, factor) {
 	return peg.tests[test].display + '-' + peg.factors[factor].left;
 }
 
-Peg.prototype.getTestTitle = function(test, factor) {
+voyc.DrZinn.prototype.getTestTitle = function(test, factor) {
 	return peg.tests[test].display;
 }
 
-Peg.prototype.changePerson = function(s) {
+voyc.DrZinn.prototype.changePerson = function(s) {
 	var t = s;
 	t = t.replace(/your/g, 'my');
 	t = t.replace(/Your/g, 'My');
@@ -578,33 +590,122 @@ Peg.prototype.changePerson = function(s) {
 	return t;
 }
 
+voyc.DrZinn.prototype.composeQuizzScroller = function(quizzid) {
+	this.openquizzid = quizzid;
+	var quizz = peg.q[quizzid];
+	/*
+		stored in database per user
+		each array matches the corresponding test array
+		what about adding, removing and reorganizing questions in the test?
+		do we need to keep a sequence for each question?
+		NO.  If we reorganize a test, we will do a onetime fix of the answer table in the database.
+		this. answers = {
+			kiersey: [0,0,0,0],
+			runner: [],
+			torres: [],
+		};
+	*/
+	if (!this.answers) {
+		this.answers = {};
+	}
+	if (!this.answers[quizzid]) {
+		this.answers[quizzid] = [];
+	}
+//	this.updateProgress();
+
+	var pat = "<div id='q%n%' class='qblock'><div id='q%n%_t'>%n%. %t%</div>%a%</div>";
+	var pata = "<div id='q%n%_a%v%' class='ans'>%a%</div>";
+	var s = '';
+	var t = '';
+	var p = '';
+	var a = '';
+	var test = quizz.test;
+	for (var i=0; i<test.length; i++) {
+		a = '';
+		for (var j=0; j<test[i].a.length; j++) {
+			t = pata;
+			t = t.replace(/%n%/g, test[i].n);
+			t = t.replace(/%a%/g, test[i].a[j].t);
+			t = t.replace(/%v%/g, test[i].a[j].v);
+			a += t;
+		}
+		p = pat;
+		p = p.replace(/%n%/g, test[i].n);
+		p = p.replace(/%t%/g, test[i].q);
+		p = p.replace(/%a%/g, a);
+		s += p;
+	}
+	return s;
+}
+
+voyc.DrZinn.prototype.answer = function(id) {
+	var x = id;
+	
+	// change the style of all the other answers
+	var a = id.split('_');
+	var ae = document.querySelectorAll('[id='+a[0]+'] .ans');
+	for (var i=0; i<ae.length; i++) {
+		ae[i].classList.remove('chosen');
+	}
+
+	// change the style
+	document.getElementById(id).classList.toggle('chosen');
+
+	// store the answer
+
+	var n = parseInt(a[0].substring(1));
+	var v = parseInt(a[1].substring(1));
+
+	this.answers[this.openquizzid][n-1] = v;
+	
+	this.updateProgress();
+	this.flushToServer();
+	return;
+}
+
+voyc.DrZinn.prototype.updateProgress = function() {
+	var cnt = this.countAnswers();
+	var tot = peg.q[this.openquizzid].test.length;
+	document.getElementById('testprogress').max = tot;
+	document.getElementById('testprogress').value = cnt;
+}
+
+voyc.DrZinn.prototype.countAnswers = function() {
+	var cnt = 0;
+	var test = peg.q[this.openquizzid].test;
+	for (i=1; i<=test.length; i++) {
+		//if (test[i].r > 0) {
+		if (this.answers[this.openquizzid][i] > 0) {
+			cnt++;
+		}
+	}
+	return cnt;
+}
+
+voyc.DrZinn.prototype.flushToServer = function() {
+	var svcname = 'setanswer';
+	var data = {};
+	data.tid = this.openquizzid;
+	data.answers = this.answers[this.openquizzid];
+	var s = JSON.stringify(data);
+	var self = this;
+	voyc.comm.request(svcname, data, function(ok, response, xhr) {
+		if (!ok) {
+			response = { 'status':'system-error'};
+		}
+		self.observer.publish(new voyc.Note('setanswer-received', 'stub', response));
+		if (response['status'] == 'ok') {
+			
+		}
+	});
+}
+
 /**
 	window handlers
 **/
 window.addEventListener('load', function() {
-	// one-time create global singleton
-	voyc.peg = new Peg();
-	peg.scores = new Scores();
-	peg.scores.read('joe');
-
-	// after login, goto the home page
-	var elems = document.querySelectorAll('[name=sampleuser]');
-	for (var i=0; i<elems.length; i++) {
-		var elem = elems[i];
-		elem.addEventListener('click', function(evt) {
-			evt.currentTarget.blur();
-			peg.scores.read(evt.currentTarget.getAttribute('id'));
-			voyc.peg.drawPage('home');
-		}, false);
-	}
-
-	// set drawPage function as the callback in BrowserHistory object
-	new voyc.BrowserHistory('name', function(pageid) {
-		voyc.peg.drawPage(pageid);
-	});
-
 }, false);
 
 window.addEventListener('resize', function() {
-	voyc.peg.populateHTML();
+	voyc.drzinn.populateHTML();
 }, false);

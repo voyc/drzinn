@@ -17,9 +17,9 @@ voyc.Model.prototype.setup = function () {
 	new voyc.Account(this.observer);
 	new voyc.AccountView(this.observer);
 
-	voyc.peg = new Peg(this.observer);
+	voyc.drzinn = new voyc.DrZinn(this.observer);
 	new voyc.BrowserHistory('name', function(pageid) {
-		voyc.peg.drawPage(pageid);
+		voyc.drzinn.drawPage(pageid);
 	});
 
 	// set drawPage method as the callback in BrowserHistory object
@@ -41,7 +41,7 @@ voyc.Model.prototype.setup = function () {
 	peg.scores.read('joe');
 
 	// attach handlers to HTML elements in the base html
-	voyc.peg.attachHandlers();
+	voyc.drzinn.attachHandlers();
 
 	// attach app events
 	var self = this;
