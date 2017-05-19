@@ -435,22 +435,22 @@ voyc.DrZinn.prototype.attachHandlers = function(element) {
 	var charts = elem.querySelectorAll('chart');
 	for (var i=0; i<charts.length; i++) {
 		charts[i].addEventListener('click', function(e) {
-//			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('factor'));
+			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('factor'));
 		}, false);
 	}
 	
-//	// click on a nav item
-//	var self = this;
-//	var navs = elem.querySelectorAll('[nav]');
-//	for (var i=0; i<navs.length; i++) {
-//		navs[i].addEventListener('click', function(e) {
-////			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('nav'));
-//			var pageid = e.currentTarget.getAttribute('nav');
-//			self.observer.publish(new voyc.Note('nav-requested', 'model', {'pageid':pageid}));
-//	
+	// click on a nav item
+	var self = this;
+	var navs = elem.querySelectorAll('[nav]');
+	for (var i=0; i<navs.length; i++) {
+		navs[i].addEventListener('click', function(e) {
 //			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('nav'));
-//		}, false);
-//	}
+			var pageid = e.currentTarget.getAttribute('nav');
+			self.observer.publish(new voyc.Note('nav-requested', 'model', {'pageid':pageid}));
+	
+			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('nav'));
+		}, false);
+	}
 
 	// click on a quizz answer
 	var ae = elem.querySelectorAll('div.ans');
