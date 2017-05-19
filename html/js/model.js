@@ -17,12 +17,17 @@ voyc.Model.prototype.setup = function () {
 	new voyc.Account(this.observer);
 	new voyc.AccountView(this.observer);
 
-	// set drawPage method as the callback in BrowserHistory object
-	var self = this;
+	voyc.peg = new Peg(this.observer);
 	new voyc.BrowserHistory('name', function(pageid) {
-		var event = pageid.split('-')[0];
-		self.observer.publish(new voyc.Note(event+'-requested', 'model', {page:pageid}));
+		voyc.peg.drawPage(pageid);
 	});
+
+	// set drawPage method as the callback in BrowserHistory object
+	//var self = this;
+	//new voyc.BrowserHistory('name', function(pageid) {
+	//	var event = pageid.split('-')[0];
+	//	self.observer.publish(new voyc.Note(event+'-requested', 'model', {page:pageid}));
+	//});
 
 	// server communications
 	var url = '/svc/';
@@ -31,6 +36,13 @@ voyc.Model.prototype.setup = function () {
 	}
 	this.comm = new voyc.Comm(url, 'acomm', 2, true);
 
+	// do relogin
+	peg.scores = new Scores();
+	peg.scores.read('joe');
+
+	// attach handlers to HTML elements in the base html
+	voyc.peg.attachHandlers();
+
 	// attach app events
 	var self = this;
 	this.observer.subscribe('profile-requested'   ,'model' ,function(note) { self.onProfileRequested    (note); });
@@ -38,6 +50,8 @@ voyc.Model.prototype.setup = function () {
 	this.observer.subscribe('setprofile-posted'   ,'model' ,function(note) { self.onSetProfilePosted    (note); });
 	this.observer.subscribe('setprofile-received' ,'model' ,function(note) { self.onSetProfileReceived  (note); });
 	this.observer.subscribe('getprofile-received' ,'model' ,function(note) { self.onGetProfileReceived  (note); });
+
+	(new voyc.BrowserHistory).nav('home');
 
 	this.observer.publish(new voyc.Note('setup-complete', 'model', {}));
 	//(new voyc.3).nav('home');
