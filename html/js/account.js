@@ -1,5 +1,5 @@
 /**
- * class Account
+ * class voyc.Account
  * @param {Object=} observer
  * @constructor
  * A singleton object
@@ -14,19 +14,21 @@
 	uname       no          yes
 	email       no          no
 
- Object Account handles sessionStorage.
- Object AccountView handles display to screen.
+ Object voyc.Account handles sessionStorage.
+ Object voyc.AccountView handles display to screen.
 
  */
-Account = function (observer) {
-	if (Account._instance) return Account._instance;
-	Account._instance = this;
+voyc.Account = function (observer) {
+	if (voyc.Account._instance) return voyc.Account._instance;
+	voyc.Account._instance = this;
 
 	this.observer = observer;
-	this.comma = new voyc.Comm('account/svc/', 'comma', 2, true);  // for production
+	
+	var url = '/account/svc/';
 	if (window.location.origin == 'file://') {
-		this.comma = new voyc.Comm('http://account.hagstrand.com/svc', 'comma', 2, true);  // for local testing
+		url = 'http://model.hagstrand.com/account/svc';  // for local testing
 	}
+	this.comm = new voyc.Comm(url, 'acomm', 2, true);
 
 	// attach app events
 	var self = this;
@@ -43,7 +45,7 @@ Account = function (observer) {
 	this.observer.subscribe('verifyemail-submitted'    ,'account' ,function(note) { self.onVerifyEmailSubmitted    (note); });
 }
 
-Account.svcdef = {
+voyc.Account.svcdef = {
 	'register':       {'uname':1, 'email':1, 'pword':1, 'both':0, 'pnew':0, 'si':0, 'tic':0},
 	'verify':         {'uname':0, 'email':0, 'pword':1, 'both':0, 'pnew':0, 'si':1, 'tic':1},
 	'login':          {'uname':0, 'email':0, 'pword':1, 'both':1, 'pnew':0, 'si':0, 'tic':0},
@@ -55,10 +57,9 @@ Account.svcdef = {
 	'changeusername': {'uname':1, 'email':0, 'pword':1, 'both':0, 'pnew':0, 'si':1, 'tic':0},
 	'changeemail':    {'uname':0, 'email':1, 'pword':1, 'both':0, 'pnew':0, 'si':1, 'tic':0},
 	'verifyemail':    {'uname':0, 'email':0, 'pword':1, 'both':0, 'pnew':0, 'si':1, 'tic':1},
-	'stub':           {'uname':0, 'email':0, 'pword':0, 'both':0, 'pnew':0, 'si':1, 'tic':0},
 }
 
-Account.fielddef = {
+voyc.Account.fielddef = {
 	'uname':	{'type':'text'    , 'valuetype':'value'  , 'display':'username'},
 	'email':	{'type':'text'    , 'valuetype':'value'  , 'display':'email'},
 	'pword':	{'type':'text'    , 'valuetype':'value'  , 'display':'password'},
@@ -73,14 +74,14 @@ Account.fielddef = {
 		database, svc, sessionStorage use numeric
 		javascript programming uses string, getAuth() 
 */
-Account.authdef = {
+voyc.Account.authdef = {
 	0: 'anonymous'   ,
 	1: 'registered'  ,
 	2: 'resetpending',
 	7: 'verified'    ,  // auth >= verified vs auth < verified
 	8: 'emailpending',
 }
-Account.svcbyauth = {
+voyc.Account.svcbyauth = {
 	'register':       {'anonymous':1, 'registered':0, 'resetpending':0, 'emailpending':0, 'verified':0 },
 	'verify':         {'anonymous':0, 'registered':1, 'resetpending':0, 'emailpending':0, 'verified':0 },
 	'login':          {'anonymous':1, 'registered':0, 'resetpending':0, 'emailpending':0, 'verified':0 },
@@ -92,10 +93,9 @@ Account.svcbyauth = {
 	'changeusername': {'anonymous':0, 'registered':0, 'resetpending':0, 'emailpending':0, 'verified':1 },
 	'changeemail':    {'anonymous':0, 'registered':0, 'resetpending':0, 'emailpending':0, 'verified':1 },
 	'verifyemail':    {'anonymous':0, 'registered':0, 'resetpending':0, 'emailpending':1, 'verified':1 },
-	'stub':           {'anonymous':0, 'registered':0, 'resetpending':0, 'emailpending':0, 'verified':1 },
 }
 
-Account.accessdef = {
+voyc.Account.accessdef = {
 	   0: 'none',
 	   1: 'novice',
 	 100: 'pro',
@@ -106,7 +106,7 @@ Account.accessdef = {
 
 /* services */
 
-Account.prototype.onLoginSubmitted = function(note) {
+voyc.Account.prototype.onLoginSubmitted = function(note) {
 	var svcname = note.payload.svc;
 	var inputs = note.payload.inputs;
 
@@ -115,7 +115,7 @@ Account.prototype.onLoginSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comma.request(svcname, data, function(ok, response, xhr) {
+	this.comm.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -129,7 +129,7 @@ Account.prototype.onLoginSubmitted = function(note) {
 	this.observer.publish(new voyc.Note('login-posted', 'account', {}));
 }
 
-Account.prototype.onRegisterSubmitted = function(note) {
+voyc.Account.prototype.onRegisterSubmitted = function(note) {
 	var svcname = note.payload.svc;
 	var inputs = note.payload.inputs;
 
@@ -138,7 +138,7 @@ Account.prototype.onRegisterSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comma.request(svcname, data, function(ok, response, xhr) {
+	this.comm.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -155,7 +155,7 @@ Account.prototype.onRegisterSubmitted = function(note) {
 	this.observer.publish(new voyc.Note('register-posted', 'account', {}));
 }
 
-Account.prototype.onVerifySubmitted = function(note) {
+voyc.Account.prototype.onVerifySubmitted = function(note) {
 	var svcname = note.payload.svc;
 	var inputs = note.payload.inputs;
 
@@ -164,7 +164,7 @@ Account.prototype.onVerifySubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comma.request(svcname, data, function(ok, response, xhr) {
+	this.comm.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -180,12 +180,12 @@ Account.prototype.onVerifySubmitted = function(note) {
 	this.observer.publish(new voyc.Note('verify-posted', 'account', {}));
 }
 
-Account.prototype.onSetupComplete = function(note) {
-	if (getSessionId()) {
+voyc.Account.prototype.onSetupComplete = function(note) {
+	if (voyc.getSessionId()) {
 		var svcname = 'relogin';
-		var data = { 'si':getSessionId() };
+		var data = { 'si':voyc.getSessionId() };
 		var self = this;
-		this.comma.request(svcname, data, function(ok, response, xhr) {
+		this.comm.request(svcname, data, function(ok, response, xhr) {
 			if (!ok) {
 				response = { 'status':'system-error'};
 			}
@@ -207,12 +207,12 @@ Account.prototype.onSetupComplete = function(note) {
 	}
 }
 
-Account.prototype.onLogoutRequested = function(note) {
+voyc.Account.prototype.onLogoutRequested = function(note) {
 	// post to svc
 	var svcname = 'logout';
-	var data = { 'si':getSessionId() };
+	var data = { 'si':voyc.getSessionId() };
 	var self = this;
-	this.comma.request(svcname, data, function(ok, response, xhr) {
+	this.comm.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -223,7 +223,7 @@ Account.prototype.onLogoutRequested = function(note) {
 	this.observer.publish(new voyc.Note('logout-posted', 'account', {}));
 }
 
-Account.prototype.onForgotPasswordSubmitted = function(note) {
+voyc.Account.prototype.onForgotPasswordSubmitted = function(note) {
 	var svcname = note.payload.svc;
 	var inputs = note.payload.inputs;
 
@@ -232,7 +232,7 @@ Account.prototype.onForgotPasswordSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comma.request(svcname, data, function(ok, response, xhr) {
+	this.comm.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -252,7 +252,7 @@ Account.prototype.onForgotPasswordSubmitted = function(note) {
 	this.observer.publish(new voyc.Note('forgotpassword-posted', 'account', {}));
 }
 
-Account.prototype.onResetPasswordSubmitted = function(note) {
+voyc.Account.prototype.onResetPasswordSubmitted = function(note) {
 	var svcname = note.payload.svc;
 	var inputs = note.payload.inputs;
 
@@ -261,7 +261,7 @@ Account.prototype.onResetPasswordSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comma.request(svcname, data, function(ok, response, xhr) {
+	this.comm.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -277,7 +277,7 @@ Account.prototype.onResetPasswordSubmitted = function(note) {
 	this.observer.publish(new voyc.Note('resetpassword-posted', 'account', {}));
 }
 
-Account.prototype.onChangePasswordSubmitted = function(note) {
+voyc.Account.prototype.onChangePasswordSubmitted = function(note) {
 	var svcname = note.payload.svc;
 	var inputs = note.payload.inputs;
 
@@ -286,7 +286,7 @@ Account.prototype.onChangePasswordSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comma.request(svcname, data, function(ok, response, xhr) {
+	this.comm.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -301,7 +301,7 @@ Account.prototype.onChangePasswordSubmitted = function(note) {
 	this.observer.publish(new voyc.Note('changepassword-posted', 'account', {}));
 }
 
-Account.prototype.onChangeUsernameSubmitted = function(note) {
+voyc.Account.prototype.onChangeUsernameSubmitted = function(note) {
 	var svcname = note.payload.svc;
 	var inputs = note.payload.inputs;
 
@@ -310,7 +310,7 @@ Account.prototype.onChangeUsernameSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comma.request(svcname, data, function(ok, response, xhr) {
+	this.comm.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -325,7 +325,7 @@ Account.prototype.onChangeUsernameSubmitted = function(note) {
 	this.observer.publish(new voyc.Note('changeusername-posted', 'account', {}));
 }
 
-Account.prototype.onChangeEmailSubmitted = function(note) {
+voyc.Account.prototype.onChangeEmailSubmitted = function(note) {
 	var svcname = note.payload.svc;
 	var inputs = note.payload.inputs;
 
@@ -334,7 +334,7 @@ Account.prototype.onChangeEmailSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comma.request(svcname, data, function(ok, response, xhr) {
+	this.comm.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -350,7 +350,7 @@ Account.prototype.onChangeEmailSubmitted = function(note) {
 
 	this.observer.publish(new voyc.Note('changeemail-posted', 'account', {}));
 }
-Account.prototype.onVerifyEmailSubmitted = function(note) {
+voyc.Account.prototype.onVerifyEmailSubmitted = function(note) {
 	var svcname = note.payload.svc;
 	var inputs = note.payload.inputs;
 
@@ -359,7 +359,7 @@ Account.prototype.onVerifyEmailSubmitted = function(note) {
 
 	// call svc
 	var self = this;
-	this.comma.request(svcname, data, function(ok, response, xhr) {
+	this.comm.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
@@ -375,43 +375,19 @@ Account.prototype.onVerifyEmailSubmitted = function(note) {
 
 	this.observer.publish(new voyc.Note('verifyemail-posted', 'account', {}));
 }
-Account.prototype.onStubRequested = function(note) {
-	var svcname = 'stub';
-	var data = { 'a':'watchword', 'b':'wizard', 'si':getSessionId() };
-
-	// call svc
-	var self = this;
-	this.comma.request(svcname, data, function(ok, response, xhr) {
-		if (!ok) {
-			response = { 'status':'system-error'};
-		}
-
-		self.observer.publish(new voyc.Note('stub-received', 'account', response));
-
-		if (response['status'] == 'ok') {
-			self.saveSession(response);
-			alert(response['message']);
-		}
-		else {
-			alert('stub failed');
-		}
-	});
-
-	this.observer.publish(new voyc.Note('stub-posted', 'account', {}));
-}
 
 /* utilities */
 
-Account.prototype.buildDataArray = function(svcname, inputs) {
+voyc.Account.prototype.buildDataArray = function(svcname, inputs) {
 	var data = {};
-	var fields = Account.svcdef[svcname];
+	var fields = voyc.Account.svcdef[svcname];
 	for (var name in fields) {
 		var req = fields[name];
-		var valuetype = Account.fielddef[name]['valuetype'];
+		var valuetype = voyc.Account.fielddef[name]['valuetype'];
 		if (req) {
 			var value = '';
 			if (name == 'si') {
-				value = getSessionId();
+				value = voyc.getSessionId();
 			}
 			else {
 				value = inputs[name][valuetype];
@@ -425,63 +401,66 @@ Account.prototype.buildDataArray = function(svcname, inputs) {
 	return data;
 }
 
-Account.prototype.isSvcAllowed = function(svc) {
+voyc.Account.prototype.isSvcAllowed = function(svc) {
 	return 	this.isSvcAllowedForAuth(svc, this.getAuth());
 }
-Account.prototype.isSvcAllowedForAuth = function(svc, auth) {
-	return 	Account.svcbyauth[svc][auth];
+
+voyc.Account.prototype.isSvcAllowedForAuth = function(svc, auth) {
+	return voyc.Account.svcbyauth[svc][auth];
 }
 
-Account.prototype.getAllowedSvcsForAuth = function(auth) {
+voyc.Account.prototype.getAllowedSvcsForAuth = function(auth) {
 	var list = [];
-	for (var svc in Account.svcbyauth) {
-		if (Account.svcbyauth[svc][auth]) {
+	for (var svc in voyc.Account.svcbyauth) {
+		if (voyc.Account.svcbyauth[svc][auth]) {
 			list.push(svc);
 		}
 	}
 	return [];
 }
 
-Account.prototype.getAuth = function() {
+voyc.Account.prototype.getAuth = function() {
 	var code = voyc.Session.get('auth');
-	return Account.authdef[code];
+	return voyc.Account.authdef[code];
 }
 
-Account.prototype.assertAuth = function(auth) {
+voyc.Account.prototype.assertAuth = function(auth) {
 	if (this.getAuth() != auth) {
 		console.log('assertion failed.  auth is not ' + auth)
 	}
 }
 
-Account.prototype.saveSession = function(response) {
+voyc.Account.prototype.saveSession = function(response) {
 	if (response['si'])     voyc.Session.set('si', response['si']);
 	if (response['auth'])   voyc.Session.set('auth', response['auth']);
 	if (response['access']) voyc.Session.set('access', response['access']);
 }
-Account.prototype.clearSession = function() {
+
+voyc.Account.prototype.clearSession = function() {
 	voyc.Session.set('si', '');
 	voyc.Session.set('auth', '0');
 	voyc.Session.set('access', '0');
 }
-Account.prototype.requestPending = function(response) {
- 	if (isUserRegistered()) {
+
+voyc.Account.prototype.requestPending = function(response) {
+ 	if (voyc.isUserRegistered()) {
 		this.observer.publish(new voyc.Note('verify-requested', 'account', response));
 	}
-	if (isUserEmailPending()) {
+	if (voyc.isUserEmailPending()) {
 		this.observer.publish(new voyc.Note('verifyemail-requested', 'account', response));
 	}
-	if (isUserResetPending()) {
+	if (voyc.isUserResetPending()) {
 		this.observer.publish(new voyc.Note('resetpassword-requested', 'account', response));
 	}
 }
 
 /*  global functions */
 
-var isSvcAllowed = function(svc) { return (new Account).isSvcAllowed(svc); }
-var getAuth = function() { return (new Account).getAuth(); }
-var isUserAnonymous   = function() { return getAuth() == 'anonymous'   ;}
-var isUserRegistered  = function() { return getAuth() == 'registered'  ;}
-var isUserResetPending= function() { return getAuth() == 'resetpending';}
-var isUserVerified    = function() { return getAuth() == 'verified'    ;}
-var isUserEmailPending= function() { return getAuth() == 'emailpending';}
-var getSessionId = function() { return voyc.Session.get('si'); }
+voyc.isSvcAllowed = function(svc) { return (new voyc.Account).isSvcAllowed(svc); }
+voyc.getAuth = function() { return (new voyc.Account).getAuth(); }
+voyc.isUserAnonymous   = function() { return voyc.getAuth() == 'anonymous'   ;}
+voyc.isUserRegistered  = function() { return voyc.getAuth() == 'registered'  ;}
+voyc.isUserResetPending= function() { return voyc.getAuth() == 'resetpending';}
+voyc.isUserVerified    = function() { return voyc.getAuth() == 'verified'    ;}
+voyc.isUserEmailPending= function() { return voyc.getAuth() == 'emailpending';}
+voyc.getSessionId = function() { return voyc.Session.get('si'); }
