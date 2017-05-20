@@ -1,4 +1,4 @@
-peg.factors = {
+voyc.data.factors = {
 	temperament: {
 		extravert: {
 			test: 'temperament',

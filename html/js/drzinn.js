@@ -16,6 +16,7 @@ voyc.DrZinn.prototype.setup = function () {
 	new voyc.Account(this.observer);
 	new voyc.AccountView(this.observer);
 	new voyc.DrZinnView(this.observer);
+	this.scores = new Scores();
 
 	// server communications
 	var url = '/svc/';
@@ -42,9 +43,7 @@ voyc.DrZinn.prototype.onSetupComplete = function(note) {
 
 voyc.DrZinn.prototype.onReloginReceived = function(note) {
 	// todo: note payload must contain success or fail.  if fail, setup empty scores.
-	peg.scores = new Scores();
-	peg.scores.read('joe');
-
+	this.scores.read('joe');
 	this.observer.publish(new voyc.Note('scores-received', 'drzinn', {}));
 }
 
@@ -118,5 +117,5 @@ voyc.DrZinn.prototype.onSetProfileReceived = function(note) {
 
 /* on startup */
 window.addEventListener('load', function(evt) {
-	new voyc.DrZinn();
+	voyc.drzinn = new voyc.DrZinn();
 }, false);

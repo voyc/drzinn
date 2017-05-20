@@ -22,10 +22,10 @@
 
 	Terminology
 		test - string id
-		tst - object in peg.tests
+		tst - object in voyc.data.tests
 
 		factor - string id
-		fact - object in peg.factors
+		fact - object in voyc.data.factors
 
 		pageid - string test-factor or test-all or all-all
 */
@@ -173,7 +173,7 @@ voyc.DrZinnView.prototype.composePanel = function(test, factors) {
 	s += "<p>";
 	var fact = {};
 	for (var i=0; i<factors.length; i++) {
-		fact = peg.factors[test][factors[i]]; 
+		fact = voyc.data.factors[test][factors[i]]; 
 		s += "<chart factor='" + fact.test + "-" + fact.factor + "'></chart>";
 	}
 	s += "</p></panel>";
@@ -229,7 +229,7 @@ voyc.DrZinnView.prototype.composeTestAll = function(pageid) {
 	s += "<div class='narrative'>";
 	s += "<h1>" + this.getTestTitle(test, factor) + "</h1>";
 	if (!factor) {
-		for (var k in peg.factors[test]) {
+		for (var k in voyc.data.factors[test]) {
 			s += this.composeFactorStory(test, k, false);
 		}
 	}
@@ -239,9 +239,9 @@ voyc.DrZinnView.prototype.composeTestAll = function(pageid) {
 
 voyc.DrZinnView.prototype.composeAllAll = function() {
 	var s = '';
-	for (var test in peg.tests) {
-		s += "<h1>" + peg.tests[test].display + "</h1>";
-		for (var k in peg.factors[test]) {
+	for (var test in voyc.data.tests) {
+		s += "<h1>" + voyc.data.tests[test].display + "</h1>";
+		for (var k in voyc.data.factors[test]) {
 			s += this.composeFactorStory(test, k, false);
 		}
 	}
@@ -249,9 +249,9 @@ voyc.DrZinnView.prototype.composeAllAll = function() {
 }
 
 voyc.DrZinnView.prototype.composeStory = function(test, factor, showComponents) {
-	var fact = peg.factors[test][factor];
+	var fact = voyc.data.factors[test][factor];
 	
-	var score = peg.scores.get(test, factor);
+	var score = voyc.drzinn.scores.get(test, factor);
 		
 	// determine range: low, high, medium
 	var range = '';
@@ -271,8 +271,8 @@ voyc.DrZinnView.prototype.composeStory = function(test, factor, showComponents) 
 	
 	// compose gift section
 	var gift;
-	for (var j=0; j<peg.gifts.length; j++) {
-		gift = peg.gifts[j];
+	for (var j=0; j<voyc.data.gifts.length; j++) {
+		gift = voyc.data.gifts[j];
 		
 		if (gift.test == test && gift.factor == factor && gift.range == range) {
 			sGift += '<p><span class="gift">Gift:</span> ' + gift.narrative + '</p>';
@@ -280,16 +280,16 @@ voyc.DrZinnView.prototype.composeStory = function(test, factor, showComponents) 
 	}
 
 	// compose nourishment section
-	for (var j=0; j<peg.nourishments.length; j++) {
-		gift = peg.nourishments[j];
+	for (var j=0; j<voyc.data.nourishments.length; j++) {
+		gift = voyc.data.nourishments[j];
 		if (gift.test == test && gift.factor == factor && gift.range == range) {
 			sNourishment += '<p><span class="nourishment">Nourishment:</span> ' + gift.narrative + '</p>';
 		}
 	}
 
 	// compose burnout section
-	for (var j=0; j<peg.burnouts.length; j++) {
-		gift = peg.burnouts[j];
+	for (var j=0; j<voyc.data.burnouts.length; j++) {
+		gift = voyc.data.burnouts[j];
 		if (gift.test == test && gift.factor == factor && gift.range == range) {
 			sBurnout += '<p><span class="burnout">Burnout:</span> ' + gift.narrative + '</p>';
 		}
@@ -309,9 +309,9 @@ voyc.DrZinnView.prototype.composeStory = function(test, factor, showComponents) 
 }
 
 voyc.DrZinnView.prototype.composeHeadline = function(test, factor, score) {
-	var fact = peg.factors[test][factor];
+	var fact = voyc.data.factors[test][factor];
 	
-	var score = peg.scores.get(test, factor);
+	var score = voyc.drzinn.scores.get(test, factor);
 		
 	var range = this.getRange(test, factor, score);
 
@@ -322,7 +322,7 @@ voyc.DrZinnView.prototype.composeHeadline = function(test, factor, score) {
 	var pcthigh = score.pct;
 	var pctlow = 100 - score.pct;
 
-	//if (peg.tests[test].dimensions == 'paired') {
+	//if (voyc.data.tests[test].dimensions == 'paired') {
 	if (this.getPole(fact) == 2) {
 		if (range == 'medium') {
 			displayrange = 'balanced';
@@ -336,20 +336,20 @@ voyc.DrZinnView.prototype.composeHeadline = function(test, factor, score) {
 		}
 	}
 	
-	var drange = peg.strings[displayrange];
+	var drange = voyc.data.strings[displayrange];
 	var dname = factorhigh;
 	if (displayrange == 'balanced') {
 		dname = fact.left + ' and ' + fact.right;
 	}
-	s = peg.strings[displayrange] + ' ' + dname;
+	s = voyc.data.strings[displayrange] + ' ' + dname;
 	return s;
 }
 
 voyc.DrZinnView.prototype.composeQuizz = function(test,factor) {
 	var pageid = test + "-" + factor;
 	
-	var quizzid = peg.tests[test].quizz;
-	var quizz = peg.q[quizzid];
+	var quizzid = voyc.data.tests[test].quizz;
+	var quizz = voyc.data.quizz[quizzid];
 	
 	var s = '';
 	s += "<div class='qcontainer narrative'>";
@@ -384,10 +384,10 @@ voyc.DrZinnView.prototype.composeGifts = function(which) {
 
 	// loop through scores
 	var score, test, factor, range;
-	for (var i=0; i<peg.scores.scores.length; i++) {
-		score = peg.scores.scores[i];
-		test = peg.tests[score.testid];
-		factor = peg.factors[score.testid][score.factorid];
+	for (var i=0; i<voyc.drzinn.scores.scores.length; i++) {
+		score = voyc.drzinn.scores.scores[i];
+		test = voyc.data.tests[score.testid];
+		factor = voyc.data.factors[score.testid][score.factorid];
 		
 		// determine range: low, high, average
 		var range = '';
@@ -404,12 +404,12 @@ voyc.DrZinnView.prototype.composeGifts = function(which) {
 		// compose gift section
 		var gift, navid, linkdisplay;
 		if (which == 'gifts') {
-			for (var j=0; j<peg.gifts.length; j++) {
-				gift = peg.gifts[j];
+			for (var j=0; j<voyc.data.gifts.length; j++) {
+				gift = voyc.data.gifts[j];
 				
 				if (gift.test == factor.test && gift.factor == factor.factor && gift.range == range) {
 					navid = gift.test + '-' + gift.factor;
-					linkdisplay = peg.tests[gift.test].display + ' - ' + peg.factors[gift.test][gift.factor].left;
+					linkdisplay = voyc.data.tests[gift.test].display + ' - ' + voyc.data.factors[gift.test][gift.factor].left;
 					s += "<p>" + gift.narrative + " <button class=anchor nav='" + navid + "'>" + linkdisplay + "</button></p>";
 				}
 			}
@@ -417,11 +417,11 @@ voyc.DrZinnView.prototype.composeGifts = function(which) {
 
 		// compose nourishment section
 		if (which == 'nourishments') {
-			for (var j=0; j<peg.nourishments.length; j++) {
-				gift = peg.nourishments[j];
+			for (var j=0; j<voyc.data.nourishments.length; j++) {
+				gift = voyc.data.nourishments[j];
 				if (gift.test == factor.test && gift.factor == factor.factor && gift.range == range) {
 					navid = gift.test + '-' + gift.factor;
-					linkdisplay = peg.tests[gift.test].display + ' - ' + peg.factors[gift.test][gift.factor].left;
+					linkdisplay = voyc.data.tests[gift.test].display + ' - ' + voyc.data.factors[gift.test][gift.factor].left;
 					s += "<p>" + gift.narrative + " <button class=anchor nav='" + navid + "'>" + linkdisplay + "</button></p>";
 				}
 			}
@@ -429,11 +429,11 @@ voyc.DrZinnView.prototype.composeGifts = function(which) {
 
 		// compose burnout section
 		if (which == 'burnouts') {
-			for (var j=0; j<peg.burnouts.length; j++) {
-				gift = peg.burnouts[j];
+			for (var j=0; j<voyc.data.burnouts.length; j++) {
+				gift = voyc.data.burnouts[j];
 				if (gift.test == factor.test && gift.factor == factor.factor && gift.range == range) {
 					navid = gift.test + '-' + gift.factor;
-					linkdisplay = peg.tests[gift.test].display + ' - ' + peg.factors[gift.test][gift.factor].left;
+					linkdisplay = voyc.data.tests[gift.test].display + ' - ' + voyc.data.factors[gift.test][gift.factor].left;
 					s += "<p>" + gift.narrative + " <button class=anchor nav='" + navid + "'>" + linkdisplay + "</button></p>";
 				}
 			}
@@ -507,11 +507,11 @@ voyc.DrZinnView.prototype.populateChart = function(elem) {
 	var a = elem.getAttribute('factor').split('-');
 	var test = a[0];
 	var factor = a[1];
-	var fact = peg.factors[test][factor];
-	var tst = peg.tests[test];
+	var fact = voyc.data.factors[test][factor];
+	var tst = voyc.data.tests[test];
 
 	if (this.getPole(fact) == 1) {
-		var scoreleft = peg.scores.get(test, factor).pct;
+		var scoreleft = voyc.drzinn.scores.get(test, factor).pct;
 		var	labelleft = fact.aleft || fact.left;
 		var w = elem.offsetWidth;
 		if (w > 400) {
@@ -529,8 +529,8 @@ voyc.DrZinnView.prototype.populateChart = function(elem) {
 		drawgauge(elem, data);
 	}
 	else if (this.getPole(fact) == 2) {
-		var scoreleft = peg.scores.get(test, factor).raw;
-		var scoreright = peg.tests[test].maxscore - scoreleft;
+		var scoreleft = voyc.drzinn.scores.get(test, factor).raw;
+		var scoreright = voyc.data.tests[test].maxscore - scoreleft;
 		
 		var labelleft = fact.aleft || fact.left;
 		var labelright = fact.aright || fact.right;
@@ -564,7 +564,7 @@ voyc.pct = function(n,max) {
 }
 
 voyc.DrZinnView.prototype.getPole = function(factor) {
-	var n = factor.pole || peg.tests[factor.test].pole;
+	var n = factor.pole || voyc.data.tests[factor.test].pole;
 	return n;
 }
 
@@ -597,11 +597,11 @@ voyc.DrZinnView.prototype.getPageId = function(test, factor) {
 }
 
 voyc.DrZinnView.prototype.getPageTitle = function(test, factor) {
-	return peg.tests[test].display + '-' + peg.factors[factor].left;
+	return voyc.data.tests[test].display + '-' + voyc.data.factors[factor].left;
 }
 
 voyc.DrZinnView.prototype.getTestTitle = function(test, factor) {
-	return peg.tests[test].display;
+	return voyc.data.tests[test].display;
 }
 
 voyc.DrZinnView.prototype.changePerson = function(s) {
@@ -619,7 +619,7 @@ voyc.DrZinnView.prototype.changePerson = function(s) {
 
 voyc.DrZinnView.prototype.composeQuizzScroller = function(quizzid) {
 	this.openquizzid = quizzid;
-	var quizz = peg.q[quizzid];
+	var quizz = voyc.data.quizz[quizzid];
 	/*
 		stored in database per user
 		each array matches the corresponding test array
@@ -692,14 +692,14 @@ voyc.DrZinnView.prototype.answer = function(id) {
 
 voyc.DrZinnView.prototype.updateProgress = function() {
 	var cnt = this.countAnswers();
-	var tot = peg.q[this.openquizzid].test.length;
+	var tot = voyc.data.quizz[this.openquizzid].test.length;
 	document.getElementById('testprogress').max = tot;
 	document.getElementById('testprogress').value = cnt;
 }
 
 voyc.DrZinnView.prototype.countAnswers = function() {
 	var cnt = 0;
-	var test = peg.q[this.openquizzid].test;
+	var test = voyc.data.quizz[this.openquizzid].test;
 	for (i=1; i<=test.length; i++) {
 		//if (test[i].r > 0) {
 		if (this.answers[this.openquizzid][i] > 0) {

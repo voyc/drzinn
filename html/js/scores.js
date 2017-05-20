@@ -55,7 +55,7 @@ Scores.prototype.initScores = function() {
 }
 
 Scores.prototype.calcScore = function(score) {
-	var max = peg.tests[score.testid].maxscore;
+	var max = voyc.data.tests[score.testid].maxscore;
 	var mean = 50;
 	score.pct = Math.round((score.raw / max) * 100);
 	var offset = mean - score.pct;
@@ -64,10 +64,12 @@ Scores.prototype.calcScore = function(score) {
 }
 
 Scores.prototype.reorder = function() {
-	if (peg.options.orderby == 'significance') {
+	var options = {};
+	options.orderby = 'test';
+	if (options.orderby == 'significance') {
 		this.scores.sort(function(a, b){return b.offset-a.offset});
 	}
-	else if (peg.options.orderby == 'test') {
+	else if (options.orderby == 'test') {
 		this.scores.sort(function(a, b){return a.order-b.order});
 	}
 };

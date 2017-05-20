@@ -1,4 +1,4 @@
-peg.tests = {
+voyc.data.tests = {
 	temperament: {
 		display: 'My Temperament',
 		minscore: 0,

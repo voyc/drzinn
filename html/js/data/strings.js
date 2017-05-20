@@ -1,4 +1,4 @@
-peg.strings = {
+voyc.data.strings = {
 	high: 'High',
 	low: 'Low',
 	medium: 'Medium',

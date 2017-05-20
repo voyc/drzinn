@@ -11,7 +11,7 @@ replace single quote with &rsquo;
 (.*?)\t(.*?)\t(.*?)\t(.*?)\t(.*?)\n
 { test:'$1', factor:'$2', range:'$3', narrative:'$5' },\n
 */
-peg.burnouts = [
+voyc.data.burnouts = [
 { test:'temperament', factor:'extravert', range:'high', narrative:'Your burnout is that you will get lonely and overwhelmed if you spend too much time alone.' },
 { test:'temperament', factor:'extravert', range:'medium', narrative:'On an introvert level, you may find that you burnout with too much interaction in a large group. On an extravert level, you may find that you burnout and get lonely if spending too much time alone.' },
 { test:'temperament', factor:'extravert', range:'low', narrative:'Your burnout is that you get fatigued and overwhelmed with too much interaction in a large group.' },
@@ -176,7 +176,7 @@ peg.burnouts = [
 { test:'soi', factor:'DSR', range:'low', narrative:'Your burnout is using symbolic relations and math, such as Algebra.' },
 ];
 
-peg.gifts = [
+voyc.data.gifts = [
 { test:'temperament', factor:'extravert', range:'high', narrative:'You have a gift with people and are nourished by being around people. This also means that you get your life energy from being with people.' },
 { test:'temperament', factor:'extravert', range:'medium', narrative:'You have a gift of being nourished by two different sources. You are nourished by one on one or small group conversations, which are deeper in meaning and content, and you are nourished by being with large groups of people, many of whom you may not know, and with a very different depth of communication.' },
 { test:'temperament', factor:'extravert', range:'low', narrative:'You have a gift of working in solitary conditions. You may prefer this or small group conversations that are deeper in meaning. You are nourished by one on one "essence-level communication" to the less personal, more generalized communication that usually accompanies larger group activities.' },
@@ -368,7 +368,7 @@ peg.gifts = [
 { test:'soi', factor:'DSR', range:'medium', narrative:'You have a gift of having n average ability to deal with symbolic relations such as applying numerical concepts.' },
 ];
 
-peg.nourishments = [
+voyc.data.nourishments = [
 { test:'temperament', factor:'extravert', range:'high', narrative:'You are nourished by being with large groups of people.' },
 { test:'temperament', factor:'extravert', range:'medium', narrative:'You are nourished by two different sources. You are nourished by one on one or small group conversations, which are deeper in meaning and content, and you are nourished by being with large groups of people, many of whom you may not know, and with a very different depth of communication' },
 { test:'temperament', factor:'extravert', range:'low', narrative:'You are nourished by spending time alone, or having 1 to 1 conversations with close friends on a more essence level or deeply meaningful conversations' },

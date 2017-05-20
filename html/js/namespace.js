@@ -1,9 +1,5 @@
 /** const */ 
-var voyc={}; 
-var peg = {};
-peg.q = {};
-
-/** externals */
-window['voyc']={};
-window['voyc']['data']={};
+var voyc={};
+voyc.data = {};
+voyc.data.quizz = {};
 var log = true; 
