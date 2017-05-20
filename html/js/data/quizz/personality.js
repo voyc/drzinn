@@ -9,9 +9,9 @@ test: [
 {n:121, t:'After you have decided on a course of action, are you inclined to keep thinking about the disadvantages that may be involved?', a:'yes', b:'no', c:'maybe' },
 ]}
 */
-
-voyc.data.quizz.pf16
-title:'16PF',
+voyc.data.quizz.personality = {
+id:'personality',
+title:'16 Personality Factors (16PF)',
 copyright:'',
 directions:'185 questions.  Answer a,b,c.',
 // 16 personality traits, a (sten) number from 0 to 10 for each.

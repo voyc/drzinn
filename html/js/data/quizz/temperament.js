@@ -1,5 +1,5 @@
-voyc.data.quizz.kiersey = {
-id:'kiersey',
+voyc.data.quizz.temperament = {
+id:'temperament',
 title:'Keirsey Temperament Sorter II',
 copyright:'&copy; Copyright unknown',
 directions:'',

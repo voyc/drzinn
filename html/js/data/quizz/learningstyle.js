@@ -1,5 +1,5 @@
-voyc.data.quizz.torres = {
-id:'torres',
+voyc.data.quizz.learningstyle = {
+id:'learningstyle',
 title:'Language System Diagnostic Instrument, Cresencio Torres',
 copyright:'&copy; Copyright unknown',
 directions:'',

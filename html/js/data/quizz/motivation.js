@@ -1,5 +1,5 @@
-voyc.data.quizz.runner = {
-id:'runner',
+voyc.data.quizz.motivation = {
+id:'motivation',
 title:'Personal Priorities Questionnaire',
 copyright:'&copy; Copyright 1962 Kenyon Runner & Jessie Runner.  Used with permission.',
 directions:'Answer yes or no for each question. If a question is 60% Yes and 40% No, answer Yes. If the answer is 50% Yes and 50% No, answer Maybe.',

@@ -49,6 +49,7 @@ voyc.DrZinnView.prototype.setup = function() {
 	// attach event handlers
 	this.observer.subscribe('setup-complete'  ,'drzinnview' ,function(note) { self.onSetupComplete    (note); });
 	this.observer.subscribe('scores-received' ,'drzinnview' ,function(note) { self.onScoresReceived   (note); });
+	this.observer.subscribe('answer-submitted','drzinnview' ,function(note) { self.onAnswerSubmitted  (note); });
 }
 
 voyc.DrZinnView.prototype.onSetupComplete = function(note) {
@@ -193,6 +194,8 @@ voyc.DrZinnView.prototype.composeFactor = function(pageid) {
 	}
 	else if (factor == 'quizz') {
 		s += this.composeQuizz(test,factor);
+		var quizzid = voyc.data.tests[test].quizz;
+		this.observer.publish(new voyc.Note('quizz-requested', 'drzinnview', {'quizzid':quizzid}));
 	}
 	else {
 		s += this.composeTestFactor(test,factor);
@@ -483,7 +486,12 @@ voyc.DrZinnView.prototype.attachHandlers = function(element) {
 	var ae = elem.querySelectorAll('div.ans');
 	for (var i=0; i<ae.length; i++) {
 		ae[i].addEventListener('click', function(e) {
-			this.answer(e.currentTarget.id);
+			//self.answer(e.currentTarget.id);
+			var id = e.currentTarget.id;
+			var a = id.split('_');
+			var q = parseInt(a[0].substring(1));
+			var a = parseInt(a[1].substring(1));
+			self.observer.publish(new voyc.Note('answer-submitted', 'drzinnview', {'q':q, 'a':a}));
 		}, false);
 	}
 }
@@ -620,25 +628,13 @@ voyc.DrZinnView.prototype.changePerson = function(s) {
 voyc.DrZinnView.prototype.composeQuizzScroller = function(quizzid) {
 	this.openquizzid = quizzid;
 	var quizz = voyc.data.quizz[quizzid];
-	/*
-		stored in database per user
-		each array matches the corresponding test array
-		what about adding, removing and reorganizing questions in the test?
-		do we need to keep a sequence for each question?
-		NO.  If we reorganize a test, we will do a onetime fix of the answer table in the database.
-		this. answers = {
-			kiersey: [0,0,0,0],
-			runner: [],
-			torres: [],
-		};
-	*/
+
 	if (!this.answers) {
 		this.answers = {};
 	}
 	if (!this.answers[quizzid]) {
 		this.answers[quizzid] = [];
 	}
-//	this.updateProgress();
 
 	var pat = "<div id='q%n%' class='qblock'><div id='q%n%_t'>%n%. %t%</div>%a%</div>";
 	var pata = "<div id='q%n%_a%v%' class='ans'>%a%</div>";
@@ -665,28 +661,21 @@ voyc.DrZinnView.prototype.composeQuizzScroller = function(quizzid) {
 	return s;
 }
 
-voyc.DrZinnView.prototype.answer = function(id) {
-	var x = id;
+voyc.DrZinnView.prototype.onAnswerSubmitted = function(note) {
+	var q = note.payload.q;
+	var a = note.payload.a;
 	
 	// change the style of all the other answers
-	var a = id.split('_');
-	var ae = document.querySelectorAll('[id='+a[0]+'] .ans');
+	var ae = document.querySelectorAll('[id=q'+q+'] .ans');
 	for (var i=0; i<ae.length; i++) {
 		ae[i].classList.remove('chosen');
 	}
 
-	// change the style
-	document.getElementById(id).classList.toggle('chosen');
+	// change the style of selected answer
+	document.getElementById('q'+q+'_a'+a).classList.toggle('chosen');
 
-	// store the answer
-
-	var n = parseInt(a[0].substring(1));
-	var v = parseInt(a[1].substring(1));
-
-	this.answers[this.openquizzid][n-1] = v;
-	
+	// update progressbar
 	this.updateProgress();
-	this.flushToServer();
 	return;
 }
 
@@ -707,24 +696,6 @@ voyc.DrZinnView.prototype.countAnswers = function() {
 		}
 	}
 	return cnt;
-}
-
-voyc.DrZinnView.prototype.flushToServer = function() {
-	var svcname = 'setanswer';
-	var data = {};
-	data.tid = this.openquizzid;
-	data.answers = this.answers[this.openquizzid];
-	var s = JSON.stringify(data);
-	var self = this;
-	voyc.comm.request(svcname, data, function(ok, response, xhr) {
-		if (!ok) {
-			response = { 'status':'system-error'};
-		}
-		self.observer.publish(new voyc.Note('setanswer-received', 'stub', response));
-		if (response['status'] == 'ok') {
-			
-		}
-	});
 }
 
 /**

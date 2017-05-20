@@ -8,7 +8,7 @@ voyc.data.tests = {
 		dimensions: 'paired', // single or paired
 		vendorstyle: 'paired', // oneway, paired or offcenter
 		pairedscore: true,
-		quizz: 'kiersey',
+		quizz: 'temperament',
 		company: '',
 		derived: false,
 		hassubs: false,
@@ -31,7 +31,7 @@ voyc.data.tests = {
 		dimensions: 'single', // single or paired
 		vendorstyle: 'oneway', // oneway, paired or offcenter
 		pairedscore: false,
-		quizz: 'runner',
+		quizz: 'motivation',
 		company: '',
 		derived: false,
 		hassubs: false,
@@ -47,6 +47,7 @@ voyc.data.tests = {
 		dimensions: 'paired', // single or paired
 		vendorstyle: 'offcenter', // oneway, paired or offcenter
 		pairedscore: false,
+		quizz: 'personality',
 		company: 'Raymond Cattell',
 		derived: false,
 		hassubs: false,
@@ -62,6 +63,7 @@ voyc.data.tests = {
 		dimensions: 'single', // single or paired
 		vendorstyle: 'oneway', // oneway, paired or offcenter
 		testname: 'Emotional Judgement Inventory',
+		quizz: 'eji',
 		company: 'IPAT Inc., Champaign IL, www.ipat.com',
 		derived: false,
 		hassubs: false,
@@ -76,6 +78,7 @@ voyc.data.tests = {
 		dimensions: 'single', // single or paired
 		vendorstyle: 'oneway', // oneway, paired or offcenter
 		pairedscore: false,
+		quizz: 'soi',
 		company: 'SOI Systems',
 		derived: false,
 		hassubs: false,
