@@ -154,7 +154,9 @@ voyc.DrZinn.prototype.collectDirty = function() {
 	var a = [];
 	for (var i=0; i<this.answersDirty[this.openquizzid].length; i++) {
 		if (this.answersDirty[this.openquizzid][i]) {
-			a.push({i:this.answers[this.openquizzid][i]});
+			var o = {};
+			o[i] = this.answers[this.openquizzid][i];
+			a.push(o);
 		}
 	}
 	return a;
@@ -175,8 +177,9 @@ voyc.DrZinn.prototype.flushToServer = function(force) {
 	
 	var svcname = 'setanswer';
 	var data = {};
-	data.tid = this.openquizzid;
-	data.answers = JSON.stringify(answers);
+	data['si'] = voyc.getSessionId();
+	data['tid'] = this.openquizzid;
+	data['ans'] = JSON.stringify(answers);
 	var s = JSON.stringify(data);
 	var self = this;
 	this.comm.request(svcname, data, function(ok, response, xhr) {
