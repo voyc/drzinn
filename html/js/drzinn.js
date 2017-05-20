@@ -444,10 +444,8 @@ voyc.DrZinn.prototype.attachHandlers = function(element) {
 	var navs = elem.querySelectorAll('[nav]');
 	for (var i=0; i<navs.length; i++) {
 		navs[i].addEventListener('click', function(e) {
-//			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('nav'));
 			var pageid = e.currentTarget.getAttribute('nav');
-			self.observer.publish(new voyc.Note('nav-requested', 'model', {'pageid':pageid}));
-	
+//			self.observer.publish(new voyc.Note('nav-requested', 'model', {'pageid':pageid}));
 			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('nav'));
 		}, false);
 	}
