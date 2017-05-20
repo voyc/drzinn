@@ -1,5 +1,5 @@
 /**
-	class voyc.DrZinn
+	class voyc.DrZinnView
 	@constructor
 singleton
 
@@ -26,7 +26,10 @@ fact - object in peg.factors
 
 pageid - string test-factor or test-all or all-all
 */
-voyc.DrZinn = function() {
+voyc.DrZinnView = function() {
+	if (voyc.DrZinnView._instance) return voyc.DrZinnView._instance;
+	voyc.DrZinnView._instance = this;
+	this.setup();
 }
 
 /**
@@ -35,7 +38,7 @@ voyc.DrZinn = function() {
 	on startup, on back and forward, and on every user navigation click.
 	Draws the page using composeXXX() methods, each of which returns a string of HTML.
 **/
-voyc.DrZinn.prototype.drawPage = function(pageid) {
+voyc.DrZinnView.prototype.drawPage = function(pageid) {
 	var pageid = pageid || 'home';
 	var s = '';
 	if (pageid == 'home') {  // main refrigerator-magnet summary page
@@ -65,7 +68,7 @@ voyc.DrZinn.prototype.drawPage = function(pageid) {
 	method composeHome()
 	draw the home page, a refrigerator-magnet-like summary screen
 */
-voyc.DrZinn.prototype.composeHome = function(test, factors) {
+voyc.DrZinnView.prototype.composeHome = function(test, factors) {
 	var s = "<h1>My Authentic Self</h3>";
 	s += "<panel id='temperament' class='panel red'><h3>My Temperament</h3>";
 	s += "<p>";
@@ -137,7 +140,7 @@ voyc.DrZinn.prototype.composeHome = function(test, factors) {
 	method composePanel()
 	A panel is a set of graphs in a box.
 */
-voyc.DrZinn.prototype.composePanel = function(test, factors) {
+voyc.DrZinnView.prototype.composePanel = function(test, factors) {
 	var s = '';
 	s += "<panel class='panel red'><h3></h3>";
 	s += "<p>";
@@ -150,7 +153,7 @@ voyc.DrZinn.prototype.composePanel = function(test, factors) {
 	return s;
 }
 
-voyc.DrZinn.prototype.composeFactor = function(pageid) {
+voyc.DrZinnView.prototype.composeFactor = function(pageid) {
 	var a = pageid.split('-');
 	var test = a[0];
 	var factor = a[1];
@@ -170,7 +173,7 @@ voyc.DrZinn.prototype.composeFactor = function(pageid) {
 	return s;
 }
 
-voyc.DrZinn.prototype.composeTestFactor = function(test,factor) {
+voyc.DrZinnView.prototype.composeTestFactor = function(test,factor) {
 	var pageid = test + '-' + factor;
 	var s = '';
 	s += "<p><button class='anchor' nav='home'>Return to main page</button></p>";
@@ -182,7 +185,7 @@ voyc.DrZinn.prototype.composeTestFactor = function(test,factor) {
 	return s;
 }
 
-voyc.DrZinn.prototype.composeFactorStory = function(test, factor, showComponents) {
+voyc.DrZinnView.prototype.composeFactorStory = function(test, factor, showComponents) {
 	var s = '';
 	var pageid = test + '-' + factor;
 	s += "<h2><headline factor='" + pageid + "'>" + this.composeHeadline(test, factor) + "</headline></h2>";
@@ -191,7 +194,7 @@ voyc.DrZinn.prototype.composeFactorStory = function(test, factor, showComponents
 	return s;
 }
 
-voyc.DrZinn.prototype.composeTestAll = function(pageid) {
+voyc.DrZinnView.prototype.composeTestAll = function(pageid) {
 	var a = pageid.split('-');
 	var test = a[0];
 	var factor = a[1];  // 'all'
@@ -207,7 +210,7 @@ voyc.DrZinn.prototype.composeTestAll = function(pageid) {
 	return s;
 }
 
-voyc.DrZinn.prototype.composeAllAll = function() {
+voyc.DrZinnView.prototype.composeAllAll = function() {
 	var s = '';
 	for (var test in peg.tests) {
 		s += "<h1>" + peg.tests[test].display + "</h1>";
@@ -218,7 +221,7 @@ voyc.DrZinn.prototype.composeAllAll = function() {
 	return s;
 }
 
-voyc.DrZinn.prototype.composeStory = function(test, factor, showComponents) {
+voyc.DrZinnView.prototype.composeStory = function(test, factor, showComponents) {
 	var fact = peg.factors[test][factor];
 	
 	var score = peg.scores.get(test, factor);
@@ -271,14 +274,14 @@ voyc.DrZinn.prototype.composeStory = function(test, factor, showComponents) {
 
 	if (fact.global && showComponents) {
 		s += '<p>This is a composite factor made up of the following component factors.</p>'
-		s += voyc.drzinn.composePanel(test, fact.components);
+		s += this.composePanel(test, fact.components);
 	}
 	
 	s = this.changePerson(s);
 	return s;
 }
 
-voyc.DrZinn.prototype.composeHeadline = function(test, factor, score) {
+voyc.DrZinnView.prototype.composeHeadline = function(test, factor, score) {
 	var fact = peg.factors[test][factor];
 	
 	var score = peg.scores.get(test, factor);
@@ -293,7 +296,7 @@ voyc.DrZinn.prototype.composeHeadline = function(test, factor, score) {
 	var pctlow = 100 - score.pct;
 
 	//if (peg.tests[test].dimensions == 'paired') {
-	if (voyc.drzinn.getPole(fact) == 2) {
+	if (this.getPole(fact) == 2) {
 		if (range == 'medium') {
 			displayrange = 'balanced';
 		}
@@ -315,7 +318,7 @@ voyc.DrZinn.prototype.composeHeadline = function(test, factor, score) {
 	return s;
 }
 
-voyc.DrZinn.prototype.composeQuizz = function(test,factor) {
+voyc.DrZinnView.prototype.composeQuizz = function(test,factor) {
 	var pageid = test + "-" + factor;
 	
 	var quizzid = peg.tests[test].quizz;
@@ -335,7 +338,7 @@ voyc.DrZinn.prototype.composeQuizz = function(test,factor) {
 	
 	// scrolling quizz area
 	s += "<div class='qscroller'>";
-	s += voyc.drzinn.composeQuizzScroller(quizzid);
+	s += this.composeQuizzScroller(quizzid);
 	s += "</div>";
 	
 	// fixed footer
@@ -349,7 +352,7 @@ voyc.DrZinn.prototype.composeQuizz = function(test,factor) {
 	return s;
 }
 
-voyc.DrZinn.prototype.composeGifts = function(which) {
+voyc.DrZinnView.prototype.composeGifts = function(which) {
 	var s = '';
 
 	// loop through scores
@@ -428,7 +431,7 @@ voyc.DrZinn.prototype.composeGifts = function(which) {
 	First time, call this with no element, do the whole page including header and hidden.
 	Subsequently, specify the element which has changed.
 **/
-voyc.DrZinn.prototype.attachHandlers = function(element) {
+voyc.DrZinnView.prototype.attachHandlers = function(element) {
 	var elem = element || document;
 	
 	// click on a chart
@@ -454,7 +457,7 @@ voyc.DrZinn.prototype.attachHandlers = function(element) {
 	var ae = elem.querySelectorAll('div.ans');
 	for (var i=0; i<ae.length; i++) {
 		ae[i].addEventListener('click', function(e) {
-			voyc.drzinn.answer(e.currentTarget.id);
+			this.answer(e.currentTarget.id);
 		}, false);
 	}
 }
@@ -464,14 +467,14 @@ voyc.DrZinn.prototype.attachHandlers = function(element) {
 	called on window resize event
 	redraws variable sized elements
 **/
-voyc.DrZinn.prototype.populateHTML = function() {
+voyc.DrZinnView.prototype.populateHTML = function() {
 	var charts = document.querySelectorAll('chart');
 	for (var i=0; i<charts.length; i++) {
 		this.populateChart(charts[i]);
 	}
 }
 
-voyc.DrZinn.prototype.populateChart = function(elem) {
+voyc.DrZinnView.prototype.populateChart = function(elem) {
 	var c1 = 'RGB(0,255,255)';
 	var c2 = 'RGB(255,255,0)';
 
@@ -481,7 +484,7 @@ voyc.DrZinn.prototype.populateChart = function(elem) {
 	var fact = peg.factors[test][factor];
 	var tst = peg.tests[test];
 
-	if (voyc.drzinn.getPole(fact) == 1) {
+	if (this.getPole(fact) == 1) {
 		var scoreleft = peg.scores.get(test, factor).pct;
 		var	labelleft = fact.aleft || fact.left;
 		var w = elem.offsetWidth;
@@ -499,7 +502,7 @@ voyc.DrZinn.prototype.populateChart = function(elem) {
 
 		drawgauge(elem, data);
 	}
-	else if (voyc.drzinn.getPole(fact) == 2) {
+	else if (this.getPole(fact) == 2) {
 		var scoreleft = peg.scores.get(test, factor).raw;
 		var scoreright = peg.tests[test].maxscore - scoreleft;
 		
@@ -534,12 +537,12 @@ voyc.pct = function(n,max) {
 	return parseInt((n / max) * 100);
 }
 
-voyc.DrZinn.prototype.getPole = function(factor) {
+voyc.DrZinnView.prototype.getPole = function(factor) {
 	var n = factor.pole || peg.tests[factor.test].pole;
 	return n;
 }
 
-voyc.DrZinn.prototype.getRange = function(test, factor, score) {
+voyc.DrZinnView.prototype.getRange = function(test, factor, score) {
 	// determine range: low, high, medium
 	var range = '';
 	var low = 35;
@@ -563,19 +566,19 @@ voyc.DrZinn.prototype.getRange = function(test, factor, score) {
 		temperament-all         Temperament All
 		temperament-extravert   Temperament Extravert
 **/
-voyc.DrZinn.prototype.getPageId = function(test, factor) {
+voyc.DrZinnView.prototype.getPageId = function(test, factor) {
 	return test + '-' + factor;
 }
 
-voyc.DrZinn.prototype.getPageTitle = function(test, factor) {
+voyc.DrZinnView.prototype.getPageTitle = function(test, factor) {
 	return peg.tests[test].display + '-' + peg.factors[factor].left;
 }
 
-voyc.DrZinn.prototype.getTestTitle = function(test, factor) {
+voyc.DrZinnView.prototype.getTestTitle = function(test, factor) {
 	return peg.tests[test].display;
 }
 
-voyc.DrZinn.prototype.changePerson = function(s) {
+voyc.DrZinnView.prototype.changePerson = function(s) {
 	var t = s;
 	t = t.replace(/your/g, 'my');
 	t = t.replace(/Your/g, 'My');
@@ -588,7 +591,7 @@ voyc.DrZinn.prototype.changePerson = function(s) {
 	return t;
 }
 
-voyc.DrZinn.prototype.composeQuizzScroller = function(quizzid) {
+voyc.DrZinnView.prototype.composeQuizzScroller = function(quizzid) {
 	this.openquizzid = quizzid;
 	var quizz = peg.q[quizzid];
 	/*
@@ -636,7 +639,7 @@ voyc.DrZinn.prototype.composeQuizzScroller = function(quizzid) {
 	return s;
 }
 
-voyc.DrZinn.prototype.answer = function(id) {
+voyc.DrZinnView.prototype.answer = function(id) {
 	var x = id;
 	
 	// change the style of all the other answers
@@ -661,14 +664,14 @@ voyc.DrZinn.prototype.answer = function(id) {
 	return;
 }
 
-voyc.DrZinn.prototype.updateProgress = function() {
+voyc.DrZinnView.prototype.updateProgress = function() {
 	var cnt = this.countAnswers();
 	var tot = peg.q[this.openquizzid].test.length;
 	document.getElementById('testprogress').max = tot;
 	document.getElementById('testprogress').value = cnt;
 }
 
-voyc.DrZinn.prototype.countAnswers = function() {
+voyc.DrZinnView.prototype.countAnswers = function() {
 	var cnt = 0;
 	var test = peg.q[this.openquizzid].test;
 	for (i=1; i<=test.length; i++) {
@@ -680,7 +683,7 @@ voyc.DrZinn.prototype.countAnswers = function() {
 	return cnt;
 }
 
-voyc.DrZinn.prototype.flushToServer = function() {
+voyc.DrZinnView.prototype.flushToServer = function() {
 	var svcname = 'setanswer';
 	var data = {};
 	data.tid = this.openquizzid;

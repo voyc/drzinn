@@ -12,7 +12,7 @@ voyc.Model = function () {
 
 voyc.Model.prototype.setup = function () {
 	this.observer = new voyc.Observer();
-	new voyc.View(this.observer);
+//	new voyc.View(this.observer);
 	new voyc.User(this.observer);
 	new voyc.Account(this.observer);
 	new voyc.AccountView(this.observer);
