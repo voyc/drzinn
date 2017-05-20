@@ -1,35 +1,48 @@
 /**
 	class voyc.DrZinnView
 	@constructor
-singleton
 
-A pie shows a distribution of scores within oneself.
-A guage shows a score compared to others.
+	singleton
 
-A pie shows two or more scores simultaneously.
+	draws reports on screen
+	A pie shows a distribution of scores within oneself.
+	A guage shows a score compared to others.
 
-A spread shows two scores relative to each other.
+	A pie shows two or more scores simultaneously.
 
-A 1-pole factor shows a single score.
-A 2-pole factor implies the existence of a second paired factor.
-A 3+pole factor is a composite of n other primary factors.
+	A spread shows two scores relative to each other.
 
-A global factor has 2 or more composite factors.
-A global factor can be a 1-pole, averaging the scores of the composite factors.
-A global factor can be a m-pole, showing the composite scores on a pie chart.
+	A 1-pole factor shows a single score.
+	A 2-pole factor implies the existence of a second paired factor.
+	A 3+pole factor is a composite of n other primary factors.
 
-test - string id
-tst - object in peg.tests
+	A global factor has 2 or more composite factors.
+	A global factor can be a 1-pole, averaging the scores of the composite factors.
+	A global factor can be a m-pole, showing the composite scores on a pie chart.
 
-factor - string id
-fact - object in peg.factors
+	test - string id
+	tst - object in peg.tests
 
-pageid - string test-factor or test-all or all-all
+	factor - string id
+	fact - object in peg.factors
+
+	pageid - string test-factor or test-all or all-all
 */
 voyc.DrZinnView = function() {
 	if (voyc.DrZinnView._instance) return voyc.DrZinnView._instance;
 	voyc.DrZinnView._instance = this;
 	this.setup();
+}
+	
+voyc.DrZinnView.prototype.setup = function() {
+	// attach handlers to header and dialogs
+	this.attachHandlers();
+	
+	// initialize nav object
+	var self = this;
+	new voyc.BrowserHistory('name', function(pageid) {
+		self.drawPage(pageid);
+	});
 }
 
 /**
@@ -708,5 +721,5 @@ window.addEventListener('load', function() {
 }, false);
 
 window.addEventListener('resize', function() {
-	voyc.drzinn.populateHTML();
+	(new voyc.DrZinnView).populateHTML();
 }, false);

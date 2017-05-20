@@ -1,26 +1,21 @@
 /**
- * class voyc.Model
+ * class voyc.DrZinn
  * @param {Object=} observer
  * @constructor
  * A singleton object
  */
-voyc.Model = function () {
-	if (voyc.Model._instance) return voyc.Model._instance;
-	voyc.Model._instance = this;
+voyc.DrZinn = function () {
+	if (voyc.DrZinn._instance) return voyc.DrZinn._instance;
+	voyc.DrZinn._instance = this;
 	this.setup();
 }
 
-voyc.Model.prototype.setup = function () {
+voyc.DrZinn.prototype.setup = function () {
 	this.observer = new voyc.Observer();
-//	new voyc.View(this.observer);
 	new voyc.User(this.observer);
 	new voyc.Account(this.observer);
 	new voyc.AccountView(this.observer);
-	voyc.drzinn = new voyc.DrZinn(this.observer);
-
-	new voyc.BrowserHistory('name', function(pageid) {
-		voyc.drzinn.drawPage(pageid);
-	});
+	new voyc.DrZinnView(this.observer);
 
 	// set drawPage method as the callback in BrowserHistory object
 	//var self = this;
@@ -37,7 +32,7 @@ voyc.Model.prototype.setup = function () {
 	this.comm = new voyc.Comm(url, 'acomm', 2, true);
 
 	// attach handlers to HTML elements in the base html
-	voyc.drzinn.attachHandlers();
+//	this.attachHandlers();
 
 	// attach app events
 	var self = this;
@@ -55,10 +50,10 @@ voyc.Model.prototype.setup = function () {
 	//(new voyc.3).nav('home');
 }
 
-voyc.Model.prototype.onSetupComplete = function(note) {
+voyc.DrZinn.prototype.onSetupComplete = function(note) {
 }
 
-voyc.Model.prototype.onReloginReceived = function(note) {
+voyc.DrZinn.prototype.onReloginReceived = function(note) {
 
 	peg.scores = new Scores();
 	peg.scores.read('joe');
@@ -66,7 +61,7 @@ voyc.Model.prototype.onReloginReceived = function(note) {
 	(new voyc.BrowserHistory).nav('home');
 }
 
-voyc.Model.prototype.onProfileRequested = function(note) {
+voyc.DrZinn.prototype.onProfileRequested = function(note) {
 	var svcname = 'getprofile';
 	var data = {};
 	data['si'] = voyc.getSessionId();
@@ -82,7 +77,7 @@ voyc.Model.prototype.onProfileRequested = function(note) {
 	this.observer.publish(new voyc.Note('getprofile-posted', 'model', {}));
 }
 
-voyc.Model.prototype.onGetProfileReceived = function(note) {
+voyc.DrZinn.prototype.onGetProfileReceived = function(note) {
 	var response = note.payload;
 	if (response['status'] == 'ok') {
 		console.log('getprofile success');
@@ -95,7 +90,7 @@ voyc.Model.prototype.onGetProfileReceived = function(note) {
 	}
 }
 
-voyc.Model.prototype.onProfileSubmitted = function(note) {
+voyc.DrZinn.prototype.onProfileSubmitted = function(note) {
 	var svcname = 'setprofile';
 	var inputs = note.payload.inputs;
 
@@ -126,15 +121,15 @@ voyc.Model.prototype.onProfileSubmitted = function(note) {
 	this.observer.publish(new voyc.Note('setprofile-posted', 'model', {}));
 }
 
-voyc.Model.prototype.onSetProfilePosted = function(note) {
+voyc.DrZinn.prototype.onSetProfilePosted = function(note) {
 	console.log('setprofile posted');
 }
 
-voyc.Model.prototype.onSetProfileReceived = function(note) {
+voyc.DrZinn.prototype.onSetProfileReceived = function(note) {
 	console.log('setprofile received');
 }
 
 /* on startup */
 window.addEventListener('load', function(evt) {
-	voyc.model = new voyc.Model();
+	new voyc.DrZinn();
 }, false);
