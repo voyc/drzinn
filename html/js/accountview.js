@@ -48,19 +48,19 @@ voyc.AccountView = function(observer) {
 	this.observer.subscribe('restart-anonymous'        ,'accountview' ,function(note) { self.refresh(note);});
 	this.observer.subscribe('relogin-received'         ,'accountview' ,function(note) { self.refresh(note);});
 
-//	// attach click handlers to the submit buttons in the header and dialogs
-//	var elems = document.querySelectorAll('[type=submit]');
-//	var elem, dialog;
-//	var self = this;
-//	for (i=0; i<elems.length; i++) {
-//		elem = elems[i];
-//		dialog = voyc.findParentWithTag(elem, 'form');
-//		dialog.addEventListener('submit', function(evt) {
-//			evt.preventDefault();
-//			self.onSubmitClick(evt);
-//		}, false);
-//	}
-//
+	// attach click handlers to the submit buttons in the header and dialogs
+	var elems = document.querySelectorAll('[type=submit]');
+	var elem, dialog;
+	var self = this;
+	for (i=0; i<elems.length; i++) {
+		elem = elems[i];
+		dialog = voyc.findParentWithTag(elem, 'form');
+		dialog.addEventListener('submit', function(evt) {
+			evt.preventDefault();
+			self.onSubmitClick(evt);
+		}, false);
+	}
+
 	// attach click handlers to the request buttons in the header and dialogs
 	var elems = document.querySelectorAll('[request]');
 	var elem;

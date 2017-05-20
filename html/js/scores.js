@@ -1,16 +1,16 @@
 // manage the scores for one user
-function Scores() {
+voyc.Scores = function() {
 	this.scores = [];
 }
 
-Scores.prototype.set = function(testid, factorid, rawscore) {
+voyc.Scores.prototype.set = function(testid, factorid, rawscore) {
 	var score = this.find(testid, factorid);
 	if (!score) alert(testid + ' ' + factorid);
 	score.raw = rawscore;
 	this.calcScore(score);
 }
 
-Scores.prototype.get = function(testid, factorid) {
+voyc.Scores.prototype.get = function(testid, factorid) {
 	var score = this.find(testid, factorid);
 	if (score) {
 		return {
@@ -21,20 +21,35 @@ Scores.prototype.get = function(testid, factorid) {
 			range: score.range,
 		}
 	}
-	else return null;
+	//else return null;
+	else {
+		return {
+			raw: 0,
+			pct: 0,
+			offset: 0,
+			dir: 0,
+			range: 0,
+		}
+	}
 }
 
-Scores.prototype.read = function(name) {
+voyc.Scores.prototype.read = function(name) {
 	// load scores for current user
 	this.scores = exampleScores[name];
 	this.initScores();
 }
 
-Scores.prototype.write = function() {
+voyc.Scores.prototype.clear = function() {
+	// load scores for current user
+	this.scores = {};
+	this.initScores();
+}
+
+voyc.Scores.prototype.write = function() {
 	// save scores for current user
 }
 
-Scores.prototype.find = function(testid, factorid) {
+voyc.Scores.prototype.find = function(testid, factorid) {
 	var score;
 	for (var i=0; i<this.scores.length; i++) {
 		score = this.scores[i];
@@ -45,7 +60,7 @@ Scores.prototype.find = function(testid, factorid) {
 	return null;
 }
 
-Scores.prototype.initScores = function() {
+voyc.Scores.prototype.initScores = function() {
 	var score;
 	for (var i=0; i<this.scores.length; i++) {
 		score = this.scores[i];
@@ -54,7 +69,7 @@ Scores.prototype.initScores = function() {
 	return null;
 }
 
-Scores.prototype.calcScore = function(score) {
+voyc.Scores.prototype.calcScore = function(score) {
 	var max = voyc.data.tests[score.testid].maxscore;
 	var mean = 50;
 	score.pct = Math.round((score.raw / max) * 100);
@@ -63,7 +78,7 @@ Scores.prototype.calcScore = function(score) {
 	score.offset = Math.abs(offset);
 }
 
-Scores.prototype.reorder = function() {
+voyc.Scores.prototype.reorder = function() {
 	var options = {};
 	options.orderby = 'test';
 	if (options.orderby == 'significance') {
@@ -76,7 +91,7 @@ Scores.prototype.reorder = function() {
 
 
 var exampleScores = {
-	joe: [
+	'alanwatts': [
 		{ testid:'temperament',     factorid:'extravert',      raw: 7   },
 		{ testid:'temperament',     factorid:'sensible',       raw: 0.5 },
 		{ testid:'temperament',     factorid:'thinking',       raw: 3.5 },
@@ -168,7 +183,7 @@ var exampleScores = {
 		{ testid:'soi',         factorid:'DSR',            raw:71   },
 	],
 
-	sally: [
+	'carljung': [
 		{ testid:'temperament',     factorid:'extravert',      raw: 4.5 },
 		{ testid:'temperament',     factorid:'sensible',       raw: 7   },
 		{ testid:'temperament',     factorid:'thinking',       raw: 0.5 },
@@ -260,7 +275,7 @@ var exampleScores = {
 		{ testid:'soi',         factorid:'DSR',            raw:42   },
 	],
 
-	alan: [
+	'elonmusk': [
 		{ testid:'temperament',     factorid:'extravert',      raw: 2.5 },
 		{ testid:'temperament',     factorid:'sensible',       raw: 6   },
 		{ testid:'temperament',     factorid:'thinking',       raw: 7   },

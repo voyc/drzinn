@@ -16,7 +16,7 @@ voyc.DrZinn.prototype.setup = function () {
 	new voyc.Account(this.observer);
 	new voyc.AccountView(this.observer);
 	new voyc.DrZinnView(this.observer);
-	this.scores = new Scores();
+	this.scores = new voyc.Scores();
 
 	// server communications
 	var url = '/svc/';
@@ -28,7 +28,10 @@ voyc.DrZinn.prototype.setup = function () {
 	// attach app events
 	var self = this;
 	this.observer.subscribe('setup-complete'      ,'drzinn' ,function(note) { self.onSetupComplete       (note); });
-	this.observer.subscribe('relogin-received'    ,'drzinn' ,function(note) { self.onReloginReceived     (note); });
+	this.observer.subscribe('relogin-received'    ,'drzinn' ,function(note) { self.onLoginReceived     (note); });
+	this.observer.subscribe('login-received'      ,'drzinn' ,function(note) { self.onLoginReceived       (note); });
+	this.observer.subscribe('logout-received'     ,'drzinn' ,function(note) { self.onLoginReceived       (note); });
+	this.observer.subscribe('restart-anonymous'   ,'drzinn' ,function(note) { self.onLoginReceived       (note); });
 	this.observer.subscribe('profile-requested'   ,'drzinn' ,function(note) { self.onProfileRequested    (note); });
 	this.observer.subscribe('profile-submitted'   ,'drzinn' ,function(note) { self.onProfileSubmitted    (note); });
 	this.observer.subscribe('setprofile-posted'   ,'drzinn' ,function(note) { self.onSetProfilePosted    (note); });
@@ -41,9 +44,13 @@ voyc.DrZinn.prototype.setup = function () {
 voyc.DrZinn.prototype.onSetupComplete = function(note) {
 }
 
-voyc.DrZinn.prototype.onReloginReceived = function(note) {
-	// todo: note payload must contain success or fail.  if fail, setup empty scores.
-	this.scores.read('joe');
+voyc.DrZinn.prototype.onLoginReceived = function(note) {
+	if (note.payload.status == 'ok' && note.payload.uname) {
+		this.scores.read(note.payload.uname);
+	}
+	else {
+		this.scores.clear();
+	}
 	this.observer.publish(new voyc.Note('scores-received', 'drzinn', {}));
 }
 
