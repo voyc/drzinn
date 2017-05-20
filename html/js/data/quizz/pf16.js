@@ -10,7 +10,7 @@ test: [
 ]}
 */
 
-var q16PF = {
+voyc.data.quizz.pf16
 title:'16PF',
 copyright:'',
 directions:'185 questions.  Answer a,b,c.',

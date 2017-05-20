@@ -1,10 +1,8 @@
-var qWheel = {
+voyc.data.quizz.wheel = {
 title:'Wheel of Life',
 copyright:'',
 directions:'',
 test: [
-
-
 
 {n:1,  r:0, q:'In the area of Romance and Intimacy, I am:', a:[
 {v:1, t:'1 Totally unsatisfied'},

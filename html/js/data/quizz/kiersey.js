@@ -1,4 +1,4 @@
-peg.q.kiersey = {
+voyc.data.quizz.kiersey = {
 id:'kiersey',
 title:'Keirsey Temperament Sorter II',
 copyright:'&copy; Copyright unknown',

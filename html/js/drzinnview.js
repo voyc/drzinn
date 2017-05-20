@@ -4,36 +4,38 @@
 
 	singleton
 
-	draws reports on screen
-	A pie shows a distribution of scores within oneself.
-	A guage shows a score compared to others.
+	Draws reports on screen.
+		A pie shows a distribution of scores within oneself.
+		A guage shows a score compared to others.
 
-	A pie shows two or more scores simultaneously.
+		A pie shows two or more scores simultaneously.
 
-	A spread shows two scores relative to each other.
+		A spread shows two scores relative to each other.
 
-	A 1-pole factor shows a single score.
-	A 2-pole factor implies the existence of a second paired factor.
-	A 3+pole factor is a composite of n other primary factors.
+		A 1-pole factor shows a single score.
+		A 2-pole factor implies the existence of a second paired factor.
+		A 3+pole factor is a composite of n other primary factors.
 
-	A global factor has 2 or more composite factors.
-	A global factor can be a 1-pole, averaging the scores of the composite factors.
-	A global factor can be a m-pole, showing the composite scores on a pie chart.
+		A global factor has 2 or more composite factors.
+		A global factor can be a 1-pole, averaging the scores of the composite factors.
+		A global factor can be a m-pole, showing the composite scores on a pie chart.
 
-	test - string id
-	tst - object in peg.tests
+	Terminology
+		test - string id
+		tst - object in peg.tests
 
-	factor - string id
-	fact - object in peg.factors
+		factor - string id
+		fact - object in peg.factors
 
-	pageid - string test-factor or test-all or all-all
+		pageid - string test-factor or test-all or all-all
 */
-voyc.DrZinnView = function() {
+voyc.DrZinnView = function(observer) {
 	if (voyc.DrZinnView._instance) return voyc.DrZinnView._instance;
 	voyc.DrZinnView._instance = this;
+	this.observer = observer;
 	this.setup();
 }
-	
+
 voyc.DrZinnView.prototype.setup = function() {
 	// attach handlers to header and dialogs
 	this.attachHandlers();
@@ -43,6 +45,18 @@ voyc.DrZinnView.prototype.setup = function() {
 	new voyc.BrowserHistory('name', function(pageid) {
 		self.drawPage(pageid);
 	});
+
+	// attach event handlers
+	this.observer.subscribe('setup-complete'  ,'drzinnview' ,function(note) { self.onSetupComplete    (note); });
+	this.observer.subscribe('scores-received' ,'drzinnview' ,function(note) { self.onScoresReceived   (note); });
+}
+
+voyc.DrZinnView.prototype.onSetupComplete = function(note) {
+}
+
+voyc.DrZinnView.prototype.onScoresReceived = function(note) {
+	// display the home page
+	(new voyc.BrowserHistory).nav('home');
 }
 
 /**
@@ -461,7 +475,6 @@ voyc.DrZinnView.prototype.attachHandlers = function(element) {
 	for (var i=0; i<navs.length; i++) {
 		navs[i].addEventListener('click', function(e) {
 			var pageid = e.currentTarget.getAttribute('nav');
-//			self.observer.publish(new voyc.Note('nav-requested', 'model', {'pageid':pageid}));
 			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('nav'));
 		}, false);
 	}

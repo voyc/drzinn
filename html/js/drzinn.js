@@ -17,48 +17,35 @@ voyc.DrZinn.prototype.setup = function () {
 	new voyc.AccountView(this.observer);
 	new voyc.DrZinnView(this.observer);
 
-	// set drawPage method as the callback in BrowserHistory object
-	//var self = this;
-	//new voyc.BrowserHistory('name', function(pageid) {
-	//	var event = pageid.split('-')[0];
-	//	self.observer.publish(new voyc.Note(event+'-requested', 'model', {page:pageid}));
-	//});
-
 	// server communications
 	var url = '/svc/';
 	if (window.location.origin == 'file://') {
-		url = 'http://model.hagstrand.com/svc';  // for local testing
+		url = 'http://drzinn.hagstrand.com/svc';  // for local testing
 	}
 	this.comm = new voyc.Comm(url, 'acomm', 2, true);
 
-	// attach handlers to HTML elements in the base html
-//	this.attachHandlers();
-
 	// attach app events
 	var self = this;
-	this.observer.subscribe('setup-complete'      ,'model' ,function(note) { self.onSetupComplete       (note); });
-	this.observer.subscribe('relogin-received'    ,'model' ,function(note) { self.onReloginReceived     (note); });
-	this.observer.subscribe('profile-requested'   ,'model' ,function(note) { self.onProfileRequested    (note); });
-	this.observer.subscribe('profile-submitted'   ,'model' ,function(note) { self.onProfileSubmitted    (note); });
-	this.observer.subscribe('setprofile-posted'   ,'model' ,function(note) { self.onSetProfilePosted    (note); });
-	this.observer.subscribe('setprofile-received' ,'model' ,function(note) { self.onSetProfileReceived  (note); });
-	this.observer.subscribe('getprofile-received' ,'model' ,function(note) { self.onGetProfileReceived  (note); });
+	this.observer.subscribe('setup-complete'      ,'drzinn' ,function(note) { self.onSetupComplete       (note); });
+	this.observer.subscribe('relogin-received'    ,'drzinn' ,function(note) { self.onReloginReceived     (note); });
+	this.observer.subscribe('profile-requested'   ,'drzinn' ,function(note) { self.onProfileRequested    (note); });
+	this.observer.subscribe('profile-submitted'   ,'drzinn' ,function(note) { self.onProfileSubmitted    (note); });
+	this.observer.subscribe('setprofile-posted'   ,'drzinn' ,function(note) { self.onSetProfilePosted    (note); });
+	this.observer.subscribe('setprofile-received' ,'drzinn' ,function(note) { self.onSetProfileReceived  (note); });
+	this.observer.subscribe('getprofile-received' ,'drzinn' ,function(note) { self.onGetProfileReceived  (note); });
 
-//	(new voyc.BrowserHistory).nav('home');
-
-	this.observer.publish(new voyc.Note('setup-complete', 'model', {}));
-	//(new voyc.3).nav('home');
+	this.observer.publish(new voyc.Note('setup-complete', 'drzinn', {}));
 }
 
 voyc.DrZinn.prototype.onSetupComplete = function(note) {
 }
 
 voyc.DrZinn.prototype.onReloginReceived = function(note) {
-
+	// todo: note payload must contain success or fail.  if fail, setup empty scores.
 	peg.scores = new Scores();
 	peg.scores.read('joe');
 
-	(new voyc.BrowserHistory).nav('home');
+	this.observer.publish(new voyc.Note('scores-received', 'drzinn', {}));
 }
 
 voyc.DrZinn.prototype.onProfileRequested = function(note) {
@@ -72,9 +59,9 @@ voyc.DrZinn.prototype.onProfileRequested = function(note) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
-		self.observer.publish(new voyc.Note('getprofile-received', 'model', response));
+		self.observer.publish(new voyc.Note('getprofile-received', 'drzinn', response));
 	});
-	this.observer.publish(new voyc.Note('getprofile-posted', 'model', {}));
+	this.observer.publish(new voyc.Note('getprofile-posted', 'drzinn', {}));
 }
 
 voyc.DrZinn.prototype.onGetProfileReceived = function(note) {
@@ -108,7 +95,7 @@ voyc.DrZinn.prototype.onProfileSubmitted = function(note) {
 			response = { 'status':'system-error'};
 		}
 
-		self.observer.publish(new voyc.Note('setprofile-received', 'model', response));
+		self.observer.publish(new voyc.Note('setprofile-received', 'drzinn', response));
 
 		if (response['status'] == 'ok') {
 			console.log('setprofile success' + response['message']);
@@ -118,7 +105,7 @@ voyc.DrZinn.prototype.onProfileSubmitted = function(note) {
 		}
 	});
 
-	this.observer.publish(new voyc.Note('setprofile-posted', 'model', {}));
+	this.observer.publish(new voyc.Note('setprofile-posted', 'drzinn', {}));
 }
 
 voyc.DrZinn.prototype.onSetProfilePosted = function(note) {

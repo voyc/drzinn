@@ -1,4 +1,4 @@
-peg.q.torres = {
+voyc.data.quizz.torres = {
 id:'torres',
 title:'Language System Diagnostic Instrument, Cresencio Torres',
 copyright:'&copy; Copyright unknown',
