@@ -34,7 +34,7 @@ voyc.data.factors = {
 			left:  'Judicious',
 			right: 'Perceptive-Spontaneous',
 			aleft: 'Judicious',
-			aright:'Perceptive-Spontaneous',
+			aright:'Perceptive',
 		},
 	},
 	motivation: {

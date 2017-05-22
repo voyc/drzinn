@@ -525,7 +525,7 @@ voyc.DrZinnView.prototype.animateQuizz = function() {
 		this.observer.publish(new voyc.Note('answer-submitted', 'drzinnview', {'q':q, 'a':a}));
 	}
 }
-	
+
 /**
 	method populateHTML()
 	called on window resize event
@@ -567,15 +567,17 @@ voyc.DrZinnView.prototype.populateChart = function(elem) {
 		drawgauge(elem, data);
 	}
 	else if (this.getPole(fact) == 2) {
-		var scoreleft = voyc.drzinn.scores.get(test, factor).raw;
-		var scoreright = voyc.data.tests[test].maxscore - scoreleft;
+		//var scoreleft = voyc.drzinn.scores.get(test, factor).raw;
+		//var scoreright = voyc.data.tests[test].maxscore - scoreleft;
+		var scoreleft = voyc.drzinn.scores.get(test, factor).pct;
+		var scoreright = 100 - scoreleft;
 		
 		var labelleft = fact.aleft || fact.left;
 		var labelright = fact.aright || fact.right;
 		var w = elem.offsetWidth;
 		if (w > 400) {
-			labelleft = fact.left + ' (' + voyc.pct(scoreleft,10) + '%)';
-			labelright = fact.right + ' (' + voyc.pct(scoreright,10) + '%)';
+			labelleft =   fact.left + ' (' + scoreleft  + '%)';
+			labelright = fact.right + ' (' + scoreright + '%)';
 		}
 
 		var data = [];
@@ -659,13 +661,6 @@ voyc.DrZinnView.prototype.composeQuizzScroller = function(quizzid) {
 	this.openquizzid = quizzid;
 	var quizz = voyc.data.quizz[quizzid];
 
-	if (!this.answers) {
-		this.answers = {};
-	}
-	if (!this.answers[quizzid]) {
-		this.answers[quizzid] = [];
-	}
-
 	var pat = "<div id='q%n%' class='qblock'><div id='q%n%_t'>%n%. %t%</div>%a%</div>";
 	var pata = "<div id='q%n%_a%v%' class='ans'>%a%</div>";
 	var s = '';
@@ -721,7 +716,7 @@ voyc.DrZinnView.prototype.countAnswers = function() {
 	var test = voyc.data.quizz[this.openquizzid].test;
 	for (i=1; i<=test.length; i++) {
 		//if (test[i].r > 0) {
-		if (this.answers[this.openquizzid][i] > 0) {
+		if (voyc.drzinn.answers[this.openquizzid][i] > 0) {
 			cnt++;
 		}
 	}

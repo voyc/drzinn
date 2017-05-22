@@ -35,14 +35,14 @@ voyc.Scores.prototype.get = function(testid, factorid) {
 
 voyc.Scores.prototype.read = function(name) {
 	// load scores for current user
-	this.scores = exampleScores[name];
-	this.initScores();
+	//this.scores = exampleScores[name];
+	//this.initScores();
 }
 
 voyc.Scores.prototype.clear = function() {
 	// load scores for current user
-	this.scores = {};
-	this.initScores();
+	this.scores = [];
+	//this.initScores();
 }
 
 voyc.Scores.prototype.write = function() {
@@ -73,6 +73,7 @@ voyc.Scores.prototype.initScores = function() {
 	//}
 	var fact = {};
 	var score = {};
+	console.log([this.scores.length]);
 	for (var testname in voyc.data.factors) {
 		for (var factorname in voyc.data.factors[testname]) {
 			fact = voyc.data.factors[testname][factorname];
@@ -80,6 +81,7 @@ voyc.Scores.prototype.initScores = function() {
 				score = this.get(fact.test, fact.factor);
 				score.pct = this.calcGlobal(fact);
 				this.scores.push({testid:fact.test, factorid:fact.factor, raw:score.pct, pct:score.pct});
+				console.log([fact.test, fact.factor, score.pct]);
 			}
 		}
 	}

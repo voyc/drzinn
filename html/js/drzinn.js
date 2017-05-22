@@ -61,6 +61,7 @@ voyc.DrZinn.prototype.onLoginReceived = function(note) {
 	}
 	else {
 		this.scores.clear();
+		this.observer.publish(new voyc.Note('scores-received', 'drzinn', {}));
 	}
 }
 
@@ -92,13 +93,12 @@ voyc.DrZinn.prototype.readScore = function() {
 				}
 			}
 			self.scores.initScores();
+			self.observer.publish(new voyc.Note('scores-received', 'drzinn', response));
 		}
 		else {
 		}
-		self.observer.publish(new voyc.Note('scores-received', 'drzinn', response));
 	});
 	this.observer.publish(new voyc.Note('getscore-posted', 'drzinn', {}));
-//		this.scores.read(note.payload.uname);
 }
 
 voyc.DrZinn.prototype.getTestNameForCode = function(code) {
@@ -259,7 +259,7 @@ voyc.DrZinn.prototype.readAnswers = function(force) {
 	var svcname = 'getanswer';
 	var data = {};
 	data['si'] = voyc.getSessionId();
-	data['tid'] = this.openquizzid;
+	data['tid'] = voyc.data.tests[this.openquizzid].code;
 	var self = this;
 	this.comm.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
