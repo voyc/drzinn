@@ -1,15 +1,15 @@
 voyc.data.factors = {
-	temperament: {
-		extravert: {
-			test: 'temperament',
+	'temperament': {
+		'extravert': {
+			test:   'temperament',
 			factor: 'extravert',
-			code: 'e',
-			left:  'Extravert',
-			right: 'Introvert',
-			aleft: 'Extravert',
-			aright:'Introvert',
+			code:   'e',
+			left:   'Extravert',
+			right:  'Introvert',
+			aleft:  'Extravert',
+			aright: 'Introvert',
 		},
-		sensible: {
+		'sensible': {
 			test: 'temperament',
 			factor: 'sensible',
 			code: 's',
@@ -18,7 +18,7 @@ voyc.data.factors = {
 			aleft: 'Sensible',
 			aright:'Intuitive',
 		},
-		thinking: {
+		'thinking': {
 			test: 'temperament',
 			factor: 'thinking',
 			code: 't',
@@ -27,7 +27,7 @@ voyc.data.factors = {
 			aleft: 'Thinking',
 			aright:'Feeling',
 		},
-		judicious: {
+		'judicious': {
 			test: 'temperament',
 			factor: 'judicious',
 			code: 'j',
@@ -37,8 +37,8 @@ voyc.data.factors = {
 			aright:'Perceptive',
 		},
 	},
-	motivation: {
-		adventure: {
+	'motivation': {
+		'adventure': {
 			test: 'motivation',
 			factor: 'adventure',
 			pole: 2,
@@ -51,7 +51,7 @@ voyc.data.factors = {
 			//rightcomponents:['feelings','curiosity','pressure','tools'],
 			components:['definitions','efficiency','authority','wariness','feelings','curiosity','pressure','tools'],
 		},
-		personal: {
+		'personal': {
 			test: 'motivation',
 			factor: 'personal',
 			pole: 2,
@@ -64,98 +64,98 @@ voyc.data.factors = {
 			//rightcomponents:['acclaim', 'direct'],
 			components:['affection', 'pressure', 'avoidance', 'disappointment','acclaim', 'direct'],
 		},
-		definitions: {
+		'definitions': {
 			test: 'motivation',
 			factor: 'definitions',
 			code: 'def',
 			left: 'Need for Definitions',
 			aleft: 'Definitions',
 		},
-		feelings: {
+		'feelings': {
 			test: 'motivation',
 			factor: 'feelings',
 			code: 'fel',
 			left: 'Emphasis on Personal Feelings',
 			aleft: 'Feelings',
 		},
-		efficiency: {
+		'efficiency': {
 			test: 'motivation',
 			factor: 'efficiency',
 			code: 'eff',
 			left: 'Emphasis on Efficiency',
 			aleft: 'Efficiency',
 		},
-		curiosity: {
+		'curiosity': {
 			test: 'motivation',
 			factor: 'curiosity',
 			code: 'cur',
 			left: 'Active Curiosity',
 			aleft: 'Curiosity',
 		},
-		authority: {
+		'authority': {
 			test: 'motivation',
 			factor: 'authority',
 			code: 'aut',
 			left: 'Need for Established Authority',
 			aleft: 'Authority',
 		},
-		resistance: {
+		'resistance': {
 			test: 'motivation',
 			factor: 'resistance',
 			code: 'res',
 			left: 'Resistance to Social Pressure',
 			aleft: 'Resistance',
 		},
-		wariness: {
+		'wariness': {
 			test: 'motivation',
 			factor: 'wariness',
 			code: 'war',
 			left: 'Wariness of People',
 			aleft: 'Wariness',
 		},
-		tools: {
+		'tools': {
 			test: 'motivation',
 			factor: 'tools',
 			code: 'tol',
 			left: 'Pleasure in Tool Skills',
 			aleft: 'Tools',
 		},
-		affection: {
+		'affection': {
 			test: 'motivation',
 			factor: 'affection',
 			code: 'aff',
 			left: 'Need for Affectional Acceptance',
 			aleft: 'Affection',
 		},
-		acclaim: {
+		'acclaim': {
 			test: 'motivation',
 			factor: 'acclaim',
 			code: 'acc',
 			left: 'Need for Public Acclaim',
 			aleft: 'Acclaim',
 		},
-		pressure: {
+		'pressure': {
 			test: 'motivation',
 			factor: 'pressure',
 			code: 'prs',
 			left: 'Feelings of Pressure',
 			aleft: 'Pressure',
 		},
-		direct: {
+		'direct': {
 			test: 'motivation',
 			factor: 'direct',
 			code: 'dir',
 			left: 'Desire to Direct Activities',
 			aleft: 'Director',
 		},
-		avoidance: {
+		'avoidance': {
 			test: 'motivation',
 			factor: 'avoidance',
 			code: 'avd',
 			left: 'Avoidance of Confrontations',
 			aleft: 'Avoidance',
 		},
-		disappointment: {
+		'disappointment': {
 			test: 'motivation',
 			factor: 'disappointment',
 			code: 'dis',
@@ -163,8 +163,8 @@ voyc.data.factors = {
 			aleft: 'Disappointment',
 		},
 	},
-	personality: {
-		extraversion: {
+	'personality': {
+		'extraversion': {
 			test: 'personality',
 			factor: 'extraversion',
 			global: true,
@@ -172,7 +172,7 @@ voyc.data.factors = {
 			right: 'Extraversion',
 			components:['warm','lively','bold','private','selfreliant'],
 		},
-		anxiety: {
+		'anxiety': {
 			pole: 1,   // override
 			test: 'personality',
 			factor: 'anxiety',
@@ -180,7 +180,7 @@ voyc.data.factors = {
 			left: 'Anxiety',
 			components:['stable','vigilant','apprehensive','tense'],
 		},
-		tough: {
+		'tough': {
 			test: 'personality',
 			factor: 'tough',
 			global: true,
@@ -188,7 +188,7 @@ voyc.data.factors = {
 			right: 'Tough-Mindedness',
 			components:['warm','sensitive','abstract','open'],
 		},
-		independence: {
+		'independence': {
 			test: 'personality',
 			factor: 'independence',
 			global: true,
@@ -196,7 +196,7 @@ voyc.data.factors = {
 			right:'Independence',
 			components:['dominant','bold','vigilant','open'],
 		},
-		selfcontrol: {
+		'selfcontrol': {
 			test: 'personality',
 			factor: 'selfcontrol',
 			global: true,
@@ -204,7 +204,7 @@ voyc.data.factors = {
 			right: 'Self-Control',
 			components:['lively','rule','abstracted','perfectionist'],
 		},
-		warm: {
+		'warm': {
 			test: 'personality',
 			factor: 'warm',
 			code: 'a',
@@ -213,7 +213,7 @@ voyc.data.factors = {
 			right: 'Warm',
 			rightsub: 'friendly, attentive to others',
 		},
-		abstract: {
+		'abstract': {
 			test: 'personality',
 			factor: 'abstract',
 			code: 'b',
@@ -222,7 +222,7 @@ voyc.data.factors = {
 			right: 'Abstract',
 			rightsub: 'more reasoning ability',
 		},
-		stable: {
+		'stable': {
 			test: 'personality',
 			factor: 'stable',
 			code: 'c',
@@ -231,7 +231,7 @@ voyc.data.factors = {
 			right: 'Emotionally Stable',
 			rightsub: 'more ego strength',
 		},
-		dominant: {
+		'dominant': {
 			test: 'personality',
 			factor: 'dominant',
 			code: 'e',
@@ -240,7 +240,7 @@ voyc.data.factors = {
 			right: 'Dominant',
 			rightsub: 'assertive, competitive',
 		},
-		lively: {
+		'lively': {
 			test: 'personality',
 			factor: 'lively',
 			code: 'f',
@@ -249,7 +249,7 @@ voyc.data.factors = {
 			right: 'Lively',
 			rightsub: 'energetic, carefree',
 		},
-		rule: {
+		'rule': {
 			test: 'personality',
 			factor: 'rule',
 			code: 'g',
@@ -258,7 +258,7 @@ voyc.data.factors = {
 			right: 'Rule-Conscious',
 			rightsub: 'conventional',
 		},
-		bold: {
+		'bold': {
 			test: 'personality',
 			factor: 'bold',
 			code: 'h',
@@ -267,7 +267,7 @@ voyc.data.factors = {
 			right: 'Socially Bold',
 			rightsub: 'venturesome, seeks attention',
 		},
-		sensitive: {
+		'sensitive': {
 			test: 'personality',
 			factor: 'sensitive',
 			code: 'i',
@@ -276,7 +276,7 @@ voyc.data.factors = {
 			right: 'Sensitive',
 			rightsub: 'refined, sentimental',
 		},
-		vigilant: {
+		'vigilant': {
 			test: 'personality',
 			factor: 'vigilant',
 			code: 'i',
@@ -285,7 +285,7 @@ voyc.data.factors = {
 			right: 'Vigilant',
 			rightsub: 'suspicious, skeptical',
 		},
-		abstracted: {
+		'abstracted': {
 			test: 'personality',
 			factor: 'abstracted',
 			code: 'm',
@@ -294,7 +294,7 @@ voyc.data.factors = {
 			right: 'Abstracted',
 			rightsub: 'idea-oriented, imaginative',
 		},
-		private: {
+		'private': {
 			test: 'personality',
 			factor: 'private',
 			code: 'n',
@@ -303,7 +303,7 @@ voyc.data.factors = {
 			right: 'Private',
 			rightsub: 'discreet, shrewd',
 		},
-		apprehensive: {
+		'apprehensive': {
 			test: 'personality',
 			factor: 'apprehensive',
 			code: 'o',
@@ -312,7 +312,7 @@ voyc.data.factors = {
 			right: 'Apprehensive',
 			rightsub: 'guiltprone, worrying',
 		},
-		open: {
+		'open': {
 			test: 'personality',
 			factor: 'open',
 			code: 'q1',
@@ -321,7 +321,7 @@ voyc.data.factors = {
 			right: 'Open-to-change',
 			rightsub: 'experimenting',
 		},
-		selfreliant: {
+		'selfreliant': {
 			test: 'personality',
 			factor: 'selfreliant',
 			code: 'q2',
@@ -330,7 +330,7 @@ voyc.data.factors = {
 			right: 'Self-Reliant',
 			rightsub: 'solitary, individualistic',
 		},
-		perfectionist: {
+		'perfectionist': {
 			test: 'personality',
 			factor: 'perfectionist',
 			code: 'q3',
@@ -339,7 +339,7 @@ voyc.data.factors = {
 			right: 'Perfectionistic',
 			rightsub: 'orderly, compulsive',
 		},
-		tense: {
+		'tense': {
 			test: 'personality',
 			factor: 'tense',
 			code: 'q4',
@@ -349,8 +349,8 @@ voyc.data.factors = {
 			rightsub: 'driven, fastpaced',
 		},
 	},
-	eji: {
-		summary: { 
+	'eji': {
+		'summary': { 
 			test:'eji', 
 			factor:'summary',
 			global: true,
@@ -359,65 +359,65 @@ voyc.data.factors = {
 			max:0,
 			components:['aware','identifyown','identifyothers','manageown','manageothers','problemsolving','express','impression'],
 		},
-		aware: {
+		'aware': {
 			test: 'eji',
 			factor: 'aware',
 			code: 'aw',
 			left: 'Being Aware of Emotions',
 			aleft: 'Awareness',
 		},
-		identifyown: {
+		'identifyown': {
 			test: 'eji',
 			factor: 'identifyown',
 			code: 'is',
 			left: 'Identifying Own Emotions',
 			aleft: 'Identify Mine',
 		},
-		identifyothers: {
+		'identifyothers': {
 			test: 'eji',
 			factor: 'identifyothers',
 			code: 'io',
 			left: 'Identifying Others\' Emotions',
 			aleft: 'Identify Others\'',
 		},
-		manageown: {
+		'manageown': {
 			test: 'eji',
 			factor: 'manageown',
 			code: 'ms',
 			left: 'Managing Own Emotions',
 			aleft: 'Manage Mine',
 		},
-		manageothers: {
+		'manageothers': {
 			test: 'eji',
 			factor: 'manageothers',
 			code: 'mo',
 			left: 'Managing Others\' Emotions',
 			aleft: 'Manage Others\'',
 		},
-		problemsolving: {
+		'problemsolving': {
 			test: 'eji',
 			factor: 'problemsolving',
 			code: 'ps',
 			left: 'Using Emotions in Problem Solving',
 			aleft: 'Problem Solving',
 		},
-		express: {
+		'express': {
 			test: 'eji',
 			factor: 'express',
 			code: 'ex',
 			left: 'Expressing Emotions Adaptively',
 			aleft: 'Expression',
 		},
-		impression: {
+		'impression': {
 			test: 'eji',
 			factor: 'impression',
 			code: 'im',
 			left: 'Impression Management',
-			left: 'Impression',
+			aleft: 'Impression',
 		},
 	},
-	soi: {
-		figural: { 
+	'soi': {
+		'figural': { 
 			test:'soi', 
 			factor:'figural',
 			global: true,
@@ -427,7 +427,7 @@ voyc.data.factors = {
 			max:0,
 			components:['CFU','CFC','MFU','EFU','EFC','CFS','CFT','NFU','DFU'],
 		},
-		symbolic: { 
+		'symbolic': { 
 			test:'soi', 
 			factor:'symbolic',
 			global: true,
@@ -438,7 +438,7 @@ voyc.data.factors = {
 			//components:['CSS','MSUv','MSSv','MSUa','MSUv','ESC','ESS','NSS','NST', 'NSI', 'CSR', 'DSR'],
 			components:['MSUv','MSSv','MSUa','MSUv','ESC','ESS','NSS','NST', 'NSI', 'CSR', 'DSR'],
 		},
-		semantic: { 
+		'semantic': { 
 			test:'soi', 
 			factor:'semantic',
 			global: true,
@@ -448,7 +448,7 @@ voyc.data.factors = {
 			max:0,
 			components:['CMU_R','CMU_M','CMR','CMS','DMU','MMI'],
 		},
-		comprehension: { 
+		'comprehension': { 
 			test:'soi', 
 			factor:'comprehension',
 			global: true,
@@ -459,7 +459,7 @@ voyc.data.factors = {
 			//components:['CFU','CFC','CFS','CFT','CSR','CSS','CMU_R','CMU_M','CMR','CMS'],
 			components:['CFU','CFC','CFS','CFT','CSR','CMU_R','CMU_M','CMR','CMS'],
 		},
-		memory: { 
+		'memory': { 
 			test:'soi', 
 			factor:'memory',
 			global: true,
@@ -469,7 +469,7 @@ voyc.data.factors = {
 			max:0,
 			components:['MFU','MSUv','MSSv','MSUa','MSSa','MSI','MMI'],
 		},
-		evaluation: { 
+		'evaluation': { 
 			test:'soi', 
 			factor:'evaluation',
 			global: true,
@@ -479,7 +479,7 @@ voyc.data.factors = {
 			max:0,
 			components:['EFU','EFC','ESC','ESS'],
 		},
-		problemsolving: { 
+		'problemsolving': { 
 			test:'soi', 
 			factor:'problemsolving',
 			global: true,
@@ -489,7 +489,7 @@ voyc.data.factors = {
 			max:0,
 			components:['NFU','NSS','NST','NSI'],
 		},
-		creativity: { 
+		'creativity': { 
 			test:'soi', 
 			factor:'creativity',
 			global: true,
@@ -499,7 +499,7 @@ voyc.data.factors = {
 			max:0,
 			components:['DFU','DMU','DSR'],
 		},
-		CFU: { 
+		'CFU': { 
 			test:'soi', 
 			factor:'CFU',
 			code:'CFU',
@@ -507,7 +507,7 @@ voyc.data.factors = {
 			aleft:'CFU',
 			max:32,
 		},
-		CFC: { 
+		'CFC': { 
 			test:'soi', 
 			factor:'CFC',
 			code:'CFC',
@@ -515,7 +515,7 @@ voyc.data.factors = {
 			aleft:'CFC',
 			max:9,
 		},
-		CFS: { 
+		'CFS': { 
 			test:'soi', 
 			factor:'CFS',
 			code:'CFS',
@@ -523,7 +523,7 @@ voyc.data.factors = {
 			aleft:'CFS',
 			max:27,
 		},
-		CFT: { 
+		'CFT': { 
 			test:'soi', 
 			factor:'CFT',
 			code:'CFT',
@@ -531,7 +531,7 @@ voyc.data.factors = {
 			aleft:'CFT',
 			max:24,
 		},
-		CSR: { 
+		'CSR': { 
 			test:'soi', 
 			factor:'CSR',
 			code:'CSR',
@@ -539,7 +539,7 @@ voyc.data.factors = {
 			aleft:'CSR',
 			max:9,
 		},
-		CMU_R: { 
+		'CMU_R': { 
 			test:'soi', 
 			factor:'CMU_R',
 			code:'CMU_R',
@@ -547,7 +547,7 @@ voyc.data.factors = {
 			aleft:'CMUr',
 			max:30,
 		},
-		CMU_M: { 
+		'CMU_M': { 
 			test:'soi', 
 			factor:'CMU_M',
 			code:'CMU_M',
@@ -555,7 +555,7 @@ voyc.data.factors = {
 			aleft:'CMUm',
 			max:33,
 		},
-		CMR: { 
+		'CMR': { 
 			test:'soi', 
 			factor:'CMR',
 			code:'CMR',
@@ -563,7 +563,7 @@ voyc.data.factors = {
 			aleft:'CMR',
 			max:51,
 		},
-		CMS: { 
+		'CMS': { 
 			test:'soi', 
 			factor:'CMS',
 			code:'CMS',
@@ -571,7 +571,7 @@ voyc.data.factors = {
 			aleft:'CMS',
 			max:31,
 		},
-		MFU: { 
+		'MFU': { 
 			test:'soi', 
 			factor:'MFU',
 			code:'MFU',
@@ -579,7 +579,7 @@ voyc.data.factors = {
 			aleft:'MFU',
 			max:24,
 		},
-		MSUv: { 
+		'MSUv': { 
 			test:'soi', 
 			factor:'MSUv',
 			code:'MSUv',
@@ -587,7 +587,7 @@ voyc.data.factors = {
 			aleft:'MSUv',
 			max:18,
 		},
-		MSSv: { 
+		'MSSv': { 
 			test:'soi', 
 			factor:'MSSv',
 			code:'MSSv',
@@ -595,7 +595,7 @@ voyc.data.factors = {
 			aleft:'MSSv',
 			max:18,
 		},
-		MSUa: { 
+		'MSUa': { 
 			test:'soi', 
 			factor:'MSUa',
 			code:'MSUa',
@@ -603,7 +603,7 @@ voyc.data.factors = {
 			aleft:'MSUa',
 			max:27,
 		},
-		MSSa: { 
+		'MSSa': { 
 			test:'soi', 
 			factor:'MSSa',
 			code:'MSSa',
@@ -611,7 +611,7 @@ voyc.data.factors = {
 			aleft:'MSSa',
 			max:27,
 		},
-		MSI: {  /* this factor is not reported in the Nancy Wilder example */
+		'MSI': {  /* this factor is not reported in the Nancy Wilder example */
 			test:'soi', 
 			factor:'MSI',
 			code:'MSI',
@@ -619,7 +619,7 @@ voyc.data.factors = {
 			aleft:'MSI',
 			max:100,
 		},
-		MMI: { 
+		'MMI': { 
 			test:'soi', 
 			factor:'MMI',
 			code:'MMI',
@@ -627,7 +627,7 @@ voyc.data.factors = {
 			aleft:'MMI',
 			max:16,
 		},
-		EFU: { 
+		'EFU': { 
 			test:'soi', 
 			factor:'EFU',
 			code:'EFU',
@@ -635,7 +635,7 @@ voyc.data.factors = {
 			aleft:'EFU',
 			max:26,
 		},
-		EFC: { 
+		'EFC': { 
 			test:'soi', 
 			factor:'EFC',
 			code:'EFC',
@@ -643,7 +643,7 @@ voyc.data.factors = {
 			aleft:'EFC',
 			max:15,
 		},
-		ESC: { 
+		'ESC': { 
 			test:'soi', 
 			factor:'ESC',
 			code:'ESC',
@@ -651,7 +651,7 @@ voyc.data.factors = {
 			aleft:'ESC',
 			max:28,
 		},
-		ESS: { 
+		'ESS': { 
 			test:'soi', 
 			factor:'ESS',
 			code:'ESS',
@@ -659,7 +659,7 @@ voyc.data.factors = {
 			aleft:'ESS',
 			max:16,
 		},
-		NFU: { 
+		'NFU': { 
 			test:'soi', 
 			factor:'NFU',
 			code:'NFU',
@@ -667,7 +667,7 @@ voyc.data.factors = {
 			aleft:'NFU',
 			max:34,
 		},
-		NSS: { 
+		'NSS': { 
 			test:'soi', 
 			factor:'NSS',
 			code:'NSS',
@@ -675,7 +675,7 @@ voyc.data.factors = {
 			aleft:'NSS',
 			max:8,
 		},
-		NST: { 
+		'NST': { 
 			test:'soi', 
 			factor:'NST',
 			code:'NST',
@@ -683,7 +683,7 @@ voyc.data.factors = {
 			aleft:'NST',
 			max:171,
 		},
-		NSI: { 
+		'NSI': { 
 			test:'soi', 
 			factor:'NSI',
 			code:'NSI',
@@ -691,7 +691,7 @@ voyc.data.factors = {
 			aleft:'NSI',
 			max:21,
 		},
-		DFU: { 
+		'DFU': { 
 			test:'soi', 
 			factor:'DFU',
 			code:'DFU',
@@ -699,7 +699,7 @@ voyc.data.factors = {
 			aleft:'DFU',
 			max:80,
 		},
-		DMU: { 
+		'DMU': { 
 			test:'soi', 
 			factor:'DMU',
 			code:'DMU',
@@ -707,7 +707,7 @@ voyc.data.factors = {
 			aleft:'DMU',
 			max:119,
 		},
-		DSR: { 
+		'DSR': { 
 			test:'soi', 
 			factor:'DSR',
 			code:'DSR',

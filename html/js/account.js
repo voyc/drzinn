@@ -343,7 +343,7 @@ voyc.Account.prototype.onChangeEmailSubmitted = function(note) {
 
 		if (response['status'] == 'ok') {
 			self.saveSession(response);
-			self.requestPending();
+			self.requestPending(response);
 			self.assertAuth('emailpending');
 		}
 	});

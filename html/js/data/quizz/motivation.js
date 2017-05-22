@@ -1,4 +1,4 @@
-voyc.data.quizz.motivation = {
+voyc.data.quizz['motivation'] = {
 id:'motivation',
 title:'Personal Priorities Questionnaire',
 copyright:'&copy; Copyright 1962 Kenyon Runner & Jessie Runner.  Used with permission.',

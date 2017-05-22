@@ -6,16 +6,20 @@ if (len(sys.argv) < 3):
 	print "two parameters required"
 	sys.exit()
 
-url = 'http://account.voyc.com/'
+url = 'http://drzinn.voyc.com/'
 if (sys.argv[1] == "dev"):
-	url = 'http://account.hagstrand.com/'
+	url = 'http://drzinn.hagstrand.com/'
  
 arr = [
 	('code_url', url + 'js/namespace.js'),
 	('code_url', url + 'js/account.js'),
-	('code_url', url + 'js/header.js'),
+	('code_url', url + 'js/accountview.js'),
 	('code_url', url + 'js/user.js'),
-	('code_url', url + 'js/modal.js'),
+	('code_url', url + 'js/drzinn.js'),
+	('code_url', url + 'js/drzinnview.js'),
+	('code_url', url + 'js/pie.js'),
+	('code_url', url + 'js/gauge.js'),
+	('code_url', url + 'js/scores.js'),
 	('code_url', url + 'minimal/minimal.js'),
 	('code_url', url + 'icon/icon.js'),
 	('code_url', url + 'icon/lib/menu.js'),
@@ -27,8 +31,16 @@ arr = [
 	('code_url', url + 'jslib/comm.js'),
 	('code_url', url + 'jslib/observer.js'),
 	('code_url', url + 'jslib/note.js'),
-	('code_url', url + 'jslib/cookie.js'),
 	('code_url', url + 'jslib/session.js'),
+	('code_url', url + 'jslib/cookie.js'),
+	('code_url', url + 'jslib/browserhistory.js'),
+	('code_url', url + 'js/data/strings.js'),
+	('code_url', url + 'js/data/tests.js'),
+	('code_url', url + 'js/data/factors.js'),
+	('code_url', url + 'js/data/gifts.js'),
+	('code_url', url + 'js/data/quizz/temperament.js'),
+	('code_url', url + 'js/data/quizz/motivation.js'),
+	('code_url', url + 'js/data/quizz/learningstyle.js'),
 	('compilation_level', 'ADVANCED_OPTIMIZATIONS'),
 	('language', 'ECMASCRIPT5'),
 	('output_format', 'text'),

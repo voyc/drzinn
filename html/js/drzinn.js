@@ -1,6 +1,5 @@
 /**
  * class voyc.DrZinn
- * @param {Object=} observer
  * @constructor
  * A singleton object
  */
@@ -56,7 +55,7 @@ voyc.DrZinn.prototype.onSetupComplete = function(note) {
 }
 
 voyc.DrZinn.prototype.onLoginReceived = function(note) {
-	if (note.payload.status == 'ok' && note.payload.uname) {
+	if (note.payload['status'] == 'ok' && note.payload['uname']) {
 		this.readScore();
 	}
 	else {
@@ -85,7 +84,7 @@ voyc.DrZinn.prototype.readScore = function() {
 			for (var tid in s) {
 				var testname = self.getTestNameForCode(tid);
 				a = JSON.parse(s[tid]);
-				for (fcode in a) {
+				for (var fcode in a) {
 					factorname = self.getFactorNameForCode(testname,fcode);
 					raw = a[fcode][0];
 					pct = a[fcode][1];
@@ -199,13 +198,13 @@ voyc.DrZinn.prototype.onQuizzRequested = function(note) {
 }
 
 voyc.DrZinn.prototype.onAnswerSubmitted = function(note) {
-	var q = note.payload.q;
-	var a = note.payload.a;
+	var q = note.payload['q'];
+	var a = note.payload['a'];
 	
 	this.answers[this.openquizzid][q-1] = a;
 	this.answersDirty[this.openquizzid][q-1] = true;
 	
-	this.writeAnswers();
+	this.writeAnswers(false);
 }
 
 voyc.DrZinn.prototype.collectDirty = function() {
@@ -217,27 +216,26 @@ voyc.DrZinn.prototype.collectDirty = function() {
 			cnt++;
 		}
 	}
-	return {cnt:cnt, o:o};
+	return {'cnt':cnt, 'o':o};
 }
 
 voyc.DrZinn.prototype.setDirty = function(answers, dirty) {
-	for (var q in answers.o) {
+	for (var q in answers['o']) {
 		this.answersDirty[this.openquizzid][q] = dirty;
 	}
 }
 	
 voyc.DrZinn.prototype.writeAnswers = function(force) {
 	var answers = this.collectDirty();
-	if ((answers.cnt < this.options.ansblocksize) && !force) {
+	if ((answers['cnt'] < this.options.ansblocksize) && !force) {
 		return;
-	} 
+	}
 	
 	var svcname = 'setanswer';
 	var data = {};
 	data['si'] = voyc.getSessionId();
 	data['tid'] = voyc.data.tests[this.openquizzid].code;
-	data['ans'] = JSON.stringify(answers.o);
-	var s = JSON.stringify(data);
+	data['ans'] = JSON.stringify(answers['o']);
 	var self = this;
 	this.comm.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
@@ -255,7 +253,7 @@ voyc.DrZinn.prototype.writeAnswers = function(force) {
 	this.setDirty(answers, false);
 }
 
-voyc.DrZinn.prototype.readAnswers = function(force) {
+voyc.DrZinn.prototype.readAnswers = function() {
 	var svcname = 'getanswer';
 	var data = {};
 	data['si'] = voyc.getSessionId();

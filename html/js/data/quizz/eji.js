@@ -11,7 +11,7 @@ a bar graph with 7 bars?
 
 */
 
-voyc.data.quizz.eji = {
+voyc.data.quizz['eji'] = {
 title:'Emotional Judgement Inventory (EJI)',
 copyright:'ipat',
 directions:'80 questions.  Answer 1 to 7, disagree-not sure-agree',

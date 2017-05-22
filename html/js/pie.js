@@ -23,10 +23,10 @@ function drawpie(elem, data) {
 	}
 	
 	var style = window.getComputedStyle(elem);
-	var w = canvas.width  = parseInt(style.width);
-	var h = canvas.height = parseInt(style.height);
-	var w2 = parseInt(canvas.width/2);
-	var h2 = parseInt(canvas.height/2);
+	var w = canvas.width  = parseInt(style.width,10);
+	var h = canvas.height = parseInt(style.height,10);
+	var w2 = parseInt(canvas.width/2,10);
+	var h2 = parseInt(canvas.height/2,10);
 	var r = Math.floor(Math.min(w, h)/2);
 
 	// calc total p and largest p

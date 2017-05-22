@@ -1,6 +1,7 @@
 /**
 	class voyc.DrZinnView
 	@constructor
+	@param {Object|null} [observer=null]
 
 	singleton
 
@@ -97,7 +98,7 @@ voyc.DrZinnView.prototype.drawPage = function(pageid) {
 	method composeHome()
 	draw the home page, a refrigerator-magnet-like summary screen
 */
-voyc.DrZinnView.prototype.composeHome = function(test, factors) {
+voyc.DrZinnView.prototype.composeHome = function() {
 	var s = "<h1>My Authentic Self</h3>";
 	s += "<panel id='temperament' class='panel red'><h3>My Temperament</h3>";
 	s += "<p>";
@@ -191,7 +192,7 @@ voyc.DrZinnView.prototype.composeFactor = function(pageid) {
 		s += this.composeAllAll();
 	}
 	else if (factor == 'all') {
-		s += this.composeTestAll(test,factor);
+		s += this.composeTestAll(test);
 	}
 	else if (factor == 'quizz') {
 		s += this.composeQuizz(test,factor);
@@ -208,11 +209,11 @@ voyc.DrZinnView.prototype.composeTestFactor = function(test,factor) {
 	var pageid = test + '-' + factor;
 	var s = '';
 	s += "<p><button class='anchor' nav='home'>Return to main page</button></p>";
-	s += "<h1>" + this.getTestTitle(test, factor) + "</h1>";
+	s += "<h1>" + this.getTestTitle(test) + "</h1>";
 	s += "<div class='narrative'>";
 	s += this.composeFactorStory(test, factor, true);
 	s += "</div>";
-	s += "<p><button class='anchor' nav='" + this.getPageId(test, 'all') + "'>Show all " + this.getTestTitle(test, factor) + " Details</button></p>";
+	s += "<p><button class='anchor' nav='" + this.getPageId(test, 'all') + "'>Show all " + this.getTestTitle(test) + " Details</button></p>";
 	return s;
 }
 
@@ -225,17 +226,12 @@ voyc.DrZinnView.prototype.composeFactorStory = function(test, factor, showCompon
 	return s;
 }
 
-voyc.DrZinnView.prototype.composeTestAll = function(pageid) {
-	var a = pageid.split('-');
-	var test = a[0];
-	var factor = a[1];  // 'all'
+voyc.DrZinnView.prototype.composeTestAll = function(test) {
 	var s = "";
 	s += "<div class='narrative'>";
-	s += "<h1>" + this.getTestTitle(test, factor) + "</h1>";
-	if (!factor) {
-		for (var k in voyc.data.factors[test]) {
-			s += this.composeFactorStory(test, k, false);
-		}
+	s += "<h1>" + this.getTestTitle(test) + "</h1>";
+	for (var k in voyc.data.factors[test]) {
+		s += this.composeFactorStory(test, k, false);
 	}
 	s += "</div>";
 	return s;
@@ -312,7 +308,7 @@ voyc.DrZinnView.prototype.composeStory = function(test, factor, showComponents) 
 	return s;
 }
 
-voyc.DrZinnView.prototype.composeHeadline = function(test, factor, score) {
+voyc.DrZinnView.prototype.composeHeadline = function(test, factor) {
 	var fact = voyc.data.factors[test][factor];
 	
 	var score = voyc.drzinn.scores.get(test, factor);
@@ -326,7 +322,6 @@ voyc.DrZinnView.prototype.composeHeadline = function(test, factor, score) {
 	var pcthigh = score.pct;
 	var pctlow = 100 - score.pct;
 
-	//if (voyc.data.tests[test].dimensions == 'paired') {
 	if (this.getPole(fact) == 2) {
 		if (range == 'medium') {
 			displayrange = 'balanced';
@@ -461,6 +456,7 @@ voyc.DrZinnView.prototype.composeGifts = function(which) {
 	Populate HTML after it has been rendered.
 	First time, call this with no element, do the whole page including header and hidden.
 	Subsequently, specify the element which has changed.
+	@param {Element|null} [element=null]
 **/
 voyc.DrZinnView.prototype.attachHandlers = function(element) {
 	var elem = element || document;
@@ -490,8 +486,8 @@ voyc.DrZinnView.prototype.attachHandlers = function(element) {
 			//self.answer(e.currentTarget.id);
 			var id = e.currentTarget.id;
 			var a = id.split('_');
-			var q = parseInt(a[0].substring(1));
-			var a = parseInt(a[1].substring(1));
+			var q = parseInt(a[0].substring(1),10);
+			var a = parseInt(a[1].substring(1),10);
 			self.observer.publish(new voyc.Note('answer-submitted', 'drzinnview', {'q':q, 'a':a}));
 		}, false);
 	}
@@ -567,8 +563,6 @@ voyc.DrZinnView.prototype.populateChart = function(elem) {
 		drawgauge(elem, data);
 	}
 	else if (this.getPole(fact) == 2) {
-		//var scoreleft = voyc.drzinn.scores.get(test, factor).raw;
-		//var scoreright = voyc.data.tests[test].maxscore - scoreleft;
 		var scoreleft = voyc.drzinn.scores.get(test, factor).pct;
 		var scoreright = 100 - scoreleft;
 		
@@ -600,7 +594,7 @@ voyc.DrZinnView.prototype.populateChart = function(elem) {
 	utilities
 **/
 voyc.pct = function(n,max) {
-	return parseInt((n / max) * 100);
+	return parseInt((n / max) * 100,10);
 }
 
 voyc.DrZinnView.prototype.getPole = function(factor) {
@@ -640,7 +634,7 @@ voyc.DrZinnView.prototype.getPageTitle = function(test, factor) {
 	return voyc.data.tests[test].display + '-' + voyc.data.factors[factor].left;
 }
 
-voyc.DrZinnView.prototype.getTestTitle = function(test, factor) {
+voyc.DrZinnView.prototype.getTestTitle = function(test) {
 	return voyc.data.tests[test].display;
 }
 
@@ -687,8 +681,8 @@ voyc.DrZinnView.prototype.composeQuizzScroller = function(quizzid) {
 }
 
 voyc.DrZinnView.prototype.onAnswerSubmitted = function(note) {
-	var q = note.payload.q;
-	var a = note.payload.a;
+	var q = note.payload['q'];
+	var a = note.payload['a'];
 	
 	// change the style of all the other answers
 	var ae = document.querySelectorAll('[id=q'+q+'] .ans');
@@ -703,9 +697,11 @@ voyc.DrZinnView.prototype.onAnswerSubmitted = function(note) {
 	this.updateProgress();
 	return;
 }
-
-voyc.DrZinnView.prototype.updateProgress = function() {
-	var cnt = this.countAnswers();
+/**
+	@param {number|null} [count=null]
+*/
+voyc.DrZinnView.prototype.updateProgress = function(count) {
+	var cnt = count || this.countAnswers();
 	var tot = voyc.data.quizz[this.openquizzid].test.length;
 	document.getElementById('testprogress').max = tot;
 	document.getElementById('testprogress').value = cnt;

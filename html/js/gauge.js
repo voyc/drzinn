@@ -26,12 +26,12 @@ function drawgauge(elem, data) {
 	//}
 	
 	var style = window.getComputedStyle(elem);
-	var w = canvas.width  = parseInt(style.width);
-	var h = canvas.height = parseInt(style.height);
+	var w = canvas.width  = parseInt(style.width,10);
+	var h = canvas.height = parseInt(style.height,10);
 	var r = Math.floor(Math.min(w, h)/2);
-	var w2 = parseInt(canvas.width/2);
-	var h2 = parseInt(canvas.height/2);
-	var r2 = parseInt(r * .75);
+	var w2 = parseInt(canvas.width/2,10);
+	var h2 = parseInt(canvas.height/2,10);
+	var r2 = parseInt(r * .75,10);
 	var ctx = canvas.getContext("2d");
 
 	// draw outer ring: three pie pieces: low medium high, red, yellow, green

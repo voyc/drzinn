@@ -1,5 +1,5 @@
 voyc.data.tests = {
-	temperament: {
+	'temperament': {
 		display: 'My Temperament',
 		code: 'tem',
 		minscore: 0,
@@ -22,7 +22,7 @@ voyc.data.tests = {
 		// high: between 71 and 100
 
 	},
-	motivation: {
+	'motivation': {
 		display: 'My Motivations',
 		code: 'mot',
 		minscore: 0,
@@ -38,7 +38,7 @@ voyc.data.tests = {
 		derived: false,
 		hassubs: false,
 	},
-	personality: {
+	'personality': {
 		//display: '16PF',
 		display: 'My Personality',
 		code: 'per',
@@ -55,7 +55,7 @@ voyc.data.tests = {
 		derived: false,
 		hassubs: false,
 	},
-	learningstyle: {
+	'learningstyle': {
 		display: 'My Learning Style',
 		code: 'lrn',
 		minscore: 0,
@@ -71,7 +71,7 @@ voyc.data.tests = {
 		derived: false,
 		hassubs: false,
 	},
-	eji: {
+	'eji': {
 		display: 'My Emotional Intelligence',
 		//display: 'Emotional Judgement Inventory',
 		code: 'eji',
@@ -88,7 +88,7 @@ voyc.data.tests = {
 		derived: false,
 		hassubs: false,
 	},
-	soi: {
+	'soi': {
 		display: 'The Structure of My Intellect',
 		code: 'soi',
 		minscore: 0,

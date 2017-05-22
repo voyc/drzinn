@@ -9,7 +9,7 @@ test: [
 {n:121, t:'After you have decided on a course of action, are you inclined to keep thinking about the disadvantages that may be involved?', a:'yes', b:'no', c:'maybe' },
 ]}
 */
-voyc.data.quizz.personality = {
+voyc.data.quizz['personality'] = {
 id:'personality',
 title:'16 Personality Factors (16PF)',
 copyright:'',

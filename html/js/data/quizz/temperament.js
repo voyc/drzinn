@@ -1,4 +1,4 @@
-voyc.data.quizz.temperament = {
+voyc.data.quizz['temperament'] = {
 id:'temperament',
 title:'Keirsey Temperament Sorter II',
 copyright:'&copy; Copyright unknown',

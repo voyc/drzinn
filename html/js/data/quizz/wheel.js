@@ -1,4 +1,4 @@
-voyc.data.quizz.wheel = {
+voyc.data.quizz['wheel'] = {
 title:'Wheel of Life',
 copyright:'',
 directions:'',

@@ -1,4 +1,8 @@
-// manage the scores for one user
+/**
+ * class voyc.Scores
+ * @constructor
+ * Manage the scores for one user
+ */
 voyc.Scores = function() {
 	this.scores = [];
 }
