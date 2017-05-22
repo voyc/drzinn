@@ -47,9 +47,10 @@ voyc.DrZinnView.prototype.setup = function() {
 	});
 
 	// attach event handlers
-	this.observer.subscribe('setup-complete'  ,'drzinnview' ,function(note) { self.onSetupComplete    (note); });
-	this.observer.subscribe('scores-received' ,'drzinnview' ,function(note) { self.onScoresReceived   (note); });
-	this.observer.subscribe('answer-submitted','drzinnview' ,function(note) { self.onAnswerSubmitted  (note); });
+	this.observer.subscribe('setup-complete'  ,'drzinnview'  ,function(note) { self.onSetupComplete    (note); });
+	this.observer.subscribe('scores-received' ,'drzinnview'  ,function(note) { self.onScoresReceived   (note); });
+	this.observer.subscribe('answer-submitted','drzinnview'  ,function(note) { self.onAnswerSubmitted  (note); });
+	this.observer.subscribe('answers-received','drzinnview'  ,function(note) { self.onAnswersReceived  (note); });
 }
 
 voyc.DrZinnView.prototype.onSetupComplete = function(note) {
@@ -494,8 +495,37 @@ voyc.DrZinnView.prototype.attachHandlers = function(element) {
 			self.observer.publish(new voyc.Note('answer-submitted', 'drzinnview', {'q':q, 'a':a}));
 		}, false);
 	}
+
+	// ctrl-click on progressbar, developer hot-key
+	var tp = elem.querySelector('[id=testprogress]');
+	if (tp) {
+		tp.addEventListener('click', function(e) {
+			if (e.ctrlKey) {
+				self.animateQuizz();
+			}
+		}, false);
+	}
 }
 
+/**
+	for developers
+	answer all questions of a quizz
+*/
+voyc.DrZinnView.prototype.animateQuizz = function() {
+	var quizz = voyc.data.quizz[this.openquizzid];
+	var a = 0;
+	var q = 0;
+	var maxa = 0;
+	var test = quizz.test;
+	var self = this;
+	for (var i=0; i<test.length; i++) {
+		maxa = test[i].a.length;
+		a = Math.ceil(maxa * Math.random());
+		q = i + 1;
+		this.observer.publish(new voyc.Note('answer-submitted', 'drzinnview', {'q':q, 'a':a}));
+	}
+}
+	
 /**
 	method populateHTML()
 	called on window resize event
@@ -696,6 +726,32 @@ voyc.DrZinnView.prototype.countAnswers = function() {
 		}
 	}
 	return cnt;
+}
+
+voyc.DrZinnView.prototype.highlightAnswer = function(q,a) {
+	var q1 = q+1;
+	var a1 = a;
+	// change the style of all the other answers
+	var ae = document.querySelectorAll('[id=q'+q1+'] .ans');
+	for (var i=0; i<ae.length; i++) {
+		ae[i].classList.remove('chosen');
+	}
+
+	// change the style of selected answer
+	document.getElementById('q'+q1+'_a'+a1).classList.toggle('chosen');
+}
+
+voyc.DrZinnView.prototype.onAnswersReceived = function(note) {
+	var a = 0;
+	var cnt = 0;
+	for (var i=0; i<voyc.drzinn.answers[this.openquizzid].length; i++) {
+		a = voyc.drzinn.answers[this.openquizzid][i];
+		if (a) {
+			this.highlightAnswer(i,a);
+			cnt++;
+		}
+	}
+	this.updateProgress(cnt);
 }
 
 /**

@@ -16,9 +16,9 @@ voyc.Scores.prototype.get = function(testid, factorid) {
 		return {
 			raw: score.raw,
 			pct: score.pct,
-			offset: score.offset,
-			dir: score.dir,
-			range: score.range,
+			//offset: score.offset,
+			//dir: score.dir,
+			//range: score.range,
 		}
 	}
 	//else return null;
@@ -26,9 +26,9 @@ voyc.Scores.prototype.get = function(testid, factorid) {
 		return {
 			raw: 0,
 			pct: 0,
-			offset: 0,
-			dir: 0,
-			range: 0,
+			//offset: 0,
+			//dir: 0,
+			//range: 0,
 		}
 	}
 }
@@ -61,18 +61,49 @@ voyc.Scores.prototype.find = function(testid, factorid) {
 }
 
 voyc.Scores.prototype.initScores = function() {
-	var score;
-	for (var i=0; i<this.scores.length; i++) {
-		score = this.scores[i];
-		this.calcScore(score);
+	//for (var i=0; i<this.scores.length; i++) {
+	//	score = this.scores[i];
+	//	this.calcScore(score);
+	//}
+	//for (var i=0; i<this.scores.length; i++) {
+	//	score = this.scores[i];
+	//	if (score.components) {
+	//		score.pct = this.calcGlobal(score);
+	//	}
+	//}
+	var fact = {};
+	var score = {};
+	for (var testname in voyc.data.factors) {
+		for (var factorname in voyc.data.factors[testname]) {
+			fact = voyc.data.factors[testname][factorname];
+			if (fact.components) {
+				score = this.get(fact.test, fact.factor);
+				score.pct = this.calcGlobal(fact);
+				this.scores.push({testid:fact.test, factorid:fact.factor, raw:score.pct, pct:score.pct});
+			}
+		}
 	}
 	return null;
+}
+
+voyc.Scores.prototype.calcGlobal = function(fact) {
+	var compscore = {};
+	var cnt = 0;
+	var tot = 0;
+	var factorname = '';
+	for (var i=0; i<fact.components.length; i++) {
+		factorname = fact.components[i];
+		compscore = this.get(fact.test, factorname);
+		tot += compscore.pct;
+		cnt++;
+	}
+	return Math.round(tot/cnt);
 }
 
 voyc.Scores.prototype.calcScore = function(score) {
 	var max = voyc.data.tests[score.testid].maxscore;
 	var mean = 50;
-	score.pct = Math.round((score.raw / max) * 100);
+	//score.pct = Math.round((score.raw / max) * 100);
 	var offset = mean - score.pct;
 	score.dir = (offset > 0) ? 1 : (offset < 0) ? -1 : 0;
 	score.offset = Math.abs(offset);

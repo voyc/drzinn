@@ -57,12 +57,70 @@ voyc.DrZinn.prototype.onSetupComplete = function(note) {
 
 voyc.DrZinn.prototype.onLoginReceived = function(note) {
 	if (note.payload.status == 'ok' && note.payload.uname) {
-		this.scores.read(note.payload.uname);
+		this.readScore();
 	}
 	else {
 		this.scores.clear();
 	}
-	this.observer.publish(new voyc.Note('scores-received', 'drzinn', {}));
+}
+
+voyc.DrZinn.prototype.readScore = function() {
+	var svcname = 'getscore';
+	var data = {};
+	data['si'] = voyc.getSessionId();
+	var self = this;
+	this.comm.request(svcname, data, function(ok, response, xhr) {
+		if (!ok) {
+			response = { 'status':'system-error'};
+		}
+		if (response['status'] == 'ok') {
+			// consolidate, codify: name, code, id, title, display, for test and factor, page title, dbid
+			var s = response['scores'];
+			var a = {};
+			var testname = '';
+			var factorname = '';
+			var raw = 0;
+			var pct = 0;
+			for (var tid in s) {
+				var testname = self.getTestNameForCode(tid);
+				a = JSON.parse(s[tid]);
+				for (fcode in a) {
+					factorname = self.getFactorNameForCode(testname,fcode);
+					raw = a[fcode][0];
+					pct = a[fcode][1];
+					voyc.drzinn.scores.scores.push({testid:testname, factorid:factorname, raw:raw, pct:pct});
+				}
+			}
+			self.scores.initScores();
+		}
+		else {
+		}
+		self.observer.publish(new voyc.Note('scores-received', 'drzinn', response));
+	});
+	this.observer.publish(new voyc.Note('getscore-posted', 'drzinn', {}));
+//		this.scores.read(note.payload.uname);
+}
+
+voyc.DrZinn.prototype.getTestNameForCode = function(code) {
+	var name = '';
+	for (var n in voyc.data.tests) {
+		if (voyc.data.tests[n].code == code) {
+			name = n;
+			break;
+		}
+	}
+	return name;
+}
+
+voyc.DrZinn.prototype.getFactorNameForCode = function(testname, code) {
+	name = '';
+	for (var n in voyc.data.factors[testname]) {
+		if (voyc.data.factors[testname][n].code == code) {
+			name = n;
+			break;
+		}
+	}
+	return name;
 }
 
 voyc.DrZinn.prototype.onProfileRequested = function(note) {
@@ -135,9 +193,9 @@ voyc.DrZinn.prototype.onSetProfileReceived = function(note) {
 
 voyc.DrZinn.prototype.onQuizzRequested = function(note) {
 	this.openquizzid = note.payload['quizzid'];
-
 	this.answers[this.openquizzid] = [];
 	this.answersDirty[this.openquizzid] = [];
+	this.readAnswers();
 }
 
 voyc.DrZinn.prototype.onAnswerSubmitted = function(note) {
@@ -147,39 +205,38 @@ voyc.DrZinn.prototype.onAnswerSubmitted = function(note) {
 	this.answers[this.openquizzid][q-1] = a;
 	this.answersDirty[this.openquizzid][q-1] = true;
 	
-	this.flushToServer();
+	this.writeAnswers();
 }
 
 voyc.DrZinn.prototype.collectDirty = function() {
-	var a = [];
+	var o = {};
+	var cnt = 0;
 	for (var i=0; i<this.answersDirty[this.openquizzid].length; i++) {
 		if (this.answersDirty[this.openquizzid][i]) {
-			var o = {};
 			o[i] = this.answers[this.openquizzid][i];
-			a.push(o);
+			cnt++;
 		}
 	}
-	return a;
+	return {cnt:cnt, o:o};
 }
 
 voyc.DrZinn.prototype.setDirty = function(answers, dirty) {
-	for (var i=0; i<answers.length; i++) {
-		var q = answers[i];
+	for (var q in answers.o) {
 		this.answersDirty[this.openquizzid][q] = dirty;
 	}
 }
 	
-voyc.DrZinn.prototype.flushToServer = function(force) {
+voyc.DrZinn.prototype.writeAnswers = function(force) {
 	var answers = this.collectDirty();
-	if ((answers.length < this.options.ansblocksize) && !force) {
+	if ((answers.cnt < this.options.ansblocksize) && !force) {
 		return;
 	} 
 	
 	var svcname = 'setanswer';
 	var data = {};
 	data['si'] = voyc.getSessionId();
-	data['tid'] = this.openquizzid;
-	data['ans'] = JSON.stringify(answers);
+	data['tid'] = voyc.data.tests[this.openquizzid].code;
+	data['ans'] = JSON.stringify(answers.o);
 	var s = JSON.stringify(data);
 	var self = this;
 	this.comm.request(svcname, data, function(ok, response, xhr) {
@@ -196,6 +253,30 @@ voyc.DrZinn.prototype.flushToServer = function(force) {
 	});
 	this.observer.publish(new voyc.Note('setanswer-posted', 'drzinn', {}));
 	this.setDirty(answers, false);
+}
+
+voyc.DrZinn.prototype.readAnswers = function(force) {
+	var svcname = 'getanswer';
+	var data = {};
+	data['si'] = voyc.getSessionId();
+	data['tid'] = this.openquizzid;
+	var self = this;
+	this.comm.request(svcname, data, function(ok, response, xhr) {
+		if (!ok) {
+			response = { 'status':'system-error'};
+		}
+		if (response['status'] == 'ok') {
+			var s = response['answers'];
+			var a = JSON.parse(s);
+			for (var q in a) {
+				self.answers[self.openquizzid][q] = a[q];
+			}
+		}
+		else {
+		}
+		self.observer.publish(new voyc.Note('answers-received', 'drzinn', response));
+	});
+	this.observer.publish(new voyc.Note('getanswer-posted', 'drzinn', {}));
 }
 
 /* on startup */

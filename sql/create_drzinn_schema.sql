@@ -7,19 +7,6 @@ After creating this schema, execute the GRANT statements found in the comments s
 drop schema drzinn cascade;
 create schema drzinn;
 
-/* client-side details for each test are found in the static tests.js file */
-/* scoring details for each test are found a score_vak.php script file for each test */
-drop table drzinn.test;
-create table drzinn.test (
-	code char(15) primary key
-);
-insert into drzinn.test (code) values ('temperament');
-insert into drzinn.test (code) values ('motivation');
-insert into drzinn.test (code) values ('learningstyle');
-insert into drzinn.test (code) values ('personality');
-insert into drzinn.test (code) values ('eji');
-insert into drzinn.test (code) values ('soi');
-
 create table drzinn.answer (
 	id serial primary key,
 	userid integer not null default 0,
@@ -35,4 +22,3 @@ create table drzinn.score (
 	scores text
 );
 create unique index ndx_score_usertest on drzinn.score (userid, testcode);
-
