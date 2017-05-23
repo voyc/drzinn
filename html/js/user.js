@@ -14,6 +14,7 @@ voyc.User = function(observer) {
 
 	var self = this;
 	this.observer.subscribe('login-received'   ,'user' ,function(note) { self.onLoginReceived   (note);});
+	this.observer.subscribe('relogin-received'   ,'user' ,function(note) { self.onLoginReceived   (note);});
 	this.observer.subscribe('logout-received'  ,'user' ,function(note) { self.onLogoutReceived  (note);});
 }
 

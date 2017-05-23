@@ -20,14 +20,6 @@ function setanswer() {
 	$si = validateToken($taint_si);
 	$tid  = validateTestCode($taint_tid );
 	$ans  = validateArray($taint_ans );
-
-	Log::write(LOG_WARNING, "si:$si");
-	Log::write(LOG_WARNING, "tid:$tid");
-	Log::write(LOG_WARNING, "ans:$ans");
-	
-	
-	
-	
 	
 	// validate parameter set
 	if (!$si || !$tid || !$ans) {

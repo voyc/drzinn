@@ -41,25 +41,39 @@ voyc.DrZinnView.prototype.setup = function() {
 	// attach handlers to header and dialogs
 	this.attachHandlers();
 	
+	this.currentPage = '';
+	this.openquizzid = '';
+
 	// initialize nav object
 	var self = this;
-	new voyc.BrowserHistory('name', function(pageid) {
+	new voyc.BrowserHistory('page', function(pageid) {
+		self.observer.publish(new voyc.Note('nav-requested', 'drzinnview', {}));
 		self.drawPage(pageid);
 	});
 
 	// attach event handlers
-	this.observer.subscribe('setup-complete'  ,'drzinnview'  ,function(note) { self.onSetupComplete    (note); });
-	this.observer.subscribe('scores-received' ,'drzinnview'  ,function(note) { self.onScoresReceived   (note); });
-	this.observer.subscribe('answer-submitted','drzinnview'  ,function(note) { self.onAnswerSubmitted  (note); });
-	this.observer.subscribe('answers-received','drzinnview'  ,function(note) { self.onAnswersReceived  (note); });
+	this.observer.subscribe('setup-complete'    ,'drzinnview'  ,function(note) { self.onSetupComplete    (note); });
+	this.observer.subscribe('scores-received'   ,'drzinnview'  ,function(note) { self.onScoresReceived   (note); });
+	this.observer.subscribe('answer-submitted'  ,'drzinnview'  ,function(note) { self.onAnswerSubmitted  (note); });
+	this.observer.subscribe('answers-received'  ,'drzinnview'  ,function(note) { self.onAnswersReceived  (note); });
 }
 
 voyc.DrZinnView.prototype.onSetupComplete = function(note) {
 }
 
 voyc.DrZinnView.prototype.onScoresReceived = function(note) {
-	// display the home page
-	(new voyc.BrowserHistory).nav('home');
+	// first time, go to startup page
+	if (!this.currentPage) {
+		var hist = (new voyc.BrowserHistory);
+		var pageid = hist.getBookmark() || 'home';
+		hist.nav(pageid);
+	}
+	else {
+		// if not quizz, redraw the current page
+		if (!this.openquizzid) {
+			this.drawPage(this.currentPage);
+		}
+	}
 }
 
 /**
@@ -70,6 +84,8 @@ voyc.DrZinnView.prototype.onScoresReceived = function(note) {
 **/
 voyc.DrZinnView.prototype.drawPage = function(pageid) {
 	var pageid = pageid || 'home';
+	this.currentPage = pageid;
+	this.openquizzid = '';
 	var s = '';
 	if (pageid == 'home') {  // main refrigerator-magnet summary page
 		s = this.composeHome();
@@ -508,17 +524,43 @@ voyc.DrZinnView.prototype.attachHandlers = function(element) {
 	answer all questions of a quizz
 */
 voyc.DrZinnView.prototype.animateQuizz = function() {
+	var username = voyc.drzinn.user.username;
+	var userndx = -1;
+	for (var i=0; i<voyc.data.exampleusers.length; i++) {
+		if (voyc.data.exampleusers[i] == username) {
+			userndx = i;
+			break;
+		}
+	}
 	var quizz = voyc.data.quizz[this.openquizzid];
 	var a = 0;
 	var q = 0;
-	var maxa = 0;
-	var test = quizz.test;
-	var self = this;
-	for (var i=0; i<test.length; i++) {
-		maxa = test[i].a.length;
-		a = Math.ceil(maxa * Math.random());
-		q = i + 1;
-		this.observer.publish(new voyc.Note('answer-submitted', 'drzinnview', {'q':q, 'a':a}));
+
+	if (userndx > -1) {
+		var example = voyc.data.examples[this.openquizzid];
+		var ans = {};
+		var pct = 0;
+		var raw = 0;
+		for (var test in example) {
+			pct = example[test].pct[userndx];
+			ans = example[test].answers;
+			raw = Math.round(pct * ans.length / 100);
+			for (var i=0; i<ans.length; i++) {
+				q = ans[i];
+				a = (i < raw) ? 1 : 2;
+				this.observer.publish(new voyc.Note('answer-submitted', 'drzinnview', {'q':q, 'a':a}));
+			}
+		}
+	}
+	else {
+		var maxa = 0;
+		var test = quizz.test;
+		for (var i=0; i<test.length; i++) {
+			maxa = test[i].a.length;
+			a = Math.ceil(maxa * Math.random());
+			q = i + 1;
+			this.observer.publish(new voyc.Note('answer-submitted', 'drzinnview', {'q':q, 'a':a}));
+		}
 	}
 }
 

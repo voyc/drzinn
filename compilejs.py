@@ -9,7 +9,11 @@ if (len(sys.argv) < 3):
 url = 'http://drzinn.voyc.com/'
 if (sys.argv[1] == "dev"):
 	url = 'http://drzinn.hagstrand.com/'
- 
+
+# to prepare for use with the online service
+# search \t\('code_url', url \+ '(.*)'\),
+# replace // @code_url $1),
+
 arr = [
 	('code_url', url + 'js/namespace.js'),
 	('code_url', url + 'js/account.js'),
