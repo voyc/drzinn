@@ -10,10 +10,10 @@ voyc.DrZinn = function () {
 	this.options = {
 		ansblocksize:5
 	}
-	this.openquizzid = '';
+	this.openquizzid = '';  // duplicate of separately managed field in drzinnview
 	this.answers = {};
 	this.answersDirty = {};
-	this.scores = {};
+	this.scores = {};   // overwritten in setup by scores class instance, for scores data, see voyc.drzinn.scores.scores, 
 	this.setup();
 }
 

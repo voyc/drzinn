@@ -89,7 +89,7 @@ voyc.data.tests = {
 		hassubs: false,
 	},
 	'soi': {
-		display: 'The Structure of My Intellect',
+		display: 'My Intellect',
 		code: 'soi',
 		minscore: 0,
 		maxscore: 100,

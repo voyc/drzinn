@@ -71,7 +71,7 @@
 				</div>
 				<icon type='draw' name='user' class='bit' open='user-dialog'></icon>
 			</div>
-			<div id='headergear' class='group tright'>
+			<div hidden id='headergear' class='group tright'>
 				<icon type='draw' name='gear' class='bit' open='settings-dialog'></icon>
 			</div>
 		</header>
@@ -81,8 +81,26 @@
 		<section id='dcontent'>
 			dynamic content goes here
 		</section>
-		
-		<!---- modeless dialogs ----------------------------------------->
+
+		<section hidden id='about'>
+			<div class='narrative'</div>
+			<h1>About</h1>
+			
+			<p>"Know Thyself."  -- The Oracle at Delphi</p>
+			
+			<p>"The unexamined life is not worth living."  -- Socrates</p>
+			
+			<p>"Who am I?"  -- Nisagardatta Maharaj</p>
+
+			<p>"Who is asking the question?"  -- Ramana Maharshi</p>
+			
+			<p>The journey to self-knowledge is long and deep, and you have just taken the first step.  On this website, you will dive into yourself, find out who you are, how to take care of yourself, and how to finetune yourself for maximum operation.  Start now.  Take some psychometric quizzes, and see the results combined into an Owner's Manual for your authentic self.</p>
+			
+			<p><button class='anchor' nav='temperament-quizz'>Take the first quizz.</button></p>
+			</div>
+		</section>
+
+		<!---- modeless dialogs ------------------------------>
 
 		<nav initially hidden class='panel popup leftnav blu' id='leftnav-dialog'>
 			<div close class='closex'>&times;</div>
@@ -206,6 +224,11 @@
 					<input close type='button' value='Cancel' class='anchor' tabindex='-1'>
 					<input type='submit' value='Change' class='submit'>
 				</p>
+			</form>
+			<form modal id='forcelogin' svc='ua' class='dialog' title='Get Started'>
+				<p><input type='button' class='anchor' value='Login' open='login'/> or
+				<input type='button' class='anchor' value='Register' open='register'/> now, 
+				so we can save your work and calculate your results.</p>
 			</form>
 		</div>
 

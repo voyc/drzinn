@@ -90,6 +90,9 @@ voyc.DrZinnView.prototype.drawPage = function(pageid) {
 	if (pageid == 'home') {  // main refrigerator-magnet summary page
 		s = this.composeHome();
 	}
+	else if (pageid == 'about') {
+		s = this.composeAbout();
+	}
 	else if (pageid == 'gifts' || pageid == 'nourishments' || pageid == 'burnouts') {
 		s = this.composeGifts(pageid);
 	}
@@ -110,6 +113,11 @@ voyc.DrZinnView.prototype.drawPage = function(pageid) {
 	following are the composeXXX() methods, which all return a string of HTML
 */
 
+voyc.DrZinnView.prototype.composeAbout = function() {
+	var s = voyc.$('about').innerHTML;
+	return s;
+}
+	
 /*
 	method composeHome()
 	draw the home page, a refrigerator-magnet-like summary screen
@@ -154,7 +162,7 @@ voyc.DrZinnView.prototype.composeHome = function() {
 	s += "<br/><button class='anchor'>Take the test</button>";
 	s += "</p></panel>";
 
-	s += "<panel class='panel red'><h3>Structure of My Intellect</h3>";
+	s += "<panel class='panel red'><h3>My Intellect</h3>";
 	s += "<p>";
 	s += "<chart factor='soi-figural'></chart>";
 	s += "<chart factor='soi-symbolic'></chart><br/>";
