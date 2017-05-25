@@ -28,8 +28,8 @@ voyc.Scores.prototype.get = function(testid, factorid) {
 	//else return null;
 	else {
 		return {
-			raw: 0,
-			pct: 0,
+			raw: -1,
+			pct: -1,
 			//offset: 0,
 			//dir: 0,
 			//range: 0,
@@ -135,7 +135,7 @@ voyc.data.examples = {
 		'thinking'            : { pct:[ 40,  0, 70], answers:[ 4,11,18,25,32,39,46,53,60,67, 5,12,19,26,33,40,47,54,61,68] },  // 20
 		'judicious'           : { pct:[ 80, 35,  5], answers:[ 6,13,20,27,34,41,48,55,62,69, 7,14,21,28,35,42,49,56,63,70] },  // 20
 	},
-	'motivation': {
+	'motivation': {       // the order here is the order of the original paper answer key.  The order in factors.js is the display order.
 		'definitions'         : { pct:[ 20, 80, 50], answers:[ 3, 4,19,39,82,110] },                  //  6
 		'efficiency'          : { pct:[ 40, 20, 80], answers:[ 8,46,47,58,59,83,84] },                //  7
 		'authority'           : { pct:[ 70, 40, 20], answers:[15,16,17,30,35,54,55,56,57,116] },      // 10

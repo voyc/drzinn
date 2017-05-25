@@ -57,8 +57,17 @@ function drawpie(elem, data) {
 		// save ending point for beginning of next piece
 		lastend += Math.PI*2*(pdata[i].p/pTotal);
 	}
+
+	// if no scores, draw a circle
+	if (pdata[0].c == pdata[1].c) {
+		ctx.strokeStyle = '#444444';
+		ctx.beginPath();
+		ctx.arc(w2,h2,h2,0,2*Math.PI);
+		ctx.stroke();
+	}
 	
 	// repeat to draw the labels
+	ctx.strokeStyle = '#000000';
 	var lastend = Math.PI*2*startpos;
 	for (var i = 0; i < pdata.length; i++) {
 		// find midpoint on the circumference of this pie piece
@@ -76,25 +85,47 @@ function drawpie(elem, data) {
 			// if there are two pieces, bold the larger one
 			ctx.fillStyle = 'black';
 			ctx.font = '12pt Arial';
-			if (i == iLarge) {
-				ctx.font = 'Bold 14pt Arial';
+			//if (i == iLarge) {
+			//	ctx.font = 'Bold 12pt Arial';
+			//}
+			if (pdata[i].r) {
+				ctx.font = 'Bold 12pt Arial';
 			}
-			
+
+			// measure text	
+			var tsize = ctx.measureText(pdata[i].l);
+
 			// go right and left from center
 			if (x<w2) {
-				x -= ctx.measureText(pdata[i].l).width;
+				x -= tsize.width;
 			}
 
 			// keep text from going off-screen
-			var tw = ctx.measureText(pdata[i].l).width;
+			var tw = tsize.width;
 			if (x+tw > w) {
 				x = w - tw;
 			}
 			if (x < 0) {
 				x = 0;
 			}
+
+			// insert minimal vertical space between labels
+			// compare y to centerline
+			// if y is between h2 and h2 - half the text height
+			tsize.height = 20;  // faking it
+			var th2 = tsize.height / 2;
+			if ((y<h2) && (y>(h2-th2))) {
+				y = h2 - th2;
+			}
+			else if ((y>=h2) && (y < (h2+th2))) {
+				y = h2 +th2;
+			}
 			
-			
+			ctx.shadowColor = pdata[i].c;
+			ctx.shadowOffsetX = .5; 
+			ctx.shadowOffsetY = .5; 
+			ctx.shadowBlur = 0;
+			ctx.textBaseline = 'middle';
 			ctx.fillText(pdata[i].l, x, y);
 		}
 		

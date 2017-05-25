@@ -613,7 +613,9 @@ voyc.DrZinnView.prototype.populateChart = function(elem) {
 		drawgauge(elem, data);
 	}
 	else if (this.getPole(fact) == 2) {
-		var scoreleft = voyc.drzinn.scores.get(test, factor).pct;
+		var score = voyc.drzinn.scores.get(test, factor);
+		var range = this.getRange(test, factor, score);
+		var scoreleft = score.pct;
 		var scoreright = 100 - scoreleft;
 		
 		var labelleft = fact.aleft || fact.left;
@@ -624,16 +626,25 @@ voyc.DrZinnView.prototype.populateChart = function(elem) {
 			labelright = fact.right + ' (' + scoreright + '%)';
 		}
 
+		if (score.pct < 0) {
+			range = 'balanced';
+			scoreleft  = 50;
+			scoreright = 50;
+			c1 = c2 = '#ffffff';
+		}
+		
 		var data = [];
 		data[0] = {
 			l:labelleft,
 			c:c1,
-			p:scoreleft
+			p:scoreleft,
+			r:(range == 'high') ? 1 : 0,
 		};
 		data[1] = {
 			l:labelright,
 			c:c2,
-			p:scoreright
+			p:scoreright,
+			r:(range == 'low') ? 1 : 0,
 		};
 
 		drawpie(elem, data);
