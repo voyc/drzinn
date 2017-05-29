@@ -3,6 +3,7 @@ id:'learningstyle',
 title:'Language System Diagnostic Instrument, Cresencio Torres',
 copyright:'&copy; Copyright unknown',
 directions:'',
+answertype: 'explicit',
 test: [
 //--- Part 1 --------
 {n:1,  r:0, q:'Which of the following paragraphs is easiest to read', a:[
@@ -134,4 +135,56 @@ test: [
 {v:0, t:'Listen up'},
 {v:2, t:'Catch this'},
 ]}
-]}
+],
+calcScores: function() {
+/**
+	input:  voyc.drzinn.answers['learningstyle']
+	output: voyc.drzinn.scores['learningstyle']
+	3 factors: 
+		visual
+		auditory
+		kinesthetic
+	all three factors presented on a single pie chart
+*/
+	var key = [
+		[1,2,3],  //  1
+		[2,3,1],  //  2
+		[3,1,2],  //  3
+		[1,3,2],  //  4
+		[2,1,3],  //  5
+		[2,1,3],  //  6
+		[3,2,1],  //  7
+		[1,3,2],  //  8
+		[2,1,3],  //  9
+		[1,3,2],  // 10
+		[2,1,3],  // 11
+		[1,3,2],  // 12
+		[3,2,1],  // 13
+		[2,1,3],  // 14
+		[1,3,2],  // 15
+		[2,1,3],  // 16
+		[1,3,2],  // 17
+		[3,2,1],  // 18
+		[2,1,3],  // 19
+		[3,2,1],  // 20
+		[1,3,2],  // 21
+		[2,1,3],  // 22
+		[3,2,1],  // 23
+		[1,3,2],  // 24
+		[2,1,3],  // 25
+	];
+	var testname = 'learningstyle';
+	var scores = [0,0,0];
+	var total = 0;
+	for (var i=0; i<key.length; i++) {
+		var ans = voyc.data.user.answers[testname][i];  // 1, 2, or 3
+		var ndx = ans - 1;   // 0, 1, 2
+		var scr = key[i][ndx];  // 1, 2, or 3
+		scores[scr]++;
+		total++;
+	}
+	voyc.data.user[test].scores.push({testid:testname, factorid:'visual'     , raw:scores[0], pct:Math.round((scores[0]/total)*100)});
+	voyc.data.user[test].scores.push({testid:testname, factorid:'auditory'   , raw:scores[1], pct:Math.round((scores[0]/total)*100)});
+	voyc.data.user[test].scores.push({testid:testname, factorid:'kinesthetic', raw:scores[2], pct:Math.round((scores[0]/total)*100)});
+}
+}

@@ -41,8 +41,8 @@ voyc.DrZinnView.prototype.setup = function() {
 	// attach handlers to header and dialogs
 	this.attachHandlers();
 	
-	this.currentPage = '';
-	this.openquizzid = '';
+	this.currentPageId = '';
+	this.openQuizzId = '';
 
 	// initialize nav object
 	var self = this;
@@ -63,15 +63,15 @@ voyc.DrZinnView.prototype.onSetupComplete = function(note) {
 
 voyc.DrZinnView.prototype.onScoresReceived = function(note) {
 	// first time, go to startup page
-	if (!this.currentPage) {
+	if (!this.currentPageId) {
 		var hist = (new voyc.BrowserHistory);
 		var pageid = hist.getBookmark() || 'home';
 		hist.nav(pageid);
 	}
 	else {
 		// if not quizz, redraw the current page
-		if (!this.openquizzid) {
-			this.drawPage(this.currentPage);
+		if (!this.openQuizzId) {
+			this.drawPage(this.currentPageId);
 		}
 	}
 }
@@ -84,8 +84,8 @@ voyc.DrZinnView.prototype.onScoresReceived = function(note) {
 **/
 voyc.DrZinnView.prototype.drawPage = function(pageid) {
 	var pageid = pageid || 'home';
-	this.currentPage = pageid;
-	this.openquizzid = '';
+	this.currentPageId = pageid;
+	this.openQuizzId = '';
 	var s = '';
 	if (pageid == 'home') {  // main refrigerator-magnet summary page
 		s = this.composeHome();
@@ -106,6 +106,9 @@ voyc.DrZinnView.prototype.drawPage = function(pageid) {
 	this.attachHandlers(dcontent); // attach click handlers to the new content
 	window.dispatchEvent(new Event('resize'));  // redraw size-dependent elements
 	window.scroll(0,0);
+	if (this.openQuizzId) {
+		this.recalcFixedHeader();
+	}
 	return;
 }
 
@@ -153,13 +156,13 @@ voyc.DrZinnView.prototype.composeHome = function() {
 	s += "<chart factor='personality-tough'></chart><br/>";
 	s += "<chart factor='personality-independence'></chart>";
 	s += "<chart factor='personality-selfcontrol'></chart>";
-	s += "<br/><button class='anchor'>Take the test</button>";
+	s += "<br/><button class='anchor' nav='personality-quizz'>Take the test</button>";
 	s += "</p></panel>";
 
 	s += "<panel class='panel red'><h3>My Emotional Intelligence</h3>";
 	s += "<p>";
 	s += "<chart factor='eji-summary'></chart>";
-	s += "<br/><button class='anchor'>Take the test</button>";
+	s += "<br/><button class='anchor' nav='eji-quizz'>Take the test</button>";
 	s += "</p></panel>";
 
 	s += "<panel class='panel red'><h3>My Intellect</h3>";
@@ -167,7 +170,7 @@ voyc.DrZinnView.prototype.composeHome = function() {
 	s += "<chart factor='soi-figural'></chart>";
 	s += "<chart factor='soi-symbolic'></chart><br/>";
 	s += "<chart factor='soi-semantic'></chart>";
-	s += "<br/><button class='anchor'>Take the test</button>";
+	s += "<br/><button class='anchor' nav='soi-quizz'>Take the test</button>";
 	s += "</p></panel>";
 
 	s += "<panel class='panel red'><h3>My Gifts</h3>";
@@ -382,8 +385,8 @@ voyc.DrZinnView.prototype.composeQuizz = function(test,factor) {
 	s += "<p><button class='anchor' nav='home'>Return to main page</button></p>";
 	s += "<h1><headline class='h3'>" + quizz.title + "</headline></h1>";
 	//s += "<p><button class='anchor' nav='home'>Instructions</button></p>";
-	s += "<p><progress id='testprogress' max=10 value=0></progress><p>";
-	s += "<p>" + quizz.copyright + "</p>";
+	s += "<p><progress id='testprogress' max=10 value=0></progress> <span id='numanswers'>0</span> of <span id='numquestions'>0</span><span id='teststatus'></span><p>";
+	s += "<p class='qcopyright'>" + quizz.copyright + "</p>";
 	s += "</div>";
 	
 	// scrolling quizz area
@@ -391,14 +394,6 @@ voyc.DrZinnView.prototype.composeQuizz = function(test,factor) {
 	s += this.composeQuizzScroller(quizzid);
 	s += "</div>";
 	
-	// fixed footer
-	/*
-	s += "<div class='qfooter'>";
-	s += "<p><button class='anchor' nav='home'>Instructions</button></p>";
-	s += "<progress id='testprogress' max=70 value=10></progress>";
-	s += "<div>Copyright</div>";
-	s += "</div>";
-	*/
 	return s;
 }
 
@@ -498,7 +493,7 @@ voyc.DrZinnView.prototype.attachHandlers = function(element) {
 	var navs = elem.querySelectorAll('[nav]');
 	for (var i=0; i<navs.length; i++) {
 		navs[i].addEventListener('click', function(e) {
-			var pageid = e.currentTarget.getAttribute('nav');
+			//var pageid = e.currentTarget.getAttribute('nav');
 			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('nav'));
 		}, false);
 	}
@@ -507,12 +502,15 @@ voyc.DrZinnView.prototype.attachHandlers = function(element) {
 	var ae = elem.querySelectorAll('div.ans');
 	for (var i=0; i<ae.length; i++) {
 		ae[i].addEventListener('click', function(e) {
-			//self.answer(e.currentTarget.id);
-			var id = e.currentTarget.id;
-			var a = id.split('_');
-			var q = parseInt(a[0].substring(1),10);
-			var a = parseInt(a[1].substring(1),10);
-			self.observer.publish(new voyc.Note('answer-submitted', 'drzinnview', {'q':q, 'a':a}));
+			self.onAnswerClick(e);
+		}, false);
+	}
+
+	// input on on a quizz answer
+	var ae = elem.querySelectorAll('input.ansh');
+	for (var i=0; i<ae.length; i++) {
+		ae[i].addEventListener('input', function(e) {
+			self.onAnswerInput(e);
 		}, false);
 	}
 
@@ -540,12 +538,12 @@ voyc.DrZinnView.prototype.animateQuizz = function() {
 			break;
 		}
 	}
-	var quizz = voyc.data.quizz[this.openquizzid];
+	var quizz = voyc.data.quizz[this.openQuizzId];
 	var a = 0;
 	var q = 0;
 
 	if (userndx > -1) {
-		var example = voyc.data.examples[this.openquizzid];
+		var example = voyc.data.examples[this.openQuizzId];
 		var ans = {};
 		var pct = 0;
 		var raw = 0;
@@ -712,40 +710,177 @@ voyc.DrZinnView.prototype.changePerson = function(s) {
 	return t;
 }
 
+/**
+*/
+voyc.DrZinnView.prototype.recalcFixedHeader = function() {
+	return;
+	var fixed = document.querySelector('header').offsetHeight;
+	fixed += document.querySelector('.qheader').offsetHeight;
+	document.querySelector('.qscroller').style.marginTop = fixed + 'px';
+}
+
 voyc.DrZinnView.prototype.composeQuizzScroller = function(quizzid) {
-	this.openquizzid = quizzid;
+	this.openQuizzId = quizzid;
 	var quizz = voyc.data.quizz[quizzid];
 
-	var pat = "<div id='q%n%' class='qblock'><div id='q%n%_t'>%n%. %t%</div>%a%</div>";
-	var pata = "<div id='q%n%_a%v%' class='ans'>%a%</div>";
 	var s = '';
+	s += "<p>" + quizz.directions.replace(/\n/g, '</p><p>') + "</p>";
+
 	var t = '';
 	var p = '';
 	var a = '';
 	var test = quizz.test;
-	for (var i=0; i<test.length; i++) {
-		a = '';
-		for (var j=0; j<test[i].a.length; j++) {
-			t = pata;
-			t = t.replace(/%n%/g, test[i].n);
-			t = t.replace(/%a%/g, test[i].a[j].t);
-			t = t.replace(/%v%/g, test[i].a[j].v);
-			a += t;
+	if (quizz.answertype == 'stanine') {
+		var numAnswers = 9;
+		var pat = "<div id='q%n%' class='qblock'><div id='q%n%_t' class='quest questh'>%n%. %t%</div>%a%</div>";
+		var pata = "<div id='q%n%_a%v%' class='ans ansh'>%a%</div>";
+		for (var i=0; i<test.length; i++) {
+			a = '';
+			for (var j=1; j<=numAnswers; j++) {
+				t = pata;
+				t = t.replace(/%n%/g, test[i].n);
+				t = t.replace(/%a%/g, j.toString());
+				t = t.replace(/%v%/g, j);
+				a += t;
+			}
+			p = pat;
+			p = p.replace(/%n%/g, test[i].n);
+			p = p.replace(/%t%/g, test[i].q);
+			p = p.replace(/%a%/g, a);
+			s += p;
 		}
-		p = pat;
-		p = p.replace(/%n%/g, test[i].n);
-		p = p.replace(/%t%/g, test[i].q);
-		p = p.replace(/%a%/g, a);
-		s += p;
+	}
+	if (quizz.answertype == 'pct') {
+		var pat = "<div id='q%n%' class='qblock'><div id='q%n%_t' class='quest questh'>%n%. %t%</div>";
+		pat += "<input id='q%n%' class='ansh' type='number' min='0' max='100' steps='1' value='0'/></div>";
+		for (var i=0; i<test.length; i++) {
+			a = '';
+			p = pat;
+			p = p.replace(/%n%/g, test[i].n);
+			p = p.replace(/%t%/g, test[i].q);
+			p = p.replace(/%a%/g, a);
+			s += p;
+		}
+	}
+	else if (quizz.answertype == 'explicit') {
+		var pat = "<div id='q%n%' class='qblock'><div id='q%n%_t' class='quest'>%n%. %t%</div>%a%</div>";
+		var pata = "<div id='q%n%_a%v%' class='ans'>%a%</div>";
+		for (var i=0; i<test.length; i++) {
+			a = '';
+			for (var j=0; j<test[i].a.length; j++) {
+				t = pata;
+				t = t.replace(/%n%/g, test[i].n);
+				t = t.replace(/%a%/g, test[i].a[j].t);
+				t = t.replace(/%v%/g, test[i].a[j].v);
+				a += t;
+			}
+			p = pat;
+			p = p.replace(/%n%/g, test[i].n);
+			p = p.replace(/%t%/g, test[i].q);
+			p = p.replace(/%a%/g, a);
+			s += p;
+		}
 	}
 	return s;
 }
 
 voyc.DrZinnView.prototype.onAnswerSubmitted = function(note) {
+	return;
+	
+	var quizz = voyc.data.quizz[this.openQuizzId];
+	if (quizz.answerType != 'explicit') {
+		return;
+	}
+
 	var q = note.payload['q'];
 	var a = note.payload['a'];
-	
-	// change the style of all the other answers
+
+	// unhighlight all the answers for this question
+	var ae = document.querySelectorAll('[id=q'+q+'] .ans');
+	for (var i=0; i<ae.length; i++) {
+		ae[i].classList.remove('chosen');
+	}
+
+	// highlight the selected answer
+	document.getElementById('q'+q+'_a'+a).classList.toggle('chosen');
+
+	// store answer
+	voyc.drzinn.answers[this.openQuizzId][q-1] = a;
+	voyc.drzinn.answersDirty[this.openQuizzId][q-1] = true;
+
+	// update progressbar
+	this.updateProgress();
+}
+
+voyc.DrZinnView.prototype.onAnswerClick = function(e) {
+	var id = e.currentTarget.id;
+	var a = id.split('_');
+	var q = parseInt(a[0].substring(1),10);
+	var a = parseInt(a[1].substring(1),10);
+	this.highlightAnswer(q,a);
+	this.setAnswer(q,a);
+}
+
+voyc.DrZinnView.prototype.onAnswerInput = function(e) {
+	var id = e.currentTarget.id;
+	var q = parseInt(id.substring(1),10);
+	var a = parseInt(e.currentTarget.value);
+	this.setAnswer(q,a);
+}
+
+/**
+	this.answer.set(q,a)
+	both q and a are non-zero
+*/
+voyc.DrZinnView.prototype.setAnswer = function(q,a) {
+	var qndx = q - 1;
+	voyc.drzinn.answers[this.openQuizzId][qndx] = a;
+	voyc.drzinn.answersDirty[this.openQuizzId][qndx] = true;
+	var isComplete = this.updateProgress();
+	if (isComplete) {
+		this.calcScores();
+	}
+	this.observer.publish(new voyc.Note('answer-submitted', 'drzinnview', {'q':q, 'a':a}));
+}
+
+voyc.DrZinnView.prototype.calcScores = function() {
+	voyc.data.calcScores[this.openQuizzId]();
+}
+
+/**
+	@param {number|null} [count=null]
+*/
+voyc.DrZinnView.prototype.updateProgress = function() {
+	var cnt = this.countAnswers();
+	var tot = this.countQuestions();
+	document.getElementById('testprogress').value = cnt;
+	document.getElementById('testprogress').max = tot;
+	document.getElementById('numanswers').innerHTML = cnt;
+	document.getElementById('numquestions').innerHTML = tot;
+	document.getElementById('teststatus').innerHTML = (cnt == tot) ? ' - Completed!' : '';
+	return (cnt == tot);
+}
+
+voyc.DrZinnView.prototype.countQuestions = function() {
+	return voyc.data.quizz[this.openQuizzId].test.length;
+}
+
+voyc.DrZinnView.prototype.countAnswers = function() {
+	var cnt = 0;
+	var test = voyc.data.quizz[this.openQuizzId].test;
+	for (var i=0; i<test.length; i++) {
+		if (voyc.drzinn.answers[this.openQuizzId][i] > 0) {
+			cnt++;
+		}
+	}
+	return cnt;
+}
+
+/**
+	both q and a are non-zero
+*/
+voyc.DrZinnView.prototype.highlightAnswer = function(q,a) {
+	// change the style of all the answers
 	var ae = document.querySelectorAll('[id=q'+q+'] .ans');
 	for (var i=0; i<ae.length; i++) {
 		ae[i].classList.remove('chosen');
@@ -753,57 +888,31 @@ voyc.DrZinnView.prototype.onAnswerSubmitted = function(note) {
 
 	// change the style of selected answer
 	document.getElementById('q'+q+'_a'+a).classList.toggle('chosen');
-
-	// update progressbar
-	this.updateProgress();
-	return;
-}
-/**
-	@param {number|null} [count=null]
-*/
-voyc.DrZinnView.prototype.updateProgress = function(count) {
-	var cnt = count || this.countAnswers();
-	var tot = voyc.data.quizz[this.openquizzid].test.length;
-	document.getElementById('testprogress').max = tot;
-	document.getElementById('testprogress').value = cnt;
-}
-
-voyc.DrZinnView.prototype.countAnswers = function() {
-	var cnt = 0;
-	var test = voyc.data.quizz[this.openquizzid].test;
-	for (i=1; i<=test.length; i++) {
-		//if (test[i].r > 0) {
-		if (voyc.drzinn.answers[this.openquizzid][i] > 0) {
-			cnt++;
-		}
-	}
-	return cnt;
-}
-
-voyc.DrZinnView.prototype.highlightAnswer = function(q,a) {
-	var q1 = q+1;
-	var a1 = a;
-	// change the style of all the other answers
-	var ae = document.querySelectorAll('[id=q'+q1+'] .ans');
-	for (var i=0; i<ae.length; i++) {
-		ae[i].classList.remove('chosen');
-	}
-
-	// change the style of selected answer
-	document.getElementById('q'+q1+'_a'+a1).classList.toggle('chosen');
 }
 
 voyc.DrZinnView.prototype.onAnswersReceived = function(note) {
 	var a = 0;
-	var cnt = 0;
-	for (var i=0; i<voyc.drzinn.answers[this.openquizzid].length; i++) {
-		a = voyc.drzinn.answers[this.openquizzid][i];
-		if (a) {
-			this.highlightAnswer(i,a);
-			cnt++;
+	var q = 0;
+	var answertype = voyc.data.quizz[this.openQuizzId].answertype;
+	if (answertype == 'explicit' || answertype == 'stanine') {
+		for (var i=0; i<voyc.drzinn.answers[this.openQuizzId].length; i++) {
+			q = i+1;
+			a = voyc.drzinn.answers[this.openQuizzId][i];
+			if (a) {
+				this.highlightAnswer(q,a);
+			}
 		}
 	}
-	this.updateProgress(cnt);
+	else if (answertype == 'pct') {
+		for (var i=0; i<voyc.drzinn.answers[this.openQuizzId].length; i++) {
+			q = i+1;
+			a = voyc.drzinn.answers[this.openQuizzId][i];
+			if (a) {
+				document.querySelector('input#q'+q).value = a;
+			}
+		}
+	}
+	this.updateProgress();
 }
 
 /**

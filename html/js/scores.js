@@ -7,11 +7,14 @@ voyc.Scores = function() {
 	this.scores = [];
 }
 
-voyc.Scores.prototype.set = function(testid, factorid, rawscore) {
+voyc.Scores.prototype.set = function(testid, factorid, raw, pct) {
 	var score = this.find(testid, factorid);
-	if (!score) alert(testid + ' ' + factorid);
-	score.raw = rawscore;
-	this.calcScore(score);
+	if (!score) {
+		score = {'testid':testid, 'factorid':factorid, 'raw': 0, 'pct':0};
+		this.scores.push(score);
+	}
+	score['raw'] = raw;
+	score['pct'] = pct;
 }
 
 voyc.Scores.prototype.get = function(testid, factorid) {
@@ -85,10 +88,11 @@ voyc.Scores.prototype.initScores = function() {
 				score = this.get(fact.test, fact.factor);
 				score.pct = this.calcGlobal(fact);
 				this.scores.push({testid:fact.test, factorid:fact.factor, raw:score.pct, pct:score.pct});
-				console.log([fact.test, fact.factor, score.pct]);
+				//console.log([fact.test, fact.factor, score.pct]);
 			}
 		}
 	}
+	console.log(['scores calculated ', fact.test]);
 	return null;
 }
 

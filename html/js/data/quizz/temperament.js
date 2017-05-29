@@ -3,6 +3,7 @@ id:'temperament',
 title:'Keirsey Temperament Sorter II',
 copyright:'&copy; Copyright unknown',
 directions:'',
+answertype: 'explicit',
 test: [
 {n:1,  r:0, q:'When the phone rings do you', a:[
 {v:1, t:'hurry to get to it first'},

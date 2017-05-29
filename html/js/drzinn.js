@@ -11,9 +11,9 @@ voyc.DrZinn = function () {
 		ansblocksize:5
 	}
 	this.openquizzid = '';  // duplicate of separately managed field in drzinnview
-	this.answers = {};
-	this.answersDirty = {};
-	this.scores = {};   // overwritten in setup by scores class instance, for scores data, see voyc.drzinn.scores.scores, 
+	this.answers = [];
+	this.answersDirty = [];
+	this.answersState = [];  // notstarted, inprogress, completed
 	this.setup();
 }
 
@@ -205,8 +205,9 @@ voyc.DrZinn.prototype.onAnswerSubmitted = function(note) {
 	var q = note.payload['q'];
 	var a = note.payload['a'];
 	
-	this.answers[this.openquizzid][q-1] = a;
-	this.answersDirty[this.openquizzid][q-1] = true;
+// this has been moved to drzinnview
+//	this.answers[this.openquizzid][q-1] = a;
+//	this.answersDirty[this.openquizzid][q-1] = true;
 	
 	this.writeAnswers(false);
 }

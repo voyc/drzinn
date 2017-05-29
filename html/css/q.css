@@ -1,10 +1,19 @@
+.quest {
+}
 .ans {
 	text-decoration:underline;
 	color:blue;
 	font-weight:normal;
-	//float:left;
 	margin:0.5rem 2rem;
 	cursor: pointer;
+}
+.questh {
+	float:left;
+	width: 4rem;
+}
+.ansh {
+	float:left;
+	margin:0 0.5rem;
 }
 .ans.chosen {
 	text-decoration:none;
@@ -34,4 +43,7 @@
 	xoverflow-y:auto;
 	xheight:20rem; /* calc(100% - 10rem); */
 	xborder:1px solid black;
+}
+.qcopyright {
+	font-size:11pt;
 }
