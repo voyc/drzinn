@@ -39,7 +39,7 @@ voyc.data.quizz['soi'] = {
 		var testname = 'soi';
 		var quizz = voyc.data.quizz[testname];
 		var questions = quizz.test;
-		var ans = voyc.drzinn.answers[testname];
+		var ans = voyc.drzinn.answers.collect(testname);
 		var factorname = '';
 		var raw = 0;
 		var pct = 0;
@@ -50,4 +50,18 @@ voyc.data.quizz['soi'] = {
 			voyc.drzinn.scores.set(testname, factorname, raw, pct);
 		}
 	}
+}
+
+voyc.pctFromStanine = function(stanine) {
+	var pctnine = [0,  2,   7,  17,  31,  45,  63,  83,  92,  98 ];	
+	return pctnine[stanine];
+}
+voyc.stanineFromPct = function(pct) {
+	var pctnine = [0,  2,   7,  17,  31,  45,  63,  83,  92,  98 ];	
+	for (var i=0; i<pctnine.length; i++) {
+		if (pct < pctnine[i]) {
+			return i-1;
+		}
+	}
+	return -1;
 }

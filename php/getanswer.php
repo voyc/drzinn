@@ -1,11 +1,8 @@
-<?php
+<?php	
 /*
 	svc getanswer
-	Return the answers for logged-in user.
+	Return the answers for all tests for logged-in user.
 */
-
-require_once('tests.php');
-
 function getanswer() {
 	$a = array(
 		'status' => 'system-error'
@@ -13,14 +10,12 @@ function getanswer() {
 
 	// raw inputs
 	$taint_si = isset($_POST['si']) ? $_POST['si'] : 0;
-	$taint_tid = isset($_POST['tid']) ? $_POST['tid'] : '';
 
 	// validate inputs
 	$si = validateToken($taint_si);
-	$tid  = validateTestCode($taint_tid );
 
 	// validate parameter set
-	if (!$si || !$tid) {
+	if (!$si) {
 		Log::write(LOG_WARNING, 'attempt with invalid parameter set');
 		return $a;
 	}
@@ -39,37 +34,26 @@ function getanswer() {
 	$row = pg_fetch_array($result, 0, PGSQL_ASSOC);
 	$userid = $row['id'];
 
-	// read answer record
-	$answerid = 0;
-	$answers = '';
-	$janswers = '';
+	// read answer records
+	$allanswers = array();
 	$name = 'query-answer';
-	$sql = "select id, answers from drzinn.answer where userid = $1 and testcode = $2";
-	$params = array($userid, $tid);
+	$sql = "select id, testcode, answers from drzinn.answer where userid = $1";
+	$params = array($userid);
 	$result = execSql($conn, $name, $sql, $params, false);
 	if ($result) {
-		$row = pg_fetch_array($result, 0, PGSQL_ASSOC);
-		$answerid = $row['id'];
-		$answers = $row['answers'];
-		$janswers = json_encode($answers);
+		$numrows = pg_num_rows($result);
+		for ($i=0; $i<$numrows; $i++) {
+			$row = pg_fetch_array($result, $i, PGSQL_ASSOC);
+			$answerid = $row['id'];
+			$testcode = $row['testcode'];
+			$answers = $row['answers'];
+			$allanswers[$testcode] = $answers;
+		}
 	}
 
 	// success
 	$a['status'] = 'ok';
-	$a['answers'] = $answers;
+	$a['answers'] = $allanswers;
 	return $a;
-}
-
-function validateTestCode($taint) {
-	// test string format
-	$clean = false;
- 	$ok = preg_match('/^[a-z]{3,16}$/', $taint);
-	if ($ok) {
-		// test presence in code table
-		if (DrZinn::$test[$taint]) {
-			$clean = $taint;
-		}
-	}
-	return $clean;
 }
 ?>

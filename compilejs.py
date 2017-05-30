@@ -12,7 +12,7 @@ if (sys.argv[1] == "dev"):
 
 # to prepare for use with the online service
 # search \t\('code_url', url \+ '(.*)'\),
-# replace // @code_url $1),
+# replace // @code_url http://drzinn.hagstrand.com/$1),
 
 arr = [
 	('code_url', url + 'js/namespace.js'),
@@ -24,6 +24,7 @@ arr = [
 	('code_url', url + 'js/pie.js'),
 	('code_url', url + 'js/gauge.js'),
 	('code_url', url + 'js/scores.js'),
+	('code_url', url + 'js/answers.js'),
 	('code_url', url + 'minimal/minimal.js'),
 	('code_url', url + 'icon/icon.js'),
 	('code_url', url + 'icon/lib/menu.js'),

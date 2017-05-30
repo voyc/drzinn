@@ -10,10 +10,7 @@ voyc.DrZinn = function () {
 	this.options = {
 		ansblocksize:5
 	}
-	this.openquizzid = '';  // duplicate of separately managed field in drzinnview
-	this.answers = [];
-	this.answersDirty = [];
-	this.answersState = [];  // notstarted, inprogress, completed
+	
 	this.setup();
 }
 
@@ -24,6 +21,7 @@ voyc.DrZinn.prototype.setup = function () {
 	new voyc.AccountView(this.observer);
 	new voyc.DrZinnView(this.observer);
 	this.scores = new voyc.Scores();
+	this.answers = new voyc.Answers();
 
 	// server communications
 	var url = '/svc/';
@@ -36,20 +34,13 @@ voyc.DrZinn.prototype.setup = function () {
 	var self = this;
 	this.observer.subscribe('setup-complete'      ,'drzinn' ,function(note) { self.onSetupComplete       (note); });
 	this.observer.subscribe('nav-requested'       ,'drzinn' ,function(note) { self.onNavRequested        (note); });
+	this.observer.subscribe('quizz-requested'     ,'drzinn' ,function(note) { self.onQuizzRequested      (note); });
+	this.observer.subscribe('answer-submitted'    ,'drzinn' ,function(note) { self.onAnswerSubmitted     (note); });
 
 	this.observer.subscribe('relogin-received'    ,'drzinn' ,function(note) { self.onLoginReceived       (note); });
 	this.observer.subscribe('login-received'      ,'drzinn' ,function(note) { self.onLoginReceived       (note); });
 	this.observer.subscribe('logout-received'     ,'drzinn' ,function(note) { self.onLoginReceived       (note); });
 	this.observer.subscribe('restart-anonymous'   ,'drzinn' ,function(note) { self.onLoginReceived       (note); });
-
-	this.observer.subscribe('quizz-requested'     ,'drzinn' ,function(note) { self.onQuizzRequested      (note); });
-	this.observer.subscribe('answer-submitted'    ,'drzinn' ,function(note) { self.onAnswerSubmitted     (note); });
-
-	this.observer.subscribe('profile-requested'   ,'drzinn' ,function(note) { self.onProfileRequested    (note); });
-	this.observer.subscribe('profile-submitted'   ,'drzinn' ,function(note) { self.onProfileSubmitted    (note); });
-	this.observer.subscribe('setprofile-posted'   ,'drzinn' ,function(note) { self.onSetProfilePosted    (note); });
-	this.observer.subscribe('setprofile-received' ,'drzinn' ,function(note) { self.onSetProfileReceived  (note); });
-	this.observer.subscribe('getprofile-received' ,'drzinn' ,function(note) { self.onGetProfileReceived  (note); });
 
 	this.observer.publish(new voyc.Note('setup-complete', 'drzinn', {}));
 }
@@ -59,49 +50,13 @@ voyc.DrZinn.prototype.onSetupComplete = function(note) {
 
 voyc.DrZinn.prototype.onLoginReceived = function(note) {
 	if (note.payload['status'] == 'ok' && note.payload['uname']) {
-		this.readScore();
+		this.readAnswers();
 	}
 	else {
+		this.answers.clear();
 		this.scores.clear();
-		this.observer.publish(new voyc.Note('scores-received', 'drzinn', {}));
+		this.observer.publish(new voyc.Note('answers-received', 'drzinn', {}));
 	}
-}
-
-voyc.DrZinn.prototype.readScore = function() {
-	var svcname = 'getscore';
-	var data = {};
-	data['si'] = voyc.getSessionId();
-	var self = this;
-	this.comm.request(svcname, data, function(ok, response, xhr) {
-		if (!ok) {
-			response = { 'status':'system-error'};
-		}
-		if (response['status'] == 'ok') {
-			// consolidate, codify: name, code, id, title, display, for test and factor, page title, dbid
-			var s = response['scores'];
-			var a = {};
-			var testname = '';
-			var factorname = '';
-			var raw = 0;
-			var pct = 0;
-			voyc.drzinn.scores.clear();
-			for (var tid in s) {
-				var testname = self.getTestNameForCode(tid);
-				a = JSON.parse(s[tid]);
-				for (var fcode in a) {
-					factorname = self.getFactorNameForCode(testname,fcode);
-					raw = a[fcode][0];
-					pct = a[fcode][1];
-					voyc.drzinn.scores.scores.push({testid:testname, factorid:factorname, raw:raw, pct:pct});
-				}
-			}
-			self.scores.initScores();
-			self.observer.publish(new voyc.Note('scores-received', 'drzinn', response));
-		}
-		else {
-		}
-	});
-	this.observer.publish(new voyc.Note('getscore-posted', 'drzinn', {}));
 }
 
 voyc.DrZinn.prototype.getTestNameForCode = function(code) {
@@ -126,119 +81,37 @@ voyc.DrZinn.prototype.getFactorNameForCode = function(testname, code) {
 	return name;
 }
 
-voyc.DrZinn.prototype.onProfileRequested = function(note) {
-	var svcname = 'getprofile';
-	var data = {};
-	data['si'] = voyc.getSessionId();
-	
-	// call svc
-	var self = this;
-	this.comm.request(svcname, data, function(ok, response, xhr) {
-		if (!ok) {
-			response = { 'status':'system-error'};
-		}
-		self.observer.publish(new voyc.Note('getprofile-received', 'drzinn', response));
-	});
-	this.observer.publish(new voyc.Note('getprofile-posted', 'drzinn', {}));
-}
-
-voyc.DrZinn.prototype.onGetProfileReceived = function(note) {
-	var response = note.payload;
-	if (response['status'] == 'ok') {
-		console.log('getprofile success');
-		voyc.$('gender').value = response['gender'];
-		voyc.$('photo' ).value = response['photo' ];
-		voyc.$('phone' ).value = response['phone' ];
-	}
-	else {
-		console.log('getprofile failed');
-	}
-}
-
-voyc.DrZinn.prototype.onProfileSubmitted = function(note) {
-	var svcname = 'setprofile';
-	var inputs = note.payload.inputs;
-
-	// build data array of name/value pairs from user input
-	var data = {};
-	data['si'] = voyc.getSessionId();
-	data['gender'] = inputs['gender'].value;
-	data['photo' ] = inputs['photo' ].value;
-	data['phone' ] = inputs['phone' ].value;
-	
-	// call svc
-	var self = this;
-	this.comm.request(svcname, data, function(ok, response, xhr) {
-		if (!ok) {
-			response = { 'status':'system-error'};
-		}
-
-		self.observer.publish(new voyc.Note('setprofile-received', 'drzinn', response));
-
-		if (response['status'] == 'ok') {
-			console.log('setprofile success' + response['message']);
-		}
-		else {
-			console.log('setprofile failed');
-		}
-	});
-
-	this.observer.publish(new voyc.Note('setprofile-posted', 'drzinn', {}));
-}
-
-voyc.DrZinn.prototype.onSetProfilePosted = function(note) {
-	console.log('setprofile posted');
-}
-
-voyc.DrZinn.prototype.onSetProfileReceived = function(note) {
-	console.log('setprofile received');
-}
-
 voyc.DrZinn.prototype.onQuizzRequested = function(note) {
-	this.openquizzid = note.payload['quizzid'];
-	this.answers[this.openquizzid] = [];
-	this.answersDirty[this.openquizzid] = [];
-	this.readAnswers();
 }
 
 voyc.DrZinn.prototype.onAnswerSubmitted = function(note) {
-	var q = note.payload['q'];
-	var a = note.payload['a'];
-	
-// this has been moved to drzinnview
-//	this.answers[this.openquizzid][q-1] = a;
-//	this.answersDirty[this.openquizzid][q-1] = true;
-	
-	this.writeAnswers(false);
-}
-
-voyc.DrZinn.prototype.collectDirty = function() {
-	var o = {};
-	var cnt = 0;
-	for (var i=0; i<this.answersDirty[this.openquizzid].length; i++) {
-		if (this.answersDirty[this.openquizzid][i]) {
-			o[i] = this.answers[this.openquizzid][i];
-			cnt++;
-		}
-	}
-	return {'cnt':cnt, 'o':o};
-}
-
-voyc.DrZinn.prototype.setDirty = function(answers, dirty) {
-	for (var q in answers['o']) {
-		this.answersDirty[this.openquizzid][q] = dirty;
+	var testcode = note.payload['quizz'];
+	if (testcode) {
+		this.writeAnswers(testcode,false);
 	}
 }
-	
-voyc.DrZinn.prototype.writeAnswers = function(force) {
-	var answers = this.collectDirty();
 
-	if ((answers['cnt'] >= this.options.ansblocksize) || ((answers['cnt'] > 0) && force)) {
+/**
+	politely demand login or register
+	move this to account
+*/
+voyc.DrZinn.prototype.requestLogin = function() {
+	this.observer.publish(new voyc.Note('login-requested', 'drzinn', {}));
+}
+
+voyc.DrZinn.prototype.writeAnswers = function(testcode,force) {
+	var answers = this.answers.collectDirty(testcode);
+
+	if ((answers.cnt >= this.options.ansblocksize) || ((answers.cnt > 0) && force)) {
 		var svcname = 'setanswer';
 		var data = {};
 		data['si'] = voyc.getSessionId();
-		data['tid'] = voyc.data.tests[this.openquizzid].code;
-		data['ans'] = JSON.stringify(answers['o']);
+		if (!data['si']) {
+			this.requestLogin();
+			return;
+		}
+		data['tid'] = testcode;
+		data['ans'] = JSON.stringify(answers.o);
 		var self = this;
 		this.comm.request(svcname, data, function(ok, response, xhr) {
 			if (!ok) {
@@ -246,35 +119,44 @@ voyc.DrZinn.prototype.writeAnswers = function(force) {
 			}
 			if (response['status'] == 'ok') {
 				self.observer.publish(new voyc.Note('setanswer-returned', 'drzinn', response));
-				if (response['scoresupdated']) {
-					self.readScore();
-				}
 			}
 			else {
-				self.setDirty(answers, true);
+				self.answers.markDirty(answers, true);
 			}
 		});
 		this.observer.publish(new voyc.Note('setanswer-posted', 'drzinn', {}));
-		this.setDirty(answers, false);
+		this.answers.markDirty(answers, false);
 	}
 }
 
+/**
+	called only once, at startup
+*/
 voyc.DrZinn.prototype.readAnswers = function() {
 	var svcname = 'getanswer';
 	var data = {};
 	data['si'] = voyc.getSessionId();
-	data['tid'] = voyc.data.tests[this.openquizzid].code;
+	if (!data['si']) {
+		return;
+	}
 	var self = this;
 	this.comm.request(svcname, data, function(ok, response, xhr) {
 		if (!ok) {
 			response = { 'status':'system-error'};
 		}
 		if (response['status'] == 'ok') {
-			var s = response['answers'];
-			var a = JSON.parse(s);
-			for (var q in a) {
-				self.answers[self.openquizzid][q] = a[q];
+			var resp = response['answers'];
+			for (var testcode in resp) {
+				var ans = resp[testcode];
+				var pans = JSON.parse(ans);
+				var q = 0;
+				for (var k in pans) {
+					q = parseInt(k) + 1;
+					self.answers.set(testcode, q, pans[k]);
+				}
 			}
+			self.answers.clearDirty();
+			self.calcScores();
 		}
 		else {
 		}
@@ -284,13 +166,35 @@ voyc.DrZinn.prototype.readAnswers = function() {
 }
 
 voyc.DrZinn.prototype.onNavRequested = function(note) {
-	if (this.openquizzid) {
-		this.writeAnswers(true);
-		this.openquizzid = '';
+	var testcode = note.payload.quizz;
+	if (testcode) {
+		this.writeAnswers(testcode,true);
 	}
+}
+
+voyc.DrZinn.prototype.calcScores = function(testcode) {
+	if (testcode) {
+		if (this.answers.getState(testcode) == 'complete') {
+			voyc.data.quizz[testcode].calcScores();
+		}
+	}
+	else {
+		// for every test, run the calcScores function
+		for (testcode in voyc.data.tests) {
+			if (this.answers.getState(testcode) == 'complete') {
+				voyc.data.quizz[testcode].calcScores();
+			}
+		}
+	}
+	this.scores.calcGlobals();
 }
 
 /* on startup */
 window.addEventListener('load', function(evt) {
 	voyc.drzinn = new voyc.DrZinn();
 }, false);
+
+
+voyc.countQuestions = function(testcode) {
+	return voyc.data.quizz[testcode].test.length;
+}

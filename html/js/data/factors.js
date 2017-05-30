@@ -435,8 +435,7 @@ voyc.data.factors = {
 			left:'Symbolic Skills',
 			aleft:'Symbolic',
 			max:0,
-			//components:['CSS','MSUv','MSSv','MSUa','MSUv','ESC','ESS','NSS','NST', 'NSI', 'CSR', 'DSR'],
-			components:['MSUv','MSSv','MSUa','MSUv','ESC','ESS','NSS','NST', 'NSI', 'CSR', 'DSR'],
+			components:['CSS','MSUv','MSSv','MSUa','MSUv','ESC','ESS','NSS','NST', 'NSI', 'CSR', 'DSR'],
 		},
 		'semantic': { 
 			test:'soi', 
@@ -446,7 +445,7 @@ voyc.data.factors = {
 			left:'Semantic Skills',
 			aleft:'Semantic',
 			max:0,
-			components:['CMU_R','CMU_M','CMR','CMS','DMU','MMI'],
+			components:['CMUr','CMUm','CMR','CMS','DMU','MMI'],
 		},
 		'comprehension': { 
 			test:'soi', 
@@ -456,8 +455,7 @@ voyc.data.factors = {
 			left:'Comprehension', /* Cognition */
 			aleft:'Comprehension', /* Cognition */
 			max:0,
-			//components:['CFU','CFC','CFS','CFT','CSR','CSS','CMU_R','CMU_M','CMR','CMS'],
-			components:['CFU','CFC','CFS','CFT','CSR','CMU_R','CMU_M','CMR','CMS'],
+			components:['CFU','CFC','CFS','CFT','CSR','CSS','CMUr','CMU_M','CMR','CMS'],
 		},
 		'memory': { 
 			test:'soi', 
@@ -539,18 +537,26 @@ voyc.data.factors = {
 			aleft:'CSR',
 			max:9,
 		},
-		'CMU_R': { 
+		'CSS': { 
 			test:'soi', 
-			factor:'CMU_R',
-			code:'CMU_R',
+			factor:'CSS',
+			code:'CSS',
+			left:'Cognition of Symbolic Systems',
+			aleft:'CSS',
+			max:9,
+		},
+		'CMUr': { 
+			test:'soi', 
+			factor:'CMUr',
+			code:'CMUr',
 			left:'Cognition of Semantic Units - Reading',
 			aleft:'CMUr',
 			max:30,
 		},
-		'CMU_M': { 
+		'CMUm': { 
 			test:'soi', 
-			factor:'CMU_M',
-			code:'CMU_M',
+			factor:'CMUm',
+			code:'CMUm',
 			left:'Cognition of Semantic Units - Math',
 			aleft:'CMUm',
 			max:33,
@@ -603,12 +609,28 @@ voyc.data.factors = {
 			aleft:'MSUa',
 			max:27,
 		},
+		'MSUv': { 
+			test:'soi', 
+			factor:'MSUv',
+			code:'MSUv',
+			left:'Memory of Symbolic Units - Visual',
+			aleft:'MSUv',
+			max:27,
+		},
 		'MSSa': { 
 			test:'soi', 
 			factor:'MSSa',
 			code:'MSSa',
 			left:'Memory of Symbolic Systems - Auditory',
 			aleft:'MSSa',
+			max:27,
+		},
+		'MSSv': { 
+			test:'soi', 
+			factor:'MSSv',
+			code:'MSSv',
+			left:'Memory of Symbolic Systems - Visual',
+			aleft:'MSSv',
 			max:27,
 		},
 		'MSI': {  /* this factor is not reported in the Nancy Wilder example */

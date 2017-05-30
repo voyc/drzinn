@@ -4,6 +4,13 @@
  * Manage the scores for one user
  */
 voyc.Scores = function() {
+	if (voyc.Scores._instance) return voyc.Scores._instance;
+	voyc.Scores._instance = this;
+
+	this.scores = [];
+}
+
+voyc.Scores.prototype.clear = function() {
 	this.scores = [];
 }
 
@@ -23,9 +30,6 @@ voyc.Scores.prototype.get = function(testid, factorid) {
 		return {
 			raw: score.raw,
 			pct: score.pct,
-			//offset: score.offset,
-			//dir: score.dir,
-			//range: score.range,
 		}
 	}
 	//else return null;
@@ -33,27 +37,8 @@ voyc.Scores.prototype.get = function(testid, factorid) {
 		return {
 			raw: -1,
 			pct: -1,
-			//offset: 0,
-			//dir: 0,
-			//range: 0,
 		}
 	}
-}
-
-voyc.Scores.prototype.read = function(name) {
-	// load scores for current user
-	//this.scores = exampleScores[name];
-	//this.initScores();
-}
-
-voyc.Scores.prototype.clear = function() {
-	// load scores for current user
-	this.scores = [];
-	//this.initScores();
-}
-
-voyc.Scores.prototype.write = function() {
-	// save scores for current user
 }
 
 voyc.Scores.prototype.find = function(testid, factorid) {
@@ -67,33 +52,20 @@ voyc.Scores.prototype.find = function(testid, factorid) {
 	return null;
 }
 
-voyc.Scores.prototype.initScores = function() {
-	//for (var i=0; i<this.scores.length; i++) {
-	//	score = this.scores[i];
-	//	this.calcScore(score);
-	//}
-	//for (var i=0; i<this.scores.length; i++) {
-	//	score = this.scores[i];
-	//	if (score.components) {
-	//		score.pct = this.calcGlobal(score);
-	//	}
-	//}
+voyc.Scores.prototype.calcGlobals = function() {
 	var fact = {};
 	var score = {};
-	console.log([this.scores.length]);
 	for (var testname in voyc.data.factors) {
 		for (var factorname in voyc.data.factors[testname]) {
 			fact = voyc.data.factors[testname][factorname];
 			if (fact.components) {
 				score = this.get(fact.test, fact.factor);
 				score.pct = this.calcGlobal(fact);
-				this.scores.push({testid:fact.test, factorid:fact.factor, raw:score.pct, pct:score.pct});
-				//console.log([fact.test, fact.factor, score.pct]);
+				this.set(fact.test, fact.factor, score.pct, score.pct);
 			}
 		}
 	}
 	console.log(['scores calculated ', fact.test]);
-	return null;
 }
 
 voyc.Scores.prototype.calcGlobal = function(fact) {
@@ -108,15 +80,6 @@ voyc.Scores.prototype.calcGlobal = function(fact) {
 		cnt++;
 	}
 	return Math.round(tot/cnt);
-}
-
-voyc.Scores.prototype.calcScore = function(score) {
-	var max = voyc.data.tests[score.testid].maxscore;
-	var mean = 50;
-	//score.pct = Math.round((score.raw / max) * 100);
-	var offset = mean - score.pct;
-	score.dir = (offset > 0) ? 1 : (offset < 0) ? -1 : 0;
-	score.offset = Math.abs(offset);
 }
 
 voyc.Scores.prototype.reorder = function() {
@@ -140,38 +103,38 @@ voyc.data.examples = {
 		'judicious'           : { pct:[ 80, 35,  5], answers:[ 6,13,20,27,34,41,48,55,62,69, 7,14,21,28,35,42,49,56,63,70] },  // 20
 	},
 	'motivation': {       // the order here is the order of the original paper answer key.  The order in factors.js is the display order.
-		'definitions'         : { pct:[ 20, 80, 50], answers:[ 3, 4,19,39,82,110] },                  //  6
-		'efficiency'          : { pct:[ 40, 20, 80], answers:[ 8,46,47,58,59,83,84] },                //  7
-		'authority'           : { pct:[ 70, 40, 20], answers:[15,16,17,30,35,54,55,56,57,116] },      // 10
-		'wariness'            : { pct:[ 20, 70, 40], answers:[18,36,37,38,67,68,118] },               //  7
-		'feelings'            : { pct:[ 60, 20, 70], answers:[1,2,7,77,78,79,81,107,108,109] },       // 10
-		'curiosity'           : { pct:[ 70, 60, 20], answers:[9,20,44,45,48,49,85,86,87,102] },       // 10
-		'resistance'          : { pct:[ 30, 70, 60], answers:[21,22,23,24,50,80,90,91,98,119] },      // 10
-		'tools'               : { pct:[ 50, 30, 70], answers:[5,6,103,104,105] },                     //  5
-		'affection'           : { pct:[ 90, 50, 30], answers:[26,27,28,29,42,63,112,113,114,115] },   // 10
-		'pressure'            : { pct:[ 10, 90, 50], answers:[60,62,99,100,101,106,111,120,121] },    //  9
-		'avoidance'           : { pct:[ 60, 10, 90], answers:[13,14,25,64,70,92,93,94,95] },          //  9
-		'disappointment'      : { pct:[100, 60, 10], answers:[43,65,66,96,97,117] },                  //  6
-		'acclaim'             : { pct:[ 00,100, 60], answers:[10,11,12,31,32,33,34,72,73,74] },       // 10
-		'direct'              : { pct:[ 50, 00,100], answers:[40,41,51,52,53,71,75,76,88,89] },       // 10
+		'definitions'         : { pct:[ 20, 80, 50], answers:[ 3, 4,19,39,82,110] },                  
+		'efficiency'          : { pct:[ 40, 20, 80], answers:[ 8,46,47,58,59,83,84] },                
+		'authority'           : { pct:[ 70, 40, 20], answers:[15,16,17,30,35,54,55,56,57,116] },      
+		'wariness'            : { pct:[ 20, 70, 40], answers:[18,36,37,38,67,68,118] },               
+		'feelings'            : { pct:[ 60, 20, 70], answers:[1,2,7,77,78,79,81,107,108,109] },       
+		'curiosity'           : { pct:[ 70, 60, 20], answers:[9,20,44,45,48,49,85,86,87,102] },       
+		'resistance'          : { pct:[ 30, 70, 60], answers:[21,22,23,24,50,80,90,91,98,119] },      
+		'tools'               : { pct:[ 50, 30, 70], answers:[5,6,103,104,105] },                     
+		'affection'           : { pct:[ 90, 50, 30], answers:[26,27,28,29,42,63,112,113,114,115] },   
+		'pressure'            : { pct:[ 10, 90, 50], answers:[60,61,62,99,100,101,106,111,120,121] }, 
+		'avoidance'           : { pct:[ 60, 10, 90], answers:[13,14,25,64,69,70,92,93,94,95] },       
+		'disappointment'      : { pct:[100, 60, 10], answers:[43,65,66,96,97,117] },                  
+		'acclaim'             : { pct:[ 00,100, 60], answers:[10,11,12,31,32,33,34,72,73,74] },       
+		'direct'              : { pct:[ 50, 00,100], answers:[40,41,51,52,53,71,75,76,88,89] },       
 	},
 	'personality': {
-		'warm'                : { pct:[  4,  6,  2], answers:[] },
-		'abstract'            : { pct:[  9,  8,  5], answers:[] },
-		'stable'              : { pct:[  2,  9,  4], answers:[] },
-		'dominant'            : { pct:[  4,  2,  9], answers:[] },
-		'lively'              : { pct:[  7,  4,  2], answers:[] },
-		'rule'                : { pct:[  2,  7,  4], answers:[] },
-		'bold'                : { pct:[  6,  2,  7], answers:[] },
-		'sensitive'           : { pct:[  7,  6,  2], answers:[] },
-		'vigilant'            : { pct:[  1,  7,  6], answers:[] },
-		'abstracted'          : { pct:[  4,  1,  7], answers:[] },
-		'private'             : { pct:[  8,  4,  1], answers:[] },
-		'apprehensive'        : { pct:[  1,  8,  4], answers:[] },
-		'open'                : { pct:[  6,  1,  8], answers:[] },
-		'selfreliant'         : { pct:[  7,  6,  1], answers:[] },
-		'perfectionist'       : { pct:[  3,  7,  6], answers:[] },
-		'tense'               : { pct:[  6,  3,  7], answers:[] },
+		'warm'                : { pct:[ 40, 60, 20], answers:[] },
+		'abstract'            : { pct:[ 90, 80, 50], answers:[] },
+		'stable'              : { pct:[ 20, 90, 40], answers:[] },
+		'dominant'            : { pct:[ 40, 20, 90], answers:[] },
+		'lively'              : { pct:[ 70, 40, 20], answers:[] },
+		'rule'                : { pct:[ 20, 70, 40], answers:[] },
+		'bold'                : { pct:[ 60, 20, 70], answers:[] },
+		'sensitive'           : { pct:[ 70, 60, 20], answers:[] },
+		'vigilant'            : { pct:[ 10, 70, 60], answers:[] },
+		'abstracted'          : { pct:[ 40, 10, 70], answers:[] },
+		'private'             : { pct:[100, 40, 10], answers:[] },
+		'apprehensive'        : { pct:[ 10, 80, 40], answers:[] },
+		'open'                : { pct:[ 60, 10, 80], answers:[] },
+		'selfreliant'         : { pct:[ 70, 60, 10], answers:[] },
+		'perfectionist'       : { pct:[ 30, 70, 60], answers:[] },
+		'tense'               : { pct:[ 60, 30, 70], answers:[] },
 	},
 	'eji': {
 		'aware'               : { pct:[ 80, 38, 77], answers:[] },
@@ -183,14 +146,14 @@ voyc.data.examples = {
 		'express'             : { pct:[ 77, 60, 31], answers:[] },
 		'impression'          : { pct:[ 18, 77, 60], answers:[] },
 	},
-	'soi': {
+	'soi': { // stanine
 		'CFU'                 : { pct:[ 18, 71, 42], answers:[] },
 		'CFC'                 : { pct:[ 49, 18, 71], answers:[] },
 		'CFS'                 : { pct:[ 77, 49, 18], answers:[] },
 		'CFT'                 : { pct:[ 25, 77, 49], answers:[] },
 		'CSR'                 : { pct:[ 62, 25, 77], answers:[] },
-		'CMU_R'               : { pct:[ 89, 62, 25], answers:[] },
-		'CMU_M'               : { pct:[ 12, 89, 62], answers:[] },
+		'CMUr'                : { pct:[ 89, 62, 25], answers:[] },
+		'CMUm'                : { pct:[ 12, 89, 62], answers:[] },
 		'CMR'                 : { pct:[ 45, 12, 89], answers:[] },
 		'CMS'                 : { pct:[ 83, 45, 12], answers:[] },
 		'MFU'                 : { pct:[ 22, 83, 45], answers:[] },
