@@ -435,7 +435,7 @@ voyc.data.factors = {
 			left:'Symbolic Skills',
 			aleft:'Symbolic',
 			max:0,
-			components:['CSS','MSUv','MSSv','MSUa','MSUv','ESC','ESS','NSS','NST', 'NSI', 'CSR', 'DSR'],
+			components:['CSS','MSUv','MSSv','MSUa','ESC','ESS','NSS','NST', 'NSI', 'CSR', 'DSR'],
 		},
 		'semantic': { 
 			test:'soi', 
@@ -609,28 +609,12 @@ voyc.data.factors = {
 			aleft:'MSUa',
 			max:27,
 		},
-		'MSUv': { 
-			test:'soi', 
-			factor:'MSUv',
-			code:'MSUv',
-			left:'Memory of Symbolic Units - Visual',
-			aleft:'MSUv',
-			max:27,
-		},
 		'MSSa': { 
 			test:'soi', 
 			factor:'MSSa',
 			code:'MSSa',
 			left:'Memory of Symbolic Systems - Auditory',
 			aleft:'MSSa',
-			max:27,
-		},
-		'MSSv': { 
-			test:'soi', 
-			factor:'MSSv',
-			code:'MSSv',
-			left:'Memory of Symbolic Systems - Visual',
-			aleft:'MSSv',
 			max:27,
 		},
 		'MSI': {  /* this factor is not reported in the Nancy Wilder example */

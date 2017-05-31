@@ -26,7 +26,7 @@ voyc.Account = function (observer) {
 	
 	var url = '/account/svc/';
 	if (window.location.origin == 'file://') {
-		url = 'http://model.hagstrand.com/account/svc';  // for local testing
+		url = 'http://drzinn.hagstrand.com/account/svc';  // for local testing
 	}
 	this.comm = new voyc.Comm(url, 'acomm', 2, true);
 

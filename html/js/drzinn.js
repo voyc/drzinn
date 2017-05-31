@@ -151,12 +151,14 @@ voyc.DrZinn.prototype.readAnswers = function() {
 				var pans = JSON.parse(ans);
 				var q = 0;
 				for (var k in pans) {
-					q = parseInt(k) + 1;
+					q = parseInt(k,10) + 1;
 					self.answers.set(testcode, q, pans[k]);
 				}
 			}
 			self.answers.clearDirty();
 			self.calcScores();
+			console.log(['answers',self.answers.count('soi')]);
+			console.log(['scores',self.scores.scores.length]);
 		}
 		else {
 		}
@@ -172,6 +174,9 @@ voyc.DrZinn.prototype.onNavRequested = function(note) {
 	}
 }
 
+/**
+	@param {?string=} testcode
+*/
 voyc.DrZinn.prototype.calcScores = function(testcode) {
 	if (testcode) {
 		if (this.answers.getState(testcode) == 'complete') {

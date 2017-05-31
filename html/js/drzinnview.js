@@ -28,7 +28,7 @@
 		factor - string id
 		fact - object in voyc.data.factors
 
-		pageid - string test-factor or test-all or all-all
+		pageid - string test-factor or test-quizz or test-all or all-all
 */
 voyc.DrZinnView = function(observer) {
 	if (voyc.DrZinnView._instance) return voyc.DrZinnView._instance;
@@ -47,7 +47,7 @@ voyc.DrZinnView.prototype.setup = function() {
 	// initialize nav object
 	var self = this;
 	new voyc.BrowserHistory('page', function(pageid) {
-		self.observer.publish(new voyc.Note('nav-requested', 'drzinnview', {old:self.currentPage, new:pageid, quizz:self.openQuizzId}));
+		self.observer.publish(new voyc.Note('nav-requested', 'drzinnview', {'old':self.currentPageId, 'new':pageid, 'quizz':self.openQuizzId}));
 		self.drawPage(pageid);
 	});
 
@@ -766,7 +766,7 @@ voyc.DrZinnView.prototype.composeQuizzScroller = function(quizzid) {
 				t = pata;
 				t = t.replace(/%n%/g, test[i].n);
 				t = t.replace(/%a%/g, j.toString());
-				t = t.replace(/%v%/g, j);
+				t = t.replace(/%v%/g, j.toString());
 				a += t;
 			}
 			p = pat;
@@ -851,14 +851,13 @@ voyc.DrZinnView.prototype.onAnswerClick = function(e) {
 voyc.DrZinnView.prototype.onAnswerInput = function(e) {
 	var id = e.currentTarget.id;
 	var q = parseInt(id.substring(1),10);
-	var a = parseInt(e.currentTarget.value);
+	var a = parseInt(e.currentTarget.value,10);
 	voyc.drzinn.answers.set(this.openQuizzId,q,a);
 	this.updateProgress();
 	this.observer.publish(new voyc.Note('answer-submitted', 'drzinnview', {'quizz':this.openQuizzId, 'q':q, 'a':a}));
 }
 
 /**
-	@param {number|null} [count=null]
 */
 voyc.DrZinnView.prototype.updateProgress = function() {
 	var cnt = voyc.drzinn.answers.count(this.openQuizzId);

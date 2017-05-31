@@ -87,17 +87,17 @@ voyc.Answers.prototype.collectDirty = function(testcode) {
 			cnt++;
 		}
 	}
-	return {cnt:cnt, o:o};
+	return {'cnt':cnt, 'o':o};
 }
 
 /**
 	Mark multiple answers as either dirty or clean.
 	@param {string} testcode - Name of test.
-	@param {array} answers - Array of answers.
+	@param {Object} answers - Array of answers, as returned from collectDirty()
 	@param {boolean} dirty - True or false.
 */
 voyc.Answers.prototype.markDirty = function(testcode, answers, dirty) {
-	for (var q in answers.o) {
+	for (var q in answers['o']) {
 		this.dirty[testcode][q] = dirty;
 	}
 }

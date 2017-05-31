@@ -17,11 +17,11 @@ voyc.Scores.prototype.clear = function() {
 voyc.Scores.prototype.set = function(testid, factorid, raw, pct) {
 	var score = this.find(testid, factorid);
 	if (!score) {
-		score = {'testid':testid, 'factorid':factorid, 'raw': 0, 'pct':0};
+		score = {testid:testid, factorid:factorid, raw: 0, pct:0};
 		this.scores.push(score);
 	}
-	score['raw'] = raw;
-	score['pct'] = pct;
+	score.raw = raw;
+	score.pct = pct;
 }
 
 voyc.Scores.prototype.get = function(testid, factorid) {
@@ -65,7 +65,6 @@ voyc.Scores.prototype.calcGlobals = function() {
 			}
 		}
 	}
-	console.log(['scores calculated ', fact.test]);
 }
 
 voyc.Scores.prototype.calcGlobal = function(fact) {
@@ -115,8 +114,8 @@ voyc.data.examples = {
 		'pressure'            : { pct:[ 10, 90, 50], answers:[60,61,62,99,100,101,106,111,120,121] }, 
 		'avoidance'           : { pct:[ 60, 10, 90], answers:[13,14,25,64,69,70,92,93,94,95] },       
 		'disappointment'      : { pct:[100, 60, 10], answers:[43,65,66,96,97,117] },                  
-		'acclaim'             : { pct:[ 00,100, 60], answers:[10,11,12,31,32,33,34,72,73,74] },       
-		'direct'              : { pct:[ 50, 00,100], answers:[40,41,51,52,53,71,75,76,88,89] },       
+		'acclaim'             : { pct:[  0,100, 60], answers:[10,11,12,31,32,33,34,72,73,74] },       
+		'direct'              : { pct:[ 50,  0,100], answers:[40,41,51,52,53,71,75,76,88,89] },       
 	},
 	'personality': {
 		'warm'                : { pct:[ 40, 60, 20], answers:[] },
