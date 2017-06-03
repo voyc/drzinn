@@ -157,8 +157,6 @@ voyc.DrZinn.prototype.readAnswers = function() {
 			}
 			self.answers.clearDirty();
 			self.calcScores();
-			console.log(['answers',self.answers.count('soi')]);
-			console.log(['scores',self.scores.scores.length]);
 		}
 		else {
 		}

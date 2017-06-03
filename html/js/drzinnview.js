@@ -288,46 +288,70 @@ voyc.DrZinnView.prototype.composeStory = function(test, factor, showComponents) 
 		range = 'medium';
 	}
 
+	var sAlways = '';
+	var sDefault = '';
 	var sGift = '';
 	var sNourishment = '';
 	var sBurnout = '';
 	
+	// compose always section
+	var item = {};
+	for (var j=0; j<voyc.data.always.length; j++) {
+		item = voyc.data.always[j];
+		if (item.test == test && item.factor == factor) {
+			sAlways += '<p>' + item.narrative + '</p>';
+		}
+	}
+
+	// compose defaults section
+	for (var j=0; j<voyc.data.defaults.length; j++) {
+		item = voyc.data.defaults[j];
+		if (item.test == test && item.factor == factor) {
+			sDefault += '<p>' + item.narrative + '</p>';
+		}
+	}
+
 	// compose gift section
-	var gift;
 	for (var j=0; j<voyc.data.gifts.length; j++) {
-		gift = voyc.data.gifts[j];
-		
-		if (gift.test == test && gift.factor == factor && gift.range == range) {
-			sGift += '<p><span class="gift">Gift:</span> ' + gift.narrative + '</p>';
+		item = voyc.data.gifts[j];
+		if (item.test == test && item.factor == factor && item.range == range) {
+			sGift += '<p><span class="gift">Gift:</span> ' + item.narrative + '</p>';
 		}
 	}
 
 	// compose nourishment section
 	for (var j=0; j<voyc.data.nourishments.length; j++) {
-		gift = voyc.data.nourishments[j];
-		if (gift.test == test && gift.factor == factor && gift.range == range) {
-			sNourishment += '<p><span class="nourishment">Nourishment:</span> ' + gift.narrative + '</p>';
+		item = voyc.data.nourishments[j];
+		if (item.test == test && item.factor == factor && item.range == range) {
+			sNourishment += '<p><span class="nourishment">Nourishment:</span> ' + item.narrative + '</p>';
 		}
 	}
 
 	// compose burnout section
 	for (var j=0; j<voyc.data.burnouts.length; j++) {
-		gift = voyc.data.burnouts[j];
-		if (gift.test == test && gift.factor == factor && gift.range == range) {
-			sBurnout += '<p><span class="burnout">Burnout:</span> ' + gift.narrative + '</p>';
+		item = voyc.data.burnouts[j];
+		if (item.test == test && item.factor == factor && item.range == range) {
+			sBurnout += '<p><span class="burnout">Burnout:</span> ' + item.narrative + '</p>';
 		}
 	}
 
+	// combine the five sections
 	var s = sGift + sNourishment + sBurnout;
-	//s += '<p><textarea>enter personal notes here</textarea></p>';
+	if (!s.length) {
+		s = sDefault;
+	}
+	s = sAlways + s;
+
+	// add personal comments in textarea
 	s += '<p><textarea placeholder="enter personal notes here"></textarea></p>';
 
+	// add panel of components
 	if (fact.global && showComponents) {
 		s += '<p>This is a composite factor made up of the following component factors.</p>'
 		s += this.composePanel(test, fact.components);
 	}
 	
-	s = this.changePerson(s);
+	//s = this.changePerson(s);
 	return s;
 }
 
@@ -732,12 +756,17 @@ voyc.DrZinnView.prototype.getTestTitle = function(test) {
 	return voyc.data.tests[test].display;
 }
 
+/**
+	obsolete
+*/
 voyc.DrZinnView.prototype.changePerson = function(s) {
+	return;
 	var t = s;
 	t = t.replace(/your/g, 'my');
 	t = t.replace(/Your/g, 'My');
 	t = t.replace(/yours/g, 'mine');
 	t = t.replace(/You are/g, 'I am');
+	t = t.replace(/you are/g, 'I am');
 	t = t.replace(/You were/g, 'I was');
 	t = t.replace(/you were/g, 'I was');
 	t = t.replace(/You/g, 'I');
