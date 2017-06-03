@@ -22,6 +22,8 @@ voyc.DrZinn.prototype.setup = function () {
 	new voyc.DrZinnView(this.observer);
 	this.scores = new voyc.Scores();
 	this.answers = new voyc.Answers();
+	this.remarks = new voyc.Remarks();
+	this.sync = new voyc.Sync();
 
 	// server communications
 	var url = '/svc/';
@@ -36,6 +38,7 @@ voyc.DrZinn.prototype.setup = function () {
 	this.observer.subscribe('nav-requested'       ,'drzinn' ,function(note) { self.onNavRequested        (note); });
 	this.observer.subscribe('quizz-requested'     ,'drzinn' ,function(note) { self.onQuizzRequested      (note); });
 	this.observer.subscribe('answer-submitted'    ,'drzinn' ,function(note) { self.onAnswerSubmitted     (note); });
+	this.observer.subscribe('remark-submitted'    ,'drzinn' ,function(note) { self.onRemarkSubmitted     (note); });
 
 	this.observer.subscribe('relogin-received'    ,'drzinn' ,function(note) { self.onLoginReceived       (note); });
 	this.observer.subscribe('login-received'      ,'drzinn' ,function(note) { self.onLoginReceived       (note); });
@@ -51,10 +54,18 @@ voyc.DrZinn.prototype.onSetupComplete = function(note) {
 voyc.DrZinn.prototype.onLoginReceived = function(note) {
 	if (note.payload['status'] == 'ok' && note.payload['uname']) {
 		this.readAnswers();
+		this.readRemarks();
+		var self = this;
+		this.sync.setup(function() {
+			self.observer.publish(new voyc.Note('answers-received', 'drzinn', {}));
+		});
+		this.sync.set('answers', 'waiting');
+		this.sync.set('remarks', 'waiting');
 	}
 	else {
 		this.answers.clear();
 		this.scores.clear();
+		this.remarks.clear();
 		this.observer.publish(new voyc.Note('answers-received', 'drzinn', {}));
 	}
 }
@@ -89,6 +100,13 @@ voyc.DrZinn.prototype.onAnswerSubmitted = function(note) {
 	if (testcode) {
 		this.writeAnswers(testcode,false);
 	}
+}
+
+voyc.DrZinn.prototype.onRemarkSubmitted = function(note) {
+	var testcode = note.payload['testcode'];
+	var factorcode = note.payload['factorcode'];
+	var remark = note.payload['remark'];
+	this.writeRemark(testcode,factorcode,remark);
 }
 
 /**
@@ -160,7 +178,8 @@ voyc.DrZinn.prototype.readAnswers = function() {
 		}
 		else {
 		}
-		self.observer.publish(new voyc.Note('answers-received', 'drzinn', response));
+		//self.observer.publish(new voyc.Note('answers-received', 'drzinn', response));
+		self.sync.set('answers', 'ready');
 	});
 	this.observer.publish(new voyc.Note('getanswer-posted', 'drzinn', {}));
 }
@@ -190,6 +209,60 @@ voyc.DrZinn.prototype.calcScores = function(testcode) {
 		}
 	}
 	this.scores.calcGlobals();
+}
+
+voyc.DrZinn.prototype.writeRemark = function(testcode,factorcode,remark) {
+	var svcname = 'setremark';
+	var data = {};
+	data['si'] = voyc.getSessionId();
+	data['tid'] = testcode;
+	data['fid'] = factorcode;
+	data['rem'] = remark;
+	var self = this;
+	this.comm.request(svcname, data, function(ok, response, xhr) {
+		if (!ok) {
+			response = { 'status':'system-error'};
+		}
+		if (response['status'] == 'ok') {
+			self.observer.publish(new voyc.Note('setremark-returned', 'drzinn', response));
+		}
+		else {
+		}
+	});
+	this.observer.publish(new voyc.Note('setremark-posted', 'drzinn', {}));
+}
+
+/**
+	read all remarks for this user
+	called only once, at startup
+*/
+voyc.DrZinn.prototype.readRemarks = function() {
+	var svcname = 'getremark';
+	var data = {};
+	data['si'] = voyc.getSessionId();
+	if (!data['si']) {
+		return;
+	}
+	var self = this;
+	this.comm.request(svcname, data, function(ok, response, xhr) {
+		if (!ok) {
+			response = { 'status':'system-error'};
+		}
+		if (response['status'] == 'ok') {
+			var resp = response['remarks'];
+			for (var t in resp) {
+				var test = resp[t];
+				for (var f in test) {
+					var r = test[f];
+					self.remarks.set(t, f, r);
+				}
+			}
+		}
+		else {
+		}
+		self.sync.set('remarks', 'ready');
+	});
+	this.observer.publish(new voyc.Note('getremark-posted', 'drzinn', {}));
 }
 
 /* on startup */

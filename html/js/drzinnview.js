@@ -334,7 +334,8 @@ voyc.DrZinnView.prototype.composeStory = function(test, factor, showComponents) 
 	s = sAlways + s;
 
 	// add personal comments in textarea
-	s += '<p><textarea placeholder="enter personal notes here"></textarea></p>';
+	var r = voyc.drzinn.remarks.get(test, factor);
+	s += '<p><textarea placeholder="enter personal notes here">'+r+'</textarea></p>';
 
 	// add panel of components
 	if (fact.global && showComponents) {
@@ -520,11 +521,19 @@ voyc.DrZinnView.prototype.attachHandlers = function(element) {
 		}, false);
 	}
 
-	// input on on a quizz answer
+	// input to a quizz answer
 	var ae = elem.querySelectorAll('input.ansh');
 	for (var i=0; i<ae.length; i++) {
 		ae[i].addEventListener('input', function(e) {
 			self.onAnswerInput(e);
+		}, false);
+	}
+
+	// input to a remark textarea
+	var ae = elem.querySelectorAll('story>p>textarea');
+	for (var i=0; i<ae.length; i++) {
+		ae[i].addEventListener('change', function(e) {
+			self.onRemarkInput(e);
 		}, false);
 	}
 
@@ -902,6 +911,18 @@ voyc.DrZinnView.prototype.highlightAnswer = function(q,a) {
 
 	// change the style of selected answer
 	document.getElementById('q'+q+'_a'+a).classList.toggle('chosen');
+}
+
+voyc.DrZinnView.prototype.onRemarkInput = function(e) {
+	var ta = e.currentTarget;
+	var story = voyc.findParentWithTag(ta, 'story');
+	var pageid = story.getAttribute('factor');
+	var a = pageid.split('-');
+	var testcode = a[0];
+	var factorcode = a[1];
+	var remark = ta.value;
+	voyc.drzinn.remarks.set(testcode, factorcode, remark);
+	this.observer.publish(new voyc.Note('remark-submitted', 'drzinnview', {'testcode':testcode, 'factorcode':factorcode, 'remark':remark}));
 }
 
 /**

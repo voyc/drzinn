@@ -15,7 +15,8 @@ writeHeader();
 $supported_svcs = array(
 	'setanswer',
 	'getanswer',
-	'getscore'
+	'setremark',
+	'getremark'
 );
 		
 function validateSvc($taint) {
