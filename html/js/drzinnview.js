@@ -170,19 +170,10 @@ voyc.DrZinnView.prototype.composeHome = function() {
 	s += "</p></panel>";
 
 	s += "<panel class='panel red'><h3>My Gifts</h3>";
-	s += "<p>";
-	s += "<img src='i/gift.jpg' nav='gifts'/>";
-	s += "</p></panel>";
-
-	s += "<panel class='panel red'><h3>My Nourishments</h3>";
-	s += "<p>";
-	s += "<img src='i/nourishment.jpg' nav='nourishments'/>";
-	s += "</p></panel>";
-
-	s += "<panel class='panel red'><h3>My Burnouts</h3>";
-	s += "<p style='margin:38px 0'>";
-	s += "<img src='i/burnout.jpg' nav='burnouts'/>";
-	s += "</p></panel>";
+	s += "<div class='panelimg' nav='gifts'><img src='i/gift.png'/><br/>Gifts</div>";
+	s += "<div class='panelimg' nav='nourishments'><img src='i/nourishment.png'/><br/>Nourishments</div>";
+	s += "<div class='panelimg' nav='burnouts'><img src='i/burnout.png'/><br/>Burnouts</div>";
+	s += "</panel>";
 
 	s += "<p><button class='anchor' nav='all-all'>Print all details</button></p>";
 
