@@ -46,10 +46,6 @@ voyc.Answers.prototype.set = function(testcode,q,a) {
 	var qndx = q - 1;
 	this.answers[testcode][qndx] = a;
 	this.dirty[testcode][qndx] = true;
-//	if (isComplete) {
-//		this.calcScores();
-//	}
-//	this.observer.publish(new voyc.Note('answer-submitted', 'drzinnview', {'q':q, 'a':a}));
 }
 
 /**

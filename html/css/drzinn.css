@@ -3,12 +3,19 @@
 
 
 /* layout */
-panel>div.panelimg {
-	float:left;
+.panelp {
+	text-align:center;
+	padding-left: 1rem;
+	padding-right:1rem;
+	margin-bottom:1rem;
+}
+.imgbox {
+	display:inline-block;
 	text-align:center;
 }
-
-
+.imgempty {
+	filter: saturate(1%) opacity(50%);
+}
 
 chapter {
 	display:block;

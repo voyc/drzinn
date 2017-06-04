@@ -14,6 +14,10 @@ voyc.Scores.prototype.clear = function() {
 	this.scores = [];
 }
 
+voyc.Scores.prototype.hasScores = function() {
+	return (this.scores.length > 0);
+}
+
 voyc.Scores.prototype.set = function(testid, factorid, raw, pct) {
 	var score = this.find(testid, factorid);
 	if (!score) {
@@ -52,17 +56,15 @@ voyc.Scores.prototype.find = function(testid, factorid) {
 	return null;
 }
 
-voyc.Scores.prototype.calcGlobals = function() {
+voyc.Scores.prototype.calcGlobals = function(testcode) {
 	var fact = {};
 	var score = {};
-	for (var testname in voyc.data.factors) {
-		for (var factorname in voyc.data.factors[testname]) {
-			fact = voyc.data.factors[testname][factorname];
-			if (fact.components) {
-				score = this.get(fact.test, fact.factor);
-				score.pct = this.calcGlobal(fact);
-				this.set(fact.test, fact.factor, score.pct, score.pct);
-			}
+	for (var factorname in voyc.data.factors[testcode]) {
+		fact = voyc.data.factors[testcode][factorname];
+		if (fact.components) {
+			score = this.get(fact.test, fact.factor);
+			score.pct = this.calcGlobal(fact);
+			this.set(fact.test, fact.factor, score.pct, score.pct);
 		}
 	}
 }

@@ -120,7 +120,7 @@ voyc.DrZinn.prototype.requestLogin = function() {
 voyc.DrZinn.prototype.writeAnswers = function(testcode,force) {
 	var answers = this.answers.collectDirty(testcode);
 
-	if ((answers.cnt >= this.options.ansblocksize) || ((answers.cnt > 0) && force)) {
+	if ((answers['cnt'] >= this.options.ansblocksize) || ((answers['cnt'] > 0) && force)) {
 		var svcname = 'setanswer';
 		var data = {};
 		data['si'] = voyc.getSessionId();
@@ -205,10 +205,10 @@ voyc.DrZinn.prototype.calcScores = function(testcode) {
 		for (testcode in voyc.data.tests) {
 			if (this.answers.getState(testcode) == 'complete') {
 				voyc.data.quizz[testcode].calcScores();
+				this.scores.calcGlobals(testcode);
 			}
 		}
 	}
-	this.scores.calcGlobals();
 }
 
 voyc.DrZinn.prototype.writeRemark = function(testcode,factorcode,remark) {

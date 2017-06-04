@@ -29,9 +29,10 @@
 }
 .qheader {
 	position:fixed;
-	top:1rem;
+	top:2rem;
 	background-color:cyan;
 	width:100%;
+	max-width:18cm;  /* same as .narrative */
 }
 .qfooter {
 	position:fixed;

@@ -92,9 +92,6 @@ voyc.DrZinnView.prototype.drawPage = function(pageid) {
 	else if (pageid == 'about') {
 		s = this.composeAbout();
 	}
-	else if (pageid == 'gifts' || pageid == 'nourishments' || pageid == 'burnouts') {
-		s = this.composeGifts(pageid);
-	}
 	else {
 		s = this.composeFactor(pageid);
 	}
@@ -170,10 +167,11 @@ voyc.DrZinnView.prototype.composeHome = function() {
 	s += "</p></panel>";
 
 	s += "<panel class='panel red'><h3>My Gifts</h3>";
-	s += "<div class='panelimg' nav='gifts'><img src='i/gift.png'/><br/>Gifts</div>";
-	s += "<div class='panelimg' nav='nourishments'><img src='i/nourishment.png'/><br/>Nourishments</div>";
-	s += "<div class='panelimg' nav='burnouts'><img src='i/burnout.png'/><br/>Burnouts</div>";
-	s += "</panel>";
+	s += "<div class='panelp'>";
+	s += "<div class='imgbox' nav='gifts-gifts'><img src='i/gift.png'/><div>Gifts</div></div>";
+	s += "<div class='imgbox' nav='gifts-nourishments'><img src='i/nourishment.png'/><div>Nourishments</div></div>";
+	s += "<div class='imgbox' nav='gifts-burnouts'><img src='i/burnout.png'/><div>Burnouts</div></div>";
+	s += "</div></panel>";
 
 	s += "<p><button class='anchor' nav='all-all'>Print all details</button></p>";
 
@@ -205,6 +203,9 @@ voyc.DrZinnView.prototype.composeFactor = function(pageid) {
 	if (test == 'all') {
 		s += this.composeAllAll();
 	}
+	else if (test == 'gifts') {
+		s = this.composeGifts(factor);
+	}
 	else if (factor == 'all') {
 		s += this.composeTestAll(test);
 	}
@@ -222,9 +223,9 @@ voyc.DrZinnView.prototype.composeFactor = function(pageid) {
 voyc.DrZinnView.prototype.composeTestFactor = function(test,factor) {
 	var pageid = test + '-' + factor;
 	var s = '';
+	s += "<div class='narrative'>";
 	s += "<p><button class='anchor' nav='home'>Return to main page</button></p>";
 	s += "<h1>" + this.getTestTitle(test) + "</h1>";
-	s += "<div class='narrative'>";
 	s += this.composeFactorStory(test, factor, true);
 	s += "</div>";
 	s += "<p><button class='anchor' nav='" + this.getPageId(test, 'all') + "'>Show all " + this.getTestTitle(test) + " Details</button></p>";
@@ -243,6 +244,7 @@ voyc.DrZinnView.prototype.composeFactorStory = function(test, factor, showCompon
 voyc.DrZinnView.prototype.composeTestAll = function(test) {
 	var s = "";
 	s += "<div class='narrative'>";
+	s += "<p><button class='anchor' nav='home'>Return to main page</button></p>";
 	s += "<h1>" + this.getTestTitle(test) + "</h1>";
 	for (var k in voyc.data.factors[test]) {
 		s += this.composeFactorStory(test, k, false);
@@ -253,12 +255,15 @@ voyc.DrZinnView.prototype.composeTestAll = function(test) {
 
 voyc.DrZinnView.prototype.composeAllAll = function() {
 	var s = '';
+	s += "<div class='narrative'>";
+	s += "<p><button class='anchor' nav='home'>Return to main page</button></p>";
 	for (var test in voyc.data.tests) {
 		s += "<h1>" + voyc.data.tests[test].display + "</h1>";
 		for (var k in voyc.data.factors[test]) {
 			s += this.composeFactorStory(test, k, false);
 		}
 	}
+	s += "</div>";
 	return s;
 }
 
@@ -396,7 +401,6 @@ voyc.DrZinnView.prototype.composeQuizz = function(test,factor) {
 	s += "<div class='qheader'>";
 	s += "<p><button class='anchor' nav='home'>Return to main page</button></p>";
 	s += "<h1><headline class='h3'>" + quizz.title + "</headline></h1>";
-	//s += "<p><button class='anchor' nav='home'>Instructions</button></p>";
 	s += "<p><progress id='testprogress' max=10 value=0></progress> <span id='numanswers'>0</span> of <span id='numquestions'>0</span><span id='teststatus'></span><p>";
 	s += "<p class='qcopyright'>" + quizz.copyright + "</p>";
 	s += "</div>";
@@ -470,21 +474,23 @@ voyc.DrZinnView.prototype.composeGifts = function(which) {
 		}
 	}
 
+	var btn = "<p><button class='anchor' nav='home'>Return to main page</button></p>";
+
 	if (which == 'gifts') {
-		s = "<h2>My Gifts</h2><container>" + s + "</container>";
+		s = btn + "<h2>My Gifts</h2><container>" + s + "</container>";
 	}
 	if (which == 'nourishments') {
-		s = "<h2>My Nourishments</h2><container>" + s + "</container>";
+		s = btn + "<h2>My Nourishments</h2><container>" + s + "</container>";
 	}
 	if (which == 'burnouts') {
-		s = "<h2>My Burnouts</h2><container>" + s + "</container>";
+		s = btn + "<h2>My Burnouts</h2><container>" + s + "</container>";
 	}
 
 	return s;
 }
 
 /**
-	Populate HTML after it has been rendered.
+	attach handlers to DOM elements
 	First time, call this with no element, do the whole page including header and hidden.
 	Subsequently, specify the element which has changed.
 	@param {Element|null} [element=null]
@@ -496,10 +502,11 @@ voyc.DrZinnView.prototype.attachHandlers = function(element) {
 	var charts = elem.querySelectorAll('chart');
 	for (var i=0; i<charts.length; i++) {
 		charts[i].addEventListener('click', function(e) {
-			if (voyc.drzinn.user.isAnonymous()) {
-				return;
+			var pageid = e.currentTarget.getAttribute('factor');
+			var testcode = pageid.split('-')[0];
+			if (voyc.drzinn.answers.getState(testcode) == 'complete') {
+				(new voyc.BrowserHistory).nav(pageid);
 			}
-			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('factor'));
 		}, false);
 	}
 	
@@ -508,7 +515,10 @@ voyc.DrZinnView.prototype.attachHandlers = function(element) {
 	var navs = elem.querySelectorAll('[nav]');
 	for (var i=0; i<navs.length; i++) {
 		navs[i].addEventListener('click', function(e) {
-			//var pageid = e.currentTarget.getAttribute('nav');
+			var nav = e.currentTarget.getAttribute('nav');
+			if ((nav.split('-')[0] == 'gifts') && !voyc.drzinn.scores.hasScores()) {
+				return;
+			}
 			(new voyc.BrowserHistory).nav(e.currentTarget.getAttribute('nav'));
 		}, false);
 	}
@@ -638,6 +648,7 @@ voyc.DrZinnView.prototype.populateHTML = function() {
 	var charts = document.querySelectorAll('chart');
 	for (var i=0; i<charts.length; i++) {
 		this.populateChart(charts[i]);
+		this.populateImages();
 	}
 }
 
@@ -705,6 +716,19 @@ voyc.DrZinnView.prototype.populateChart = function(elem) {
 		};
 
 		drawpie(elem, data);
+	}
+}
+
+/**
+	@param {Element|null} [element=null]
+*/
+voyc.DrZinnView.prototype.populateImages = function(element) {
+	var elem = element || document;
+	elems = elem.querySelectorAll('.imgbox>img');
+	for (var i=0; i<elems.length; i++) {
+		if (!voyc.drzinn.scores.hasScores()) {
+			elems[i].classList.add('imgempty');
+		}
 	}
 }
 
