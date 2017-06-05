@@ -136,11 +136,11 @@ voyc.DrZinnView.prototype.composeHome = function() {
 	s += "<br/><button class='anchor' nav='motivation-quizz'>Take the test</button>";
 	s += "</p></panel>";
 
-	//s += "<panel class='panel red'><h3>My Learning Style</h3>";
-	//s += "<p>";
-	//s += "<chart factor='learningstyle-learningstyle'></chart>";
-	//s += "<br/><button class='anchor' nav='learningstyle-quizz'>Take the test</button>";
-	//s += "</p></panel>";
+	s += "<panel class='panel red'><h3>My Learning Style</h3>";
+	s += "<p>";
+	s += "<chart factor='learningstyle-learningstyle'></chart>";
+	s += "<br/><button class='anchor' nav='learningstyle-quizz'>Take the test</button>";
+	s += "</p></panel>";
 
 	s += "<panel class='panel red'><h3>My Personality</h3>";
 	s += "<p>";
@@ -357,7 +357,7 @@ voyc.DrZinnView.prototype.composeHeadline = function(test, factor) {
 	
 	var score = voyc.drzinn.scores.get(test, factor);
 		
-	var range = this.getRange(test, factor, score);
+	var range = this.getRange(fact, score);
 
 	// reverse range for paired factors
 	var displayrange = range;
@@ -379,12 +379,13 @@ voyc.DrZinnView.prototype.composeHeadline = function(test, factor) {
 		}
 	}
 	
-	var drange = voyc.data.strings[displayrange];
 	var dname = factorhigh;
 	if (displayrange == 'balanced') {
 		dname = fact.left + ' and ' + fact.right;
 	}
-	s = voyc.data.strings[displayrange] + ' ' + dname;
+	
+	var drange = (displayrange) ? voyc.data.strings[displayrange] + ' ' : '';
+	s = drange + dname;
 	return s;
 }
 
@@ -395,7 +396,6 @@ voyc.DrZinnView.prototype.composeQuizz = function(test,factor) {
 	var quizz = voyc.data.quizz[quizzid];
 	
 	var s = '';
-	s += "<p><button class='anchor' nav='home'>Return to main page</button></p>";
 	s += "<div class='qcontainer narrative'>";
 	
 	// fixed header
@@ -407,6 +407,7 @@ voyc.DrZinnView.prototype.composeQuizz = function(test,factor) {
 	
 	// scrolling quizz area
 	s += "<div class='qscroller'>";
+	s += "<p><button class='anchor' nav='home'>Return to main page</button></p>";
 	s += this.composeQuizzScroller(quizzid);
 	s += "</div>";
 	
@@ -663,6 +664,12 @@ voyc.DrZinnView.prototype.populateChart = function(elem) {
 	var c1 = 'RGB(0,255,255)';
 	var c2 = 'RGB(255,255,0)';
 
+	var color = [
+		'RGB(0,255,255)',
+		'RGB(255,255,0)',
+		'RGB(255,0,255)',
+	];
+
 	var a = elem.getAttribute('factor').split('-');
 	var test = a[0];
 	var factor = a[1];
@@ -689,7 +696,7 @@ voyc.DrZinnView.prototype.populateChart = function(elem) {
 	}
 	else if (this.getPole(fact) == 2) {
 		var score = voyc.drzinn.scores.get(test, factor);
-		var range = this.getRange(test, factor, score);
+		var range = this.getRange(fact, score);
 		var scoreleft = score.pct;
 		var scoreright = 100 - scoreleft;
 		
@@ -724,6 +731,22 @@ voyc.DrZinnView.prototype.populateChart = function(elem) {
 
 		drawpie(elem, data);
 	}
+	else if (this.getPole(fact) > 2) {
+		var data = [];
+		for (var i=0; i<fact.components.length; i++) {
+			var comp = fact.components[i];
+			var fct = voyc.data.factors[test][comp];
+			var score = voyc.drzinn.scores.get(test, comp);
+			var range = this.getRange(fct, score);
+			data[i] = {
+				l:fct.left,
+				c:color[i],
+				p:score.pct,
+				r:(range == 'high') ? 1 : 0,
+			}
+		}
+		drawpie(elem, data);
+	}
 }
 
 /**
@@ -751,7 +774,7 @@ voyc.DrZinnView.prototype.getPole = function(factor) {
 	return n;
 }
 
-voyc.DrZinnView.prototype.getRange = function(test, factor, score) {
+voyc.DrZinnView.prototype.getRange = function(factor, score) {
 	// determine range: low, high, medium
 	var range = '';
 	var low = 35;
@@ -762,6 +785,9 @@ voyc.DrZinnView.prototype.getRange = function(test, factor, score) {
 		range = 'high';
 	else {
 		range = 'medium';
+	}
+	if (factor.pole > 2) {
+		range = '';
 	}
 	return range;
 }
@@ -810,7 +836,9 @@ voyc.DrZinnView.prototype.composeQuizzScroller = function(quizzid) {
 	var quizz = voyc.data.quizz[quizzid];
 
 	var s = '';
-	s += "<p>" + quizz.directions.replace(/\n/g, '</p><p>') + "</p>";
+	if (quizz.directions.length) {
+		s += "<p>" + quizz.directions.replace(/\n/g, '</p><p>') + "</p>";
+	}
 
 	var t = '';
 	var p = '';
@@ -941,6 +969,10 @@ voyc.DrZinnView.prototype.highlightAnswer = function(q,a) {
 	}
 
 	// change the style of selected answer
+	var x = document.getElementById('q'+q+'_a'+a);
+	if (!x) {
+		debugger;
+	}
 	document.getElementById('q'+q+'_a'+a).classList.toggle('chosen');
 }
 

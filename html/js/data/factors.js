@@ -750,4 +750,32 @@ voyc.data.factors = {
 			max:159,
 		},
 	},
+	'learningstyle': {
+		'learningstyle': {
+			test: 'learningstyle',
+			factor: 'learningstyle',
+			pole: 3,
+			global: true,
+			left: 'Learning Style',
+			components:['visual','auditory','kinesthetic'],
+		},
+		'visual': {
+			test: 'learningstyle',
+			factor: 'visual',
+			pole: 1,
+			left: 'Visual',
+		},
+		'auditory': {
+			test: 'learningstyle',
+			factor: 'auditory',
+			pole: 1,
+			left: 'Auditory',
+		},
+		'kinesthetic': {
+			test: 'learningstyle',
+			factor: 'kinesthetic',
+			pole: 1,
+			left: 'Kinesthetic',
+		},
+	}
 }
