@@ -1,6 +1,8 @@
-
 /* typography */
-
+button.ref {
+	font-size:.7rem;
+	font-family:sans-serif;
+}
 
 /* layout */
 .panelp {

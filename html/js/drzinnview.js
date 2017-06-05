@@ -138,7 +138,7 @@ voyc.DrZinnView.prototype.composeHome = function() {
 
 	//s += "<panel class='panel red'><h3>My Learning Style</h3>";
 	//s += "<p>";
-	//s += "<img src='i/vak.jpg'/>";
+	//s += "<chart factor='learningstyle-learningstyle'></chart>";
 	//s += "<br/><button class='anchor' nav='learningstyle-quizz'>Take the test</button>";
 	//s += "</p></panel>";
 
@@ -223,8 +223,8 @@ voyc.DrZinnView.prototype.composeFactor = function(pageid) {
 voyc.DrZinnView.prototype.composeTestFactor = function(test,factor) {
 	var pageid = test + '-' + factor;
 	var s = '';
-	s += "<div class='narrative'>";
 	s += "<p><button class='anchor' nav='home'>Return to main page</button></p>";
+	s += "<div class='narrative'>";
 	s += "<h1>" + this.getTestTitle(test) + "</h1>";
 	s += this.composeFactorStory(test, factor, true);
 	s += "</div>";
@@ -243,8 +243,8 @@ voyc.DrZinnView.prototype.composeFactorStory = function(test, factor, showCompon
 
 voyc.DrZinnView.prototype.composeTestAll = function(test) {
 	var s = "";
-	s += "<div class='narrative'>";
 	s += "<p><button class='anchor' nav='home'>Return to main page</button></p>";
+	s += "<div class='narrative'>";
 	s += "<h1>" + this.getTestTitle(test) + "</h1>";
 	for (var k in voyc.data.factors[test]) {
 		s += this.composeFactorStory(test, k, false);
@@ -255,8 +255,8 @@ voyc.DrZinnView.prototype.composeTestAll = function(test) {
 
 voyc.DrZinnView.prototype.composeAllAll = function() {
 	var s = '';
-	s += "<div class='narrative'>";
 	s += "<p><button class='anchor' nav='home'>Return to main page</button></p>";
+	s += "<div class='narrative'>";
 	for (var test in voyc.data.tests) {
 		s += "<h1>" + voyc.data.tests[test].display + "</h1>";
 		for (var k in voyc.data.factors[test]) {
@@ -395,11 +395,11 @@ voyc.DrZinnView.prototype.composeQuizz = function(test,factor) {
 	var quizz = voyc.data.quizz[quizzid];
 	
 	var s = '';
+	s += "<p><button class='anchor' nav='home'>Return to main page</button></p>";
 	s += "<div class='qcontainer narrative'>";
 	
 	// fixed header
 	s += "<div class='qheader'>";
-	s += "<p><button class='anchor' nav='home'>Return to main page</button></p>";
 	s += "<h1><headline class='h3'>" + quizz.title + "</headline></h1>";
 	s += "<p><progress id='testprogress' max=10 value=0></progress> <span id='numanswers'>0</span> of <span id='numquestions'>0</span><span id='teststatus'></span><p>";
 	s += "<p class='qcopyright'>" + quizz.copyright + "</p>";
@@ -444,7 +444,7 @@ voyc.DrZinnView.prototype.composeGifts = function(which) {
 				if (gift.test == factor.test && gift.factor == factor.factor && gift.range == range) {
 					navid = gift.test + '-' + gift.factor;
 					linkdisplay = voyc.data.tests[gift.test].display + ' - ' + voyc.data.factors[gift.test][gift.factor].left;
-					s += "<p>" + gift.narrative + " <button class=anchor nav='" + navid + "'>" + linkdisplay + "</button></p>";
+					s += "<p>" + gift.narrative + " <button class='anchor ref' nav='" + navid + "'>" + linkdisplay + "</button></p>";
 				}
 			}
 		}
@@ -456,7 +456,7 @@ voyc.DrZinnView.prototype.composeGifts = function(which) {
 				if (gift.test == factor.test && gift.factor == factor.factor && gift.range == range) {
 					navid = gift.test + '-' + gift.factor;
 					linkdisplay = voyc.data.tests[gift.test].display + ' - ' + voyc.data.factors[gift.test][gift.factor].left;
-					s += "<p>" + gift.narrative + " <button class=anchor nav='" + navid + "'>" + linkdisplay + "</button></p>";
+					s += "<p>" + gift.narrative + " <button class='anchor ref' nav='" + navid + "'>" + linkdisplay + "</button></p>";
 				}
 			}
 		}
@@ -468,24 +468,22 @@ voyc.DrZinnView.prototype.composeGifts = function(which) {
 				if (gift.test == factor.test && gift.factor == factor.factor && gift.range == range) {
 					navid = gift.test + '-' + gift.factor;
 					linkdisplay = voyc.data.tests[gift.test].display + ' - ' + voyc.data.factors[gift.test][gift.factor].left;
-					s += "<p>" + gift.narrative + " <button class=anchor nav='" + navid + "'>" + linkdisplay + "</button></p>";
+					s += "<p>" + gift.narrative + " <button class='anchor ref' nav='" + navid + "'>" + linkdisplay + "</button></p>";
 				}
 			}
 		}
 	}
 
-	var btn = "<p><button class='anchor' nav='home'>Return to main page</button></p>";
-
-	if (which == 'gifts') {
-		s = btn + "<h2>My Gifts</h2><container>" + s + "</container>";
-	}
+	var title = 'My Gifts';
 	if (which == 'nourishments') {
-		s = btn + "<h2>My Nourishments</h2><container>" + s + "</container>";
+		title = 'My Nourishments';
 	}
-	if (which == 'burnouts') {
-		s = btn + "<h2>My Burnouts</h2><container>" + s + "</container>";
+	else if (which == 'burnouts') {
+		title = 'My Burnouts';
 	}
 
+	var btn = "<p><button class='anchor' nav='home'>Return to main page</button></p>";
+	s = btn+"<div class='narrative'><h2>"+title+"</h2>" + s + "</div>";
 	return s;
 }
 
@@ -544,6 +542,15 @@ voyc.DrZinnView.prototype.attachHandlers = function(element) {
 	for (var i=0; i<ae.length; i++) {
 		ae[i].addEventListener('change', function(e) {
 			self.onRemarkInput(e);
+		}, false);
+	}
+
+	// click on print page in menu
+	var tp = elem.querySelector('[id=printpage]');
+	if (tp) {
+		tp.addEventListener('click', function(e) {
+			voyc.closePopup();
+			window.print();
 		}, false);
 	}
 
