@@ -63,7 +63,13 @@ voyc.Scores.prototype.calcGlobals = function(testcode) {
 		fact = voyc.data.factors[testcode][factorname];
 		if (fact.components) {
 			score = this.get(fact.test, fact.factor);
-			score.pct = this.calcGlobal(fact);
+			if (voyc.data.quizz[testcode].answertype == 'stanine') {
+				score.raw = this.calcGlobalRaw(fact);
+				score.pct = voyc.pctFromStanine(score.raw);
+			}
+			else {
+				score.pct = this.calcGlobal(fact);
+			}
 			this.set(fact.test, fact.factor, score.pct, score.pct);
 		}
 	}
@@ -78,6 +84,20 @@ voyc.Scores.prototype.calcGlobal = function(fact) {
 		factorname = fact.components[i];
 		compscore = this.get(fact.test, factorname);
 		tot += compscore.pct;
+		cnt++;
+	}
+	return Math.round(tot/cnt);
+}
+
+voyc.Scores.prototype.calcGlobalRaw = function(fact) {
+	var compscore = {};
+	var cnt = 0;
+	var tot = 0;
+	var factorname = '';
+	for (var i=0; i<fact.components.length; i++) {
+		factorname = fact.components[i];
+		compscore = this.get(fact.test, factorname);
+		tot += compscore.raw;
 		cnt++;
 	}
 	return Math.round(tot/cnt);
