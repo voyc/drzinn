@@ -45,7 +45,7 @@ voyc.DrZinn.prototype.setup = function () {
 	this.observer.subscribe('logout-received'     ,'drzinn' ,function(note) { self.onLoginReceived       (note); });
 	this.observer.subscribe('restart-anonymous'   ,'drzinn' ,function(note) { self.onLoginReceived       (note); });
 
-	this.observer.publish(new voyc.Note('setup-complete', 'drzinn', {}));
+	this.observer.publish('setup-complete', 'drzinn', {});
 }
 
 voyc.DrZinn.prototype.onSetupComplete = function(note) {
@@ -57,7 +57,7 @@ voyc.DrZinn.prototype.onLoginReceived = function(note) {
 		this.readRemarks();
 		var self = this;
 		this.sync.setup(function() {
-			self.observer.publish(new voyc.Note('answers-received', 'drzinn', {}));
+			self.observer.publish('answers-received', 'drzinn', {});
 		});
 		this.sync.set('answers', 'waiting');
 		this.sync.set('remarks', 'waiting');
@@ -66,7 +66,7 @@ voyc.DrZinn.prototype.onLoginReceived = function(note) {
 		this.answers.clear();
 		this.scores.clear();
 		this.remarks.clear();
-		this.observer.publish(new voyc.Note('answers-received', 'drzinn', {}));
+		this.observer.publish('answers-received', 'drzinn', {});
 	}
 }
 
@@ -114,7 +114,7 @@ voyc.DrZinn.prototype.onRemarkSubmitted = function(note) {
 	move this to account
 */
 voyc.DrZinn.prototype.requestLogin = function() {
-	this.observer.publish(new voyc.Note('login-requested', 'drzinn', {}));
+	this.observer.publish('login-requested', 'drzinn', {});
 }
 
 voyc.DrZinn.prototype.writeAnswers = function(testcode,force) {
@@ -136,13 +136,13 @@ voyc.DrZinn.prototype.writeAnswers = function(testcode,force) {
 				response = { 'status':'system-error'};
 			}
 			if (response['status'] == 'ok') {
-				self.observer.publish(new voyc.Note('setanswer-returned', 'drzinn', response));
+				self.observer.publish('setanswer-returned', 'drzinn', response);
 			}
 			else {
 				self.answers.markDirty(answers, true);
 			}
 		});
-		this.observer.publish(new voyc.Note('setanswer-posted', 'drzinn', {}));
+		this.observer.publish('setanswer-posted', 'drzinn', {});
 		this.answers.markDirty(answers, false);
 	}
 }
@@ -178,10 +178,10 @@ voyc.DrZinn.prototype.readAnswers = function() {
 		}
 		else {
 		}
-		//self.observer.publish(new voyc.Note('answers-received', 'drzinn', response));
+		//self.observer.publish('answers-received', 'drzinn', response);
 		self.sync.set('answers', 'ready');
 	});
-	this.observer.publish(new voyc.Note('getanswer-posted', 'drzinn', {}));
+	this.observer.publish('getanswer-posted', 'drzinn', {});
 }
 
 voyc.DrZinn.prototype.onNavRequested = function(note) {
@@ -224,12 +224,12 @@ voyc.DrZinn.prototype.writeRemark = function(testcode,factorcode,remark) {
 			response = { 'status':'system-error'};
 		}
 		if (response['status'] == 'ok') {
-			self.observer.publish(new voyc.Note('setremark-returned', 'drzinn', response));
+			self.observer.publish('setremark-returned', 'drzinn', response);
 		}
 		else {
 		}
 	});
-	this.observer.publish(new voyc.Note('setremark-posted', 'drzinn', {}));
+	this.observer.publish('setremark-posted', 'drzinn', {});
 }
 
 /**
@@ -262,7 +262,7 @@ voyc.DrZinn.prototype.readRemarks = function() {
 		}
 		self.sync.set('remarks', 'ready');
 	});
-	this.observer.publish(new voyc.Note('getremark-posted', 'drzinn', {}));
+	this.observer.publish('getremark-posted', 'drzinn', {});
 }
 
 /* on startup */

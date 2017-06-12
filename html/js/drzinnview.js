@@ -47,7 +47,7 @@ voyc.DrZinnView.prototype.setup = function() {
 	// initialize nav object
 	var self = this;
 	new voyc.BrowserHistory('page', function(pageid) {
-		self.observer.publish(new voyc.Note('nav-requested', 'drzinnview', {'old':self.currentPageId, 'new':pageid, 'quizz':self.openQuizzId}));
+		self.observer.publish('nav-requested', 'drzinnview', {'old':self.currentPageId, 'new':pageid, 'quizz':self.openQuizzId});
 		self.drawPage(pageid);
 	});
 
@@ -212,7 +212,7 @@ voyc.DrZinnView.prototype.composeFactor = function(pageid) {
 	else if (factor == 'quizz') {
 		s += this.composeQuizz(test,factor);
 		var quizzid = voyc.data.tests[test].quizz;
-		this.observer.publish(new voyc.Note('quizz-requested', 'drzinnview', {'quizzid':quizzid}));
+		this.observer.publish('quizz-requested', 'drzinnview', {'quizzid':quizzid});
 	}
 	else {
 		s += this.composeTestFactor(test,factor);
@@ -634,7 +634,7 @@ voyc.DrZinnView.prototype.animateQuizz = function() {
 	}
 	this.updateProgress();
 	this.highlightAll();
-	this.observer.publish(new voyc.Note('answer-submitted', 'drzinnview', {'quizz':this.openQuizzId, 'q':q, 'a':a}));
+	this.observer.publish('answer-submitted', 'drzinnview', {'quizz':this.openQuizzId, 'q':q, 'a':a});
 }
 
 voyc.DrZinnView.prototype.getMaxAnswers = function(quizz,ndx) {
@@ -933,7 +933,7 @@ voyc.DrZinnView.prototype.onAnswerClick = function(e) {
 	this.highlightAnswer(q,a);
 	voyc.drzinn.answers.set(this.openQuizzId,q,a);
 	this.updateProgress();
-	this.observer.publish(new voyc.Note('answer-submitted', 'drzinnview', {'quizz':this.openQuizzId, 'q':q, 'a':a}));
+	this.observer.publish('answer-submitted', 'drzinnview', {'quizz':this.openQuizzId, 'q':q, 'a':a});
 }
 
 voyc.DrZinnView.prototype.onAnswerInput = function(e) {
@@ -942,7 +942,7 @@ voyc.DrZinnView.prototype.onAnswerInput = function(e) {
 	var a = parseInt(e.currentTarget.value,10);
 	voyc.drzinn.answers.set(this.openQuizzId,q,a);
 	this.updateProgress();
-	this.observer.publish(new voyc.Note('answer-submitted', 'drzinnview', {'quizz':this.openQuizzId, 'q':q, 'a':a}));
+	this.observer.publish('answer-submitted', 'drzinnview', {'quizz':this.openQuizzId, 'q':q, 'a':a});
 }
 
 /**
@@ -985,7 +985,7 @@ voyc.DrZinnView.prototype.onRemarkInput = function(e) {
 	var factorcode = a[1];
 	var remark = ta.value;
 	voyc.drzinn.remarks.set(testcode, factorcode, remark);
-	this.observer.publish(new voyc.Note('remark-submitted', 'drzinnview', {'testcode':testcode, 'factorcode':factorcode, 'remark':remark}));
+	this.observer.publish('remark-submitted', 'drzinnview', {'testcode':testcode, 'factorcode':factorcode, 'remark':remark});
 }
 
 /**
