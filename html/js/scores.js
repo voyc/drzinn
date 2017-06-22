@@ -124,20 +124,20 @@ voyc.data.examples = {
 		'judicious'           : { pct:[ 80, 35,  5], answers:[ 6,13,20,27,34,41,48,55,62,69, 7,14,21,28,35,42,49,56,63,70] },  // 20
 	},
 	'motivation': {       // the order here is the order of the original paper answer key.  The order in factors.js is the display order.
-		'definitions'         : { pct:[ 20, 80, 50], answers:[ 3, 4,19,39,82,110] },                  
-		'efficiency'          : { pct:[ 40, 20, 80], answers:[ 8,46,47,58,59,83,84] },                
-		'authority'           : { pct:[ 70, 40, 20], answers:[15,16,17,30,35,54,55,56,57,116] },      
-		'wariness'            : { pct:[ 20, 70, 40], answers:[18,36,37,38,67,68,118] },               
-		'feelings'            : { pct:[ 60, 20, 70], answers:[1,2,7,77,78,79,81,107,108,109] },       
-		'curiosity'           : { pct:[ 70, 60, 20], answers:[9,20,44,45,48,49,85,86,87,102] },       
-		'resistance'          : { pct:[ 30, 70, 60], answers:[21,22,23,24,50,80,90,91,98,119] },      
-		'tools'               : { pct:[ 50, 30, 70], answers:[5,6,103,104,105] },                     
-		'affection'           : { pct:[ 90, 50, 30], answers:[26,27,28,29,42,63,112,113,114,115] },   
-		'pressure'            : { pct:[ 10, 90, 50], answers:[60,61,62,99,100,101,106,111,120,121] }, 
-		'avoidance'           : { pct:[ 60, 10, 90], answers:[13,14,25,64,69,70,92,93,94,95] },       
-		'disappointment'      : { pct:[100, 60, 10], answers:[43,65,66,96,97,117] },                  
-		'acclaim'             : { pct:[  0,100, 60], answers:[10,11,12,31,32,33,34,72,73,74] },       
-		'direct'              : { pct:[ 50,  0,100], answers:[40,41,51,52,53,71,75,76,88,89] },       
+		'definitions'         : { pct:[ 20, 80, 50], answers:[ 3, 4,19,39,82,110] },
+		'efficiency'          : { pct:[ 40, 20, 80], answers:[ 8,46,47,58,59,83,84] },
+		'authority'           : { pct:[ 70, 40, 20], answers:[15,16,17,30,35,54,55,56,57,116] },
+		'wariness'            : { pct:[ 20, 70, 40], answers:[18,36,37,38,67,68,118] },
+		'feelings'            : { pct:[ 60, 20, 70], answers:[1,2,7,77,78,79,81,107,108,109] },
+		'curiosity'           : { pct:[ 70, 60, 20], answers:[9,20,44,45,48,49,85,86,87,102] },
+		'resistance'          : { pct:[ 30, 70, 60], answers:[21,22,23,24,50,80,90,91,98,119] },
+		'tools'               : { pct:[ 50, 30, 70], answers:[5,6,103,104,105] },
+		'affection'           : { pct:[ 90, 50, 30], answers:[26,27,28,29,42,63,112,113,114,115] },
+		'pressure'            : { pct:[ 10, 90, 50], answers:[60,61,62,99,100,101,106,111,120,121] },
+		'avoidance'           : { pct:[ 60, 10, 90], answers:[13,14,25,64,69,70,92,93,94,95] },
+		'disappointment'      : { pct:[100, 60, 10], answers:[43,65,66,96,97,117] },
+		'acclaim'             : { pct:[  0,100, 60], answers:[10,11,12,31,32,33,34,72,73,74] },
+		'direct'              : { pct:[ 50,  0,100], answers:[40,41,51,52,53,71,75,76,88,89] },
 	},
 	'personality': {
 		'warm'                : { pct:[ 40, 60, 20], answers:[] },
@@ -195,5 +195,11 @@ voyc.data.examples = {
 		'DFU'                 : { pct:[ 17, 90, 50], answers:[] },
 		'DMU'                 : { pct:[ 42, 17, 90], answers:[] },
 		'DSR'                 : { pct:[ 71, 42, 17], answers:[] },
+	},
+	'learningstyle': { // pct
+		'visual'              : { pct:[ 20, 80, 35], answers:[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
+		'auditory'            : { pct:[ 50, 10, 35], answers:[11,12,13,14,15,16,17,18,19,20] },
+		'kinesthetic'         : { pct:[ 30, 10, 30], answers:[21,22,23,24,25] },
 	}
+
 };

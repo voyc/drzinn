@@ -50,6 +50,7 @@ voyc.data.factors = {
 			//leftcomponents:['definitions','efficiency','authority','wariness'],
 			//rightcomponents:['feelings','curiosity','pressure','tools'],
 			components:['definitions','efficiency','authority','wariness','feelings','curiosity','pressure','tools'],
+			showcomponents: true,
 		},
 		'personal': {
 			test: 'motivation',
@@ -63,6 +64,7 @@ voyc.data.factors = {
 			//leftcomponents:['affection', 'pressure', 'avoidance', 'disappointment'],
 			//rightcomponents:['acclaim', 'direct'],
 			components:['affection', 'pressure', 'avoidance', 'disappointment','acclaim', 'direct'],
+			showcomponents: true,
 		},
 		'definitions': {
 			test: 'motivation',
@@ -171,6 +173,7 @@ voyc.data.factors = {
 			left:  'Introversion',
 			right: 'Extraversion',
 			components:['warm','lively','bold','private','selfreliant'],
+			showcomponents: true,
 		},
 		'anxiety': {
 			pole: 1,   // override
@@ -179,6 +182,7 @@ voyc.data.factors = {
 			global: true,
 			left: 'Anxiety',
 			components:['stable','vigilant','apprehensive','tense'],
+			showcomponents: true,
 		},
 		'tough': {
 			test: 'personality',
@@ -187,6 +191,7 @@ voyc.data.factors = {
 			left: 'Receptivity',
 			right: 'Tough-Mindedness',
 			components:['warm','sensitive','abstract','open'],
+			showcomponents: true,
 		},
 		'independence': {
 			test: 'personality',
@@ -195,6 +200,7 @@ voyc.data.factors = {
 			left: 'Accomodation',
 			right:'Independence',
 			components:['dominant','bold','vigilant','open'],
+			showcomponents: true,
 		},
 		'selfcontrol': {
 			test: 'personality',
@@ -203,6 +209,7 @@ voyc.data.factors = {
 			left: 'Unrestrained',
 			right: 'Self-Control',
 			components:['lively','rule','abstracted','perfectionist'],
+			showcomponents: true,
 		},
 		'warm': {
 			test: 'personality',
@@ -358,6 +365,7 @@ voyc.data.factors = {
 			left:'EQ',
 			max:0,
 			components:['aware','identifyown','identifyothers','manageown','manageothers','problemsolving','express','impression'],
+			showcomponents: true,
 		},
 		'aware': {
 			test: 'eji',
@@ -426,6 +434,7 @@ voyc.data.factors = {
 			aleft:'Figural',
 			max:0,
 			components:['CFU','CFC','MFU','EFU','EFC','CFS','CFT','NFU','DFU'],
+			showcomponents: true,
 		},
 		'symbolic': { 
 			test:'soi', 
@@ -436,6 +445,7 @@ voyc.data.factors = {
 			aleft:'Symbolic',
 			max:0,
 			components:['CSS','MSUv','MSSv','MSUa','ESC','ESS','NSS','NST', 'NSI', 'CSR', 'DSR'],
+			showcomponents: true,
 		},
 		'semantic': { 
 			test:'soi', 
@@ -446,6 +456,7 @@ voyc.data.factors = {
 			aleft:'Semantic',
 			max:0,
 			components:['CMUr','CMUm','CMR','CMS','DMU','MMI'],
+			showcomponents: true,
 		},
 		'comprehension': { 
 			test:'soi', 
@@ -456,6 +467,7 @@ voyc.data.factors = {
 			aleft:'Comprehension',
 			max:0,
 			components:['CFU','CFC','CFS','CFT','CSR','CSS','CMUr','CMU_M','CMR','CMS'],
+			showcomponents: true,
 		},
 		'memory': { 
 			test:'soi', 
@@ -466,6 +478,7 @@ voyc.data.factors = {
 			aleft:'Memory',
 			max:0,
 			components:['MFU','MSUv','MSSv','MSUa','MSSa','MSI','MMI'],
+			showcomponents: true,
 		},
 		'evaluation': { 
 			test:'soi', 
@@ -476,6 +489,7 @@ voyc.data.factors = {
 			aleft:'Evaluation',
 			max:0,
 			components:['EFU','EFC','ESC','ESS'],
+			showcomponents: true,
 		},
 		'problemsolving': { 
 			test:'soi', 
@@ -486,6 +500,7 @@ voyc.data.factors = {
 			aleft:'Problem Solving',
 			max:0,
 			components:['NFU','NSS','NST','NSI'],
+			showcomponents: true,
 		},
 		'creativity': { 
 			test:'soi', 
@@ -496,6 +511,7 @@ voyc.data.factors = {
 			aleft:'Creativity',
 			max:0,
 			components:['DFU','DMU','DSR'],
+			showcomponents: true,
 		},
 		'CFU': { 
 			test:'soi', 
@@ -758,6 +774,7 @@ voyc.data.factors = {
 			global: true,
 			left: 'Learning Style',
 			components:['visual','auditory','kinesthetic'],
+			showcomponents: false,
 		},
 		'visual': {
 			test: 'learningstyle',

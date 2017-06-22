@@ -343,7 +343,7 @@ voyc.DrZinnView.prototype.composeStory = function(test, factor, showComponents) 
 	s += '<p><textarea placeholder="enter personal notes here">'+r+'</textarea></p>';
 
 	// add panel of components
-	if (fact.global && showComponents) {
+	if (fact.global && showComponents && fact.showcomponents) {
 		s += '<p>This is a composite factor made up of the following component factors.</p>'
 		s += this.composePanel(test, fact.components);
 	}
@@ -732,16 +732,22 @@ voyc.DrZinnView.prototype.populateChart = function(elem) {
 		drawpie(elem, data);
 	}
 	else if (this.getPole(fact) > 2) {
+		var defp = [25,25,50];
 		var data = [];
 		for (var i=0; i<fact.components.length; i++) {
 			var comp = fact.components[i];
 			var fct = voyc.data.factors[test][comp];
 			var score = voyc.drzinn.scores.get(test, comp);
 			var range = this.getRange(fct, score);
+			var c = (score.pct > 0) ? color[i] : 'white';
+			var p = (score.pct > 0) ? score.pct : defp[i];
+			var w = elem.offsetWidth;
+			var left = (w > 400) ? fct.left + ' (' + score.pct  + '%)' : fct.left;
+
 			data[i] = {
-				l:fct.left,
-				c:color[i],
-				p:score.pct,
+				l:left,
+				c:c,
+				p:p,
 				r:(range == 'high') ? 1 : 0,
 			}
 		}

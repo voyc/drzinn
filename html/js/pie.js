@@ -85,9 +85,6 @@ function drawpie(elem, data) {
 			// if there are two pieces, bold the larger one
 			ctx.fillStyle = 'black';
 			ctx.font = '12pt Arial';
-			//if (i == iLarge) {
-			//	ctx.font = 'Bold 12pt Arial';
-			//}
 			if (pdata[i].r) {
 				ctx.font = 'Bold 12pt Arial';
 			}
@@ -112,13 +109,15 @@ function drawpie(elem, data) {
 			// insert minimal vertical space between labels
 			// compare y to centerline
 			// if y is between h2 and h2 - half the text height
-			tsize.height = 20;  // faking it
-			var th2 = tsize.height / 2;
-			if ((y<h2) && (y>(h2-th2))) {
-				y = h2 - th2;
-			}
-			else if ((y>=h2) && (y < (h2+th2))) {
-				y = h2 +th2;
+			if (pdata.length == 2) {
+				tsize.height = 20;  // faking it
+				var th2 = tsize.height / 2;
+				if ((y<h2) && (y>(h2-th2))) {
+					y = h2 - th2;
+				}
+				else if ((y>=h2) && (y < (h2+th2))) {
+					y = h2 + th2;
+				}
 			}
 			
 			ctx.shadowColor = pdata[i].c;
