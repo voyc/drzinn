@@ -63,6 +63,8 @@ voyc.data.tests = {
 		mean: 5,
 		step: 1,
 		pole: 3,
+		maxlow:20,
+		minhigh:46,
 		dimensions: 'paired', // single or paired
 		vendorstyle: 'offcenter', // oneway, paired or offcenter
 		pairedscore: false,

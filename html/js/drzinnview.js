@@ -228,7 +228,9 @@ voyc.DrZinnView.prototype.composeTestFactor = function(test,factor) {
 	s += "<h1>" + this.getTestTitle(test) + "</h1>";
 	s += this.composeFactorStory(test, factor, true);
 	s += "</div>";
-	s += "<p><button class='anchor' nav='" + this.getPageId(test, 'all') + "'>Show all " + this.getTestTitle(test) + " Details</button></p>";
+	if (test != 'learningstyle') {
+		s += "<p><button class='anchor' nav='" + this.getPageId(test, 'all') + "'>Show all " + this.getTestTitle(test) + " Details</button></p>";
+	}
 	return s;
 }
 
@@ -267,7 +269,128 @@ voyc.DrZinnView.prototype.composeAllAll = function() {
 	return s;
 }
 
+/*
+	set range = 'high'
+
+	set test to one of these seven:
+		auditory
+		visual
+		kinesthetic
+		auditory+kinesthetic
+		visual+auditory
+		visual+kinesthetic
+		balanced
+
+	then what about low?
+
+	<20 low
+	>46 high
+	
+	50.30.20 high, medium, low
+	50.25.25 high, medium, medium
+	40.21.39 high, medium, medium
+	40.40.20 medium, medium, low
+	46.46.8  high, high, low
+	60.20.20 high, low, low
+	59.40.1 high, high, low
+	39.39.22 balanced
+	33.33.34 balanced
+
+	for a 3-pole pie
+	churn thru all the components
+	compose always, gifts, nourishments, burnouts on all components
+	if all three are medium: he's balanced.  That's a gift.
+
+	I learn easily, regardless of the style of learning available to me.
+	
+*/
+voyc.DrZinnView.prototype.composeStoryLearningStyle = function(test, factor, showComponents) {
+	var tst = voyc.data.tests[test];
+	var fact = voyc.data.factors[test][factor];
+
+//	var s = '';
+//	if (tst.pole >= 3) {
+//		var comp, fct, score, range, spacer;
+//		for (var i=0; i<fact.components.length; i++) {
+//			comp = fact.components[i];
+//			fct = voyc.data.factors[test][comp];
+//			score = voyc.drzinn.scores.get(test, comp);
+//			range = this.getRangeImproved(test, fct, score);
+//			s += this.composeGiftStory(test, factor, showComponents);
+//		}
+//	}
+	var s = this.composeGiftStory(test, factor, showComponents);
+
+	// add personal comments in textarea
+	var r = voyc.drzinn.remarks.get(test, factor);
+	s += '<p><textarea placeholder="enter personal notes here">'+r+'</textarea></p>';
+
+	// add panel of components
+	if (fact.global && showComponents && fact.showcomponents) {
+		s += '<p>This is a composite factor made up of the following component factors.</p>'
+		s += this.composePanel(test, fact.components);
+	}
+	
+	//s = this.changePerson(s);
+	return s;
+}
+
+voyc.DrZinnView.prototype.composeGiftStory = function(test, factor, showComponents) {
+	var keys = [
+		'always',
+		'defaults',
+		'gifts',
+		'nourishments',
+		'burnouts',
+	];
+	var story = {
+		'always'  :'',
+		'defaults' :'',
+		'gifts'    :'',
+		'nourishments' :'',
+		'burnouts' :'',
+	};
+	var sets = [
+		voyc.data.always,
+		voyc.data.defaults,
+		voyc.data.gifts,
+		voyc.data.nourishments,
+		voyc.data.burnouts
+	];
+	
+	var comp = voyc.data.factors[test][factor].components;
+	// if comp
+	for (var n=0; n<comp.length; n++) {
+		var fact = voyc.data.factors[test][comp[n]];
+		var key = '';
+		var item = {};
+		score = voyc.drzinn.scores.get(test, comp[n]);
+		range = this.getRangeImproved(test, comp[n], score);
+		for (var i=0; i<sets.length; i++) {
+			var set = sets[i];
+			for (var j=0; j<set.length; j++) {
+				item = set[j];
+				key = keys[i]
+				if (item.test == fact.test && item.factor == fact.factor && item.range == range) {
+					story[key] += '<p>' + item.narrative + '</p>';
+				}
+			}
+		}
+	}
+
+	// combine the five sections
+	var s = story['gifts'] + story['nourishments'] + story['burnouts'];
+	if (!s.length) {
+		s = story['defaults'];
+	}
+	s = story['always'] + s;
+	return s;
+}
+
 voyc.DrZinnView.prototype.composeStory = function(test, factor, showComponents) {
+	if (test == 'learningstyle') {
+		return this.composeStoryLearningStyle(test, factor, showComponents);
+	}
 	var fact = voyc.data.factors[test][factor];
 	
 	var score = voyc.drzinn.scores.get(test, factor);
@@ -353,40 +476,61 @@ voyc.DrZinnView.prototype.composeStory = function(test, factor, showComponents) 
 }
 
 voyc.DrZinnView.prototype.composeHeadline = function(test, factor) {
+	var tst = voyc.data.tests[test];
 	var fact = voyc.data.factors[test][factor];
-	
-	var score = voyc.drzinn.scores.get(test, factor);
+	var headline = '';
+	if (tst.pole >= 3) {
+		var comp, fct, score, range, spacer;
+		for (var i=0; i<fact.components.length; i++) {
+			comp = fact.components[i];
+			fct = voyc.data.factors[test][comp];
+			score = voyc.drzinn.scores.get(test, comp);
+			range = this.getRangeImproved(test, fct, score);
+			spacer = (headline.length) ? ', ' : '';
+			if (range == 'high') {
+				headline += spacer + 'High ' + fct.left;
+			}
+			else if (range == 'low') {
+				headline += spacer + 'Low ' + fct.left;
+			}
+		}
+		if (!headline.length) {
+			headline = 'Balanced';
+		}
+	}
+	else {
+		var score = voyc.drzinn.scores.get(test, factor);
+		var range = this.getRange(fact, score);
+
+		// reverse range for paired factors
+		var displayrange = range;
+		var factorhigh = fact.left;
+		var factorlow = fact.right;
+		var pcthigh = score.pct;
+		var pctlow = 100 - score.pct;
+
+		if (this.getPole(fact) == 2) {
+			if (range == 'medium') {
+				displayrange = 'balanced';
+			}
+			else if (range == 'low') {
+				displayrange = 'high';
+				factorhigh = fact.right;
+				factorlow = fact.left;
+				pcthigh = 100 - score.pct;
+				pctlow = score.pct;
+			}
+		}
 		
-	var range = this.getRange(fact, score);
-
-	// reverse range for paired factors
-	var displayrange = range;
-	var factorhigh = fact.left;
-	var factorlow = fact.right;
-	var pcthigh = score.pct;
-	var pctlow = 100 - score.pct;
-
-	if (this.getPole(fact) == 2) {
-		if (range == 'medium') {
-			displayrange = 'balanced';
+		var dname = factorhigh;
+		if (displayrange == 'balanced') {
+			dname = fact.left + ' and ' + fact.right;
 		}
-		else if (range == 'low') {
-			displayrange = 'high';
-			factorhigh = fact.right;
-			factorlow = fact.left;
-			pcthigh = 100 - score.pct;
-			pctlow = score.pct;
-		}
+		
+		var drange = (displayrange) ? voyc.data.strings[displayrange] + ' ' : '';
+		headline = drange + dname;
 	}
-	
-	var dname = factorhigh;
-	if (displayrange == 'balanced') {
-		dname = fact.left + ' and ' + fact.right;
-	}
-	
-	var drange = (displayrange) ? voyc.data.strings[displayrange] + ' ' : '';
-	s = drange + dname;
-	return s;
+	return headline;
 }
 
 voyc.DrZinnView.prototype.composeQuizz = function(test,factor) {
@@ -778,6 +922,19 @@ voyc.pct = function(n,max) {
 voyc.DrZinnView.prototype.getPole = function(factor) {
 	var n = factor.pole || voyc.data.tests[factor.test].pole;
 	return n;
+}
+
+voyc.DrZinnView.prototype.getRangeImproved = function(test, factor, score) {
+	var tst = voyc.data.tests[test];
+	var range = '';
+	if (score.pct <= tst.maxlow)
+		range = 'low';
+	else if (score.pct >= tst.minhigh)
+		range = 'high';
+	else {
+		range = 'medium';
+	}
+	return range;
 }
 
 voyc.DrZinnView.prototype.getRange = function(factor, score) {

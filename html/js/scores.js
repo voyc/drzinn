@@ -197,9 +197,12 @@ voyc.data.examples = {
 		'DSR'                 : { pct:[ 71, 42, 17], answers:[] },
 	},
 	'learningstyle': { // pct
-		'visual'              : { pct:[ 20, 80, 35], answers:[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
-		'auditory'            : { pct:[ 50, 10, 35], answers:[11,12,13,14,15,16,17,18,19,20] },
-		'kinesthetic'         : { pct:[ 30, 10, 30], answers:[21,22,23,24,25] },
+//		'visual'              : { pct:[ 20, 80, 35], answers:[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
+//		'auditory'            : { pct:[ 50, 10, 35], answers:[11,12,13,14,15,16,17,18,19,20] },
+//		'kinesthetic'         : { pct:[ 30, 10, 30], answers:[21,22,23,24,25] },
+		'visual'              : { pct:[ 20, 80, 35], answers:[ 1, 4, 8,10,12,15,17,21,24] },
+		'auditory'            : { pct:[ 50, 10, 35], answers:[ 2, 5, 6,11,14,16,19,22,25] },
+		'kinesthetic'         : { pct:[ 30, 10, 30], answers:[ 3, 7,13,18,20,23] },
 	}
 
 };

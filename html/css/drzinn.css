@@ -1,4 +1,7 @@
 /* typography */
+h2 {
+	font-size:1.6rem;
+}
 button.ref {
 	font-size:.7rem;
 	font-family:sans-serif;

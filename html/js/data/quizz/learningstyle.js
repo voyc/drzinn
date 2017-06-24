@@ -178,8 +178,8 @@ voyc.data.quizz['learningstyle'] = {
 			scores[scrndx]++;
 			total++;
 		}
-		voyc.drzinn.scores.set(testname, 'visual'     , scores[0], Math.round((scores[0]/total)*100));
-		voyc.drzinn.scores.set(testname, 'auditory'   , scores[1], Math.round((scores[1]/total)*100));
+		voyc.drzinn.scores.set(testname, 'auditory'   , scores[0], Math.round((scores[0]/total)*100));
+		voyc.drzinn.scores.set(testname, 'visual'     , scores[1], Math.round((scores[1]/total)*100));
 		voyc.drzinn.scores.set(testname, 'kinesthetic', scores[2], Math.round((scores[2]/total)*100));
 	}
 }
