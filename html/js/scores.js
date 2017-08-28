@@ -61,7 +61,11 @@ voyc.Scores.prototype.calcGlobals = function(testcode) {
 	var score = {};
 	for (var factorname in voyc.data.factors[testcode]) {
 		fact = voyc.data.factors[testcode][factorname];
-		if (fact.components) {
+		if (fact.leftcomponents) {
+			score.pct = this.calcGlobalBi(fact);
+			this.set(fact.test, fact.factor, score.pct, score.pct);
+		}
+		else if (fact.components) {
 			score = this.get(fact.test, fact.factor);
 			if (voyc.data.quizz[testcode].answertype == 'stanine') {
 				score.raw = this.calcGlobalRaw(fact);
@@ -101,6 +105,30 @@ voyc.Scores.prototype.calcGlobalRaw = function(fact) {
 		cnt++;
 	}
 	return Math.round(tot/cnt);
+}
+
+voyc.Scores.prototype.calcGlobalBi = function(fact) {
+	var compscore = {};
+	var leftcnt = 0;
+	var lefttot = 0;
+	var rightcnt = 0;
+	var righttot = 0;
+	var factorname = '';
+	for (var i=0; i<fact.leftcomponents.length; i++) {
+		factorname = fact.leftcomponents[i];
+		compscore = this.get(fact.test, factorname);
+		lefttot += compscore.raw;
+		leftcnt++;
+	}
+	for (var i=0; i<fact.rightcomponents.length; i++) {
+		factorname = fact.rightcomponents[i];
+		compscore = this.get(fact.test, factorname);
+		righttot += compscore.raw;
+		rightcnt++;
+	}
+	var leftcomp =  (lefttot/leftcnt);
+	var rightcomp = (righttot/rightcnt);
+	return Math.round(leftcomp/(leftcomp+rightcomp) * 100);
 }
 
 voyc.Scores.prototype.reorder = function() {

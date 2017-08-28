@@ -68,6 +68,7 @@ voyc.DrZinn.prototype.onLoginReceived = function(note) {
 		this.remarks.clear();
 		this.observer.publish('answers-received', 'drzinn', {});
 	}
+	(new voyc.BrowserHistory).nav('home');
 }
 
 voyc.DrZinn.prototype.getTestNameForCode = function(code) {
