@@ -1,8 +1,8 @@
-# DrZinn's Personal Empowerment Guide
+# DrZinn
 
-Using psychometric testing.
+Psychometric testing.
 
-The first page is a one-screen summary of your authentic self.
+The first page is a one-screen summary of your test results.
 
 Click on each panel to drill-down to additional details.
 
